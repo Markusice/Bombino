@@ -1,6 +1,6 @@
-﻿fMicrosoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombinoTesting", "BombinoTesting.csproj", "{2A1B65E2-8105-49D9-A48D-104ED912A27A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bombino", "Bombino.csproj", "{2A1B65E2-8105-49D9-A48D-104ED912A27A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
