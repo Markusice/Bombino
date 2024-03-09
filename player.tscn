@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddvwgpvdgoyxf"]
+
+[ext_resource type="PackedScene" uid="uid://br8rj03354bcw" path="res://art/player.glb" id="1_2ebxi"]
+[ext_resource type="Script" path="res://scripts/Player.cs" id="1_o2hsc"]
+[ext_resource type="PackedScene" uid="uid://bb6uotovywqqa" path="res://bomb.tscn" id="2_l1xsj"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_sxnsl"]
+radius = 1.14107
+
+[node name="Player" type="CharacterBody3D" groups=["players"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1, 2.08165e-12)
+collision_layer = 2
+script = ExtResource("1_o2hsc")
+BombScene = ExtResource("2_l1xsj")
+metadata/_edit_group_ = true
+
+[node name="Pivot" type="Node3D" parent="."]
+
+[node name="Character" parent="Pivot" instance=ExtResource("1_2ebxi")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_sxnsl")
+
+[connection signal="Hit" from="." to="." method="OnHit"]
