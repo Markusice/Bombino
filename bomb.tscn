@@ -1,7 +1,6 @@
-[gd_scene load_steps=12 format=3 uid="uid://bb6uotovywqqa"]
+[gd_scene load_steps=13 format=3 uid="uid://bb6uotovywqqa"]
 
 [ext_resource type="Script" path="res://scripts/Bomb.cs" id="1_1hr57"]
-[ext_resource type="PackedScene" uid="uid://d3ldxy0l5gvp" path="res://vfx_explosion2.tscn" id="2_43g44"]
 [ext_resource type="Texture2D" uid="uid://dlqpjddt6hois" path="res://assets/sphere_-_id_test_0.jpg" id="3_bclop"]
 [ext_resource type="Texture2D" uid="uid://civrw5te3ycrs" path="res://assets/sphere_-_id_test_1.png" id="4_qg27w"]
 [ext_resource type="Texture2D" uid="uid://c403e55d44ku2" path="res://assets/sphere_-_id_test_2.jpg" id="5_gaxg5"]
@@ -60,14 +59,19 @@ shadow_mesh = SubResource("ArrayMesh_b6bwk")
 [sub_resource type="BoxShape3D" id="BoxShape3D_1d2bc"]
 size = Vector3(10, 2, 2)
 
+[sub_resource type="BoxMesh" id="BoxMesh_0gdek"]
+size = Vector3(10, 1, 1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_x1fd5"]
 size = Vector3(2, 2, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_o1avs"]
+size = Vector3(1, 1, 10)
 
 [node name="Bomb" type="Area3D" groups=["bombs"]]
 collision_layer = 8
 collision_mask = 11
 script = ExtResource("1_1hr57")
-_effect = ExtResource("2_43g44")
 metadata/_edit_group_ = true
 
 [node name="BombMesh" type="MeshInstance3D" parent="."]
@@ -77,11 +81,19 @@ skeleton = NodePath("")
 [node name="CollisionShapeX" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_1d2bc")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShapeX"]
+visible = false
+mesh = SubResource("BoxMesh_0gdek")
+
 [node name="CollisionShapeZ" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_x1fd5")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShapeZ"]
+visible = false
+mesh = SubResource("BoxMesh_o1avs")
+
 [node name="BombTimer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 3.0
 one_shot = true
 
 [connection signal="ExplodeSooner" from="." to="." method="OnExplodeSooner"]
