@@ -82,14 +82,12 @@ skeleton = NodePath("")
 shape = SubResource("BoxShape3D_1d2bc")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShapeX"]
-visible = false
 mesh = SubResource("BoxMesh_0gdek")
 
 [node name="CollisionShapeZ" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_x1fd5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShapeZ"]
-visible = false
 mesh = SubResource("BoxMesh_o1avs")
 
 [node name="BombTimer" type="Timer" parent="."]
