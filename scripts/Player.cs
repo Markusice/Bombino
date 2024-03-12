@@ -96,6 +96,10 @@ public partial class Player : CharacterBody3D
 
 		if (direction != Vector3.Zero)
 		{
+
+			Vector3 targetPosition = Position - direction;
+			LookAt(targetPosition, Vector3.Up);
+
 			direction = direction.Normalized();
 
 			var absoluteDirection = direction.Abs();
@@ -103,8 +107,6 @@ public partial class Player : CharacterBody3D
 			// Player can't move diagonally
 			if (!absoluteDirection.Z.Equals(1) && !absoluteDirection.Z.Equals(0)) return;
 
-			// Setting the basis property will affect the rotation of the node.
-			GetNode<Node3D>("Pivot").Basis = Basis.LookingAt(direction);
 		}
 
 		// Ground velocity
@@ -116,6 +118,11 @@ public partial class Player : CharacterBody3D
 		{
 			_targetVelocity.Y -= FallAcceleration * (float)delta;
 		}
+		
+		var animTree = GetNode<AnimationTree>("AnimationTree");
+		var stateMachine = (AnimationNodeStateMachinePlayback)animTree.Get("parameters/playback");
+
+		animTree.Set("parameters/IR/blend_position", _targetVelocity.Length());
 
 		// Moving the character
 		Velocity = _targetVelocity;

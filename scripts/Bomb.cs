@@ -3,14 +3,19 @@ using Godot.Collections;
 
 public partial class Bomb : Area3D
 {
+	#region Exports
+
+	[Export]
+	private PackedScene _effect;
+
+	#endregion
+
 	#region Signals
 
 	[Signal]
 	public delegate void ExplodeSoonerEventHandler(float bombTimerWaitTime);
 
 	#endregion
-
-	private PackedScene _effect;
 
 	private readonly Array<Node3D> _bodiesToExplode = new();
 	private readonly Array<Bomb> _bombsInRange = new();
@@ -21,8 +26,6 @@ public partial class Bomb : Area3D
 
 	public override void _Ready()
 	{
-		_effect = ResourceLoader.Load<PackedScene>("res://vfx_explosion.tscn");
-
 		GD.Print($"bomb position : {Position}");
 		GD.Print($"tile: {GameManager.GridMap.LocalToMap(Position)}");
 
