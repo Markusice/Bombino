@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cjlwvspgkq57s"
-path="res://.godot/imported/Montserrat-Medium.ttf-9322cac81db17d2f033bd26b2a37967f.fontdata"
+uid="uid://bn4sm0qhcg0jm"
+path="res://.godot/imported/Spoon-Bold.ttf-51461f4435d3edf2416c29bbab1a1547.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/Montserrat-Medium.ttf"
-dest_files=["res://.godot/imported/Montserrat-Medium.ttf-9322cac81db17d2f033bd26b2a37967f.fontdata"]
+source_file="res://fonts/Spoon-Bold.ttf"
+dest_files=["res://.godot/imported/Spoon-Bold.ttf-51461f4435d3edf2416c29bbab1a1547.fontdata"]
 
 [params]
 

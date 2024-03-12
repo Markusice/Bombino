@@ -1,0 +1,140 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwn8vy6or60pe"]
+
+[ext_resource type="Texture2D" uid="uid://coogvqvpfiv15" path="res://assets/icons/bomb.png" id="1_h6m3v"]
+
+[node name="UI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 204.0
+offset_bottom = 199.0
+
+[node name="PlayerBombsContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+offset_right = 204.0
+offset_bottom = 199.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerBombsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 20
+
+[node name="GridContainer" type="GridContainer" parent="PlayerBombsContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="BombStatusContainer" type="PanelContainer" parent="PlayerBombsContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+
+[node name="BombPicture" type="TextureRect" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer"]
+layout_mode = 2
+texture = ExtResource("1_h6m3v")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="BombNumberContainer" type="Panel" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer/BombPicture"]
+layout_mode = 0
+offset_left = 38.0
+offset_top = -8.0
+offset_right = 58.0
+offset_bottom = 12.0
+theme_type_variation = &"BombNumber"
+
+[node name="BombNumber" type="Label" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer/BombPicture/BombNumberContainer"]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 14
+text = "x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerBombsContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PlayerName" type="Label" parent="PlayerBombsContainer/MarginContainer/GridContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 28
+text = "Player1"
+
+[node name="BombStatusContainer2" type="PanelContainer" parent="PlayerBombsContainer/MarginContainer/GridContainer"]
+visible = false
+layout_mode = 2
+
+[node name="BombPicture" type="TextureRect" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer2"]
+layout_mode = 2
+texture = ExtResource("1_h6m3v")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="BombNumberContainer" type="Panel" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer2/BombPicture"]
+layout_mode = 0
+offset_left = 38.0
+offset_top = -8.0
+offset_right = 58.0
+offset_bottom = 12.0
+theme_type_variation = &"BombNumber"
+
+[node name="BombNumber" type="Label" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer2/BombPicture/BombNumberContainer"]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 14
+text = "x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="PlayerBombsContainer/MarginContainer/GridContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PlayerName" type="Label" parent="PlayerBombsContainer/MarginContainer/GridContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 28
+text = "Player1"
+
+[node name="BombStatusContainer3" type="PanelContainer" parent="PlayerBombsContainer/MarginContainer/GridContainer"]
+visible = false
+layout_mode = 2
+
+[node name="BombPicture" type="TextureRect" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer3"]
+layout_mode = 2
+texture = ExtResource("1_h6m3v")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="BombNumberContainer" type="Panel" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer3/BombPicture"]
+layout_mode = 0
+offset_left = 38.0
+offset_top = -8.0
+offset_right = 58.0
+offset_bottom = 12.0
+theme_type_variation = &"BombNumber"
+
+[node name="BombNumber" type="Label" parent="PlayerBombsContainer/MarginContainer/GridContainer/BombStatusContainer3/BombPicture/BombNumberContainer"]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 14
+text = "x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="PlayerBombsContainer/MarginContainer/GridContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PlayerName" type="Label" parent="PlayerBombsContainer/MarginContainer/GridContainer/MarginContainer3"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 28
+text = "Player1"

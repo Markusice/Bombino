@@ -1,0 +1,86 @@
+[gd_scene load_steps=4 format=3 uid="uid://cgka8qcma8qkj"]
+
+[ext_resource type="Texture2D" uid="uid://4cvoyks7h6qh" path="res://assets/explosion/Circle03.png" id="1_mtxhi"]
+[ext_resource type="Script" path="res://scripts/ui/MapButton.cs" id="1_ym8yk"]
+[ext_resource type="PackedScene" uid="uid://tvlak70hpojg" path="res://scenes/ui/rounds-menu.tscn" id="2_yxhnx"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_use_anchors_ = true
+
+[node name="TitleContainer" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -524.0
+offset_top = 80.0
+offset_right = -81.0
+offset_bottom = 196.0
+grow_horizontal = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Maps"
+horizontal_alignment = 1
+
+[node name="MapsContainer" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MapsContainer"]
+layout_mode = 2
+
+[node name="Map1" type="TextureRect" parent="MapsContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_mtxhi")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Map1Button" type="Button" parent="MapsContainer/HBoxContainer/Map1"]
+layout_mode = 2
+offset_left = 1.0
+offset_right = 44.0
+offset_bottom = 40.0
+theme_type_variation = &"MapButton"
+script = ExtResource("1_ym8yk")
+_roundsMenuScene = ExtResource("2_yxhnx")
+
+[node name="Map2" type="TextureRect" parent="MapsContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Map2Button" type="Button" parent="MapsContainer/HBoxContainer/Map2"]
+layout_mode = 2
+offset_left = 4.0
+offset_right = 4.0
+offset_bottom = 40.0
+theme_type_variation = &"MapButton"
+script = ExtResource("1_ym8yk")
+
+[node name="Map3" type="TextureRect" parent="MapsContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Map3Button" type="Button" parent="MapsContainer/HBoxContainer/Map3"]
+layout_mode = 2
+offset_left = 4.0
+offset_right = 4.0
+offset_bottom = 40.0
+theme_type_variation = &"MapButton"
+script = ExtResource("1_ym8yk")
+
+[connection signal="pressed" from="MapsContainer/HBoxContainer/Map1/Map1Button" to="MapsContainer/HBoxContainer/Map1/Map1Button" method="OnPressed"]
+[connection signal="pressed" from="MapsContainer/HBoxContainer/Map2/Map2Button" to="MapsContainer/HBoxContainer/Map2/Map2Button" method="OnPressed"]
+[connection signal="pressed" from="MapsContainer/HBoxContainer/Map3/Map3Button" to="MapsContainer/HBoxContainer/Map3/Map3Button" method="OnPressed"]

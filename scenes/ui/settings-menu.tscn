@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3 uid="uid://73bcenf68jtr"]
+
+[ext_resource type="Script" path="res://scripts/ui/ActionKeysContainer.cs" id="1_sd3in"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TitleContainer" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -524.0
+offset_top = 80.0
+offset_right = -81.0
+offset_bottom = 196.0
+grow_horizontal = 2
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -511.5
+offset_top = -300.0
+offset_right = 511.5
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ActionKeysContainer" type="GridContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 100
+theme_override_constants/v_separation = 30
+columns = 2
+script = ExtResource("1_sd3in")
+
+[node name="SettingKey" type="Label" parent="ScrollContainer/ActionKeysContainer"]
+visible = false
+layout_mode = 2
+theme_type_variation = &"SettingLabel"
+text = "Setting key"
+
+[node name="RemapButton" type="Button" parent="ScrollContainer/ActionKeysContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"RemapButton"
+text = "K"
+
+[node name="SaveButton" type="Button" parent="ScrollContainer/ActionKeysContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"PrimaryButton"
+text = "Save"
+
+[node name="CancelButton" type="Button" parent="ScrollContainer/ActionKeysContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"SecondaryButton"
+text = "Cancel"
