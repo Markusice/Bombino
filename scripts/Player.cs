@@ -143,7 +143,7 @@ public partial class Player : CharacterBody3D
     private void OnPlaceBomb()
     {
         var bombTilePosition = GameManager.GridMap.MapToLocal(_positionOnMap);
-        var bombToPlacePosition = new Vector3(bombTilePosition.X, GameManager.GridMap.CellSize.Y, bombTilePosition.Z);
+        var bombToPlacePosition = new Vector3(bombTilePosition.X, GameManager.GridMap.CellSize.Y + 1, bombTilePosition.Z);
 
         if (CannotPlaceBomb(bombToPlacePosition))
         {
