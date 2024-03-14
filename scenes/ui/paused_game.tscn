@@ -109,7 +109,6 @@ text = "Save & Exit"
 horizontal_alignment = 1
 
 [node name="BlurAnimation" type="AnimationPlayer" parent="."]
-process_mode = 2
 libraries = {
 "": SubResource("AnimationLibrary_b3hyr")
 }

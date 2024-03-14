@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://mwftlefv7r0j"]
 
 [ext_resource type="Script" path="res://scripts/ui/Players2Button.cs" id="1_olaa4"]
-[ext_resource type="PackedScene" uid="uid://cgka8qcma8qkj" path="res://scenes/ui/maps-menu.tscn" id="2_dcjl4"]
+[ext_resource type="PackedScene" uid="uid://cgka8qcma8qkj" path="res://scenes/ui/maps_menu.tscn" id="2_dcjl4"]
 [ext_resource type="Script" path="res://scripts/ui/Players3Button.cs" id="2_fciy4"]
 
 [node name="CanvasLayer" type="CanvasLayer"]

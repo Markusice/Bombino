@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=30 format=3 uid="uid://hyhf73h5hes8"]
+[gd_resource type="Theme" load_steps=32 format=3 uid="uid://hyhf73h5hes8"]
 
 [ext_resource type="FontFile" uid="uid://bn4sm0qhcg0jm" path="res://assets/fonts/Spoon-Bold.ttf" id="1_2hswg"]
 [ext_resource type="Texture2D" uid="uid://bg2w4kkpxvm3s" path="res://assets/textures/button-style.png" id="2_b00xl"]
@@ -61,6 +61,20 @@ texture_margin_right = 80.0
 bg_color = Color(0.8, 0.678, 0, 0.85)
 corner_radius_bottom_right = 50
 corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvy3m"]
+bg_color = Color(0.85098, 0.85098, 0.85098, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ogdd8"]
+bg_color = Color(0.85098, 0.85098, 0.85098, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wgy7o"]
 
@@ -191,6 +205,15 @@ ButtonMirrored/styles/normal = SubResource("StyleBoxTexture_eu0d8")
 ButtonMirrored/styles/pressed = SubResource("StyleBoxTexture_2rc5h")
 GameTimerContainer/base_type = &"Panel"
 GameTimerContainer/styles/panel = SubResource("StyleBoxFlat_2om1i")
+InputField/base_type = &"LineEdit"
+InputField/colors/caret_color = Color(0, 0, 0, 1)
+InputField/colors/font_color = Color(0, 0, 0, 1)
+InputField/colors/font_placeholder_color = Color(0, 0, 0, 1)
+InputField/constants/minimum_character_width = 2
+InputField/font_sizes/font_size = 45
+InputField/fonts/font = ExtResource("1_2hswg")
+InputField/styles/focus = SubResource("StyleBoxFlat_wvy3m")
+InputField/styles/normal = SubResource("StyleBoxFlat_ogdd8")
 Label/fonts/font = ExtResource("1_2hswg")
 MapButton/base_type = &"Button"
 MapButton/styles/hover = SubResource("StyleBoxFlat_wgy7o")

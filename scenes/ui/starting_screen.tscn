@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://wpo1q3hd2yct"]
 
-[ext_resource type="Script" path="res://scripts/ui/PlayButton.cs" id="1_6yxge"]
-[ext_resource type="PackedScene" uid="uid://mwftlefv7r0j" path="res://scenes/ui/play-menu.tscn" id="2_3rj5m"]
-[ext_resource type="Script" path="res://scripts/ui/ExitToDesktopButton.cs" id="3_6orj8"]
-[ext_resource type="Script" path="res://scripts/ui/SettingsButton.cs" id="3_jlcld"]
+[ext_resource type="Script" path="res://scripts/ui/PlayButton.cs" id="1_3bbu4"]
+[ext_resource type="PackedScene" uid="uid://mwftlefv7r0j" path="res://scenes/ui/play_menu.tscn" id="2_hg56s"]
+[ext_resource type="Script" path="res://scripts/ui/SettingsButton.cs" id="3_obgcj"]
+[ext_resource type="Script" path="res://scripts/ui/ExitToDesktopButton.cs" id="4_sest6"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -49,8 +49,8 @@ size_flags_horizontal = 4
 [node name="PlayButton" type="Button" parent="MainActionsContainer/HBoxContainer"]
 layout_mode = 2
 text = "Play"
-script = ExtResource("1_6yxge")
-_playMenuScene = ExtResource("2_3rj5m")
+script = ExtResource("1_3bbu4")
+_playMenuScene = ExtResource("2_hg56s")
 
 [node name="TextureRect" type="TextureRect" parent="MainActionsContainer/HBoxContainer"]
 layout_mode = 2
@@ -60,7 +60,7 @@ layout_mode = 2
 theme_type_variation = &"ButtonMirrored"
 theme_override_font_sizes/font_size = 80
 text = "Settings"
-script = ExtResource("3_jlcld")
+script = ExtResource("3_obgcj")
 
 [node name="ExitButtonContainer" type="PanelContainer" parent="."]
 anchors_preset = 7
@@ -79,7 +79,7 @@ grow_vertical = 0
 layout_mode = 2
 theme_type_variation = &"PrimaryButton"
 text = "Exit To Desktop"
-script = ExtResource("3_6orj8")
+script = ExtResource("4_sest6")
 
 [connection signal="pressed" from="MainActionsContainer/HBoxContainer/PlayButton" to="MainActionsContainer/HBoxContainer/PlayButton" method="OnPressed"]
 [connection signal="pressed" from="MainActionsContainer/HBoxContainer/SettingsButton" to="MainActionsContainer/HBoxContainer/SettingsButton" method="OnPressed"]
