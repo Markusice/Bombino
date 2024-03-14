@@ -13,7 +13,7 @@ public partial class Bomb : Area3D
     #region Signals
 
     [Signal]
-    public delegate void ExplodeSoonerEventHandler(float bombTimerWaitTime);
+    public delegate void ExplodeSoonerEventHandler(float newTimerWaitTime);
 
     #endregion
 
@@ -155,16 +155,16 @@ public partial class Bomb : Area3D
         }
     }
 
-    private void OnExplodeSooner(float bombTimerWaitTime)
+    private void OnExplodeSooner(float newTimerWaitTime)
     {
         var bombTimer = GetNode<Timer>("BombTimer");
-        
-        if (bombTimer.TimeLeft <= bombTimerWaitTime) return;
+
+        if (bombTimer.TimeLeft <= newTimerWaitTime) return;
 
         bombTimer.Stop();
-        
-        bombTimer.WaitTime = bombTimerWaitTime;
-        
+
+        bombTimer.WaitTime = newTimerWaitTime;
+
         bombTimer.Start();
     }
 
