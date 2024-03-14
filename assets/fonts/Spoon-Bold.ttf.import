@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bn4sm0qhcg0jm"
-path="res://.godot/imported/Spoon-Bold.ttf-51461f4435d3edf2416c29bbab1a1547.fontdata"
+path="res://.godot/imported/Spoon-Bold.ttf-f0897b384bf960a0e139a477a2e2f7f5.fontdata"
 
 [deps]
 
-source_file="res://fonts/Spoon-Bold.ttf"
-dest_files=["res://.godot/imported/Spoon-Bold.ttf-51461f4435d3edf2416c29bbab1a1547.fontdata"]
+source_file="res://assets/fonts/Spoon-Bold.ttf"
+dest_files=["res://.godot/imported/Spoon-Bold.ttf-f0897b384bf960a0e139a477a2e2f7f5.fontdata"]
 
 [params]
 

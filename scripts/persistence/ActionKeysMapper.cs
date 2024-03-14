@@ -6,17 +6,32 @@ public class ActionKeysMapper
     {
         foreach (var actionItem in actionKeysContainer.ActionItems)
         {
-            var remapButton = new RemapButton();
-            remapButton.SetActionKey(actionItem);
-            remapButton.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+            var remapButton = CreateRemapButton(actionItem);
+            var settingKeyLabel = CreateSettingKey(actionItem);
 
-            var settingKey = new Label();
-            settingKey.Text = actionItem;
-            settingKey.ThemeTypeVariation = "SettingLabel";
-            settingKey.HorizontalAlignment = HorizontalAlignment.Center;
-
-            actionKeysContainer.AddChild(settingKey);
+            actionKeysContainer.AddChild(settingKeyLabel);
             actionKeysContainer.AddChild(remapButton);
         }
+    }
+
+    private static RemapButton CreateRemapButton(string actionItem)
+    {
+        var remapButton = new RemapButton();
+
+        remapButton.SetActionKey(actionItem);
+        remapButton.SizeFlagsHorizontal = Control.SizeFlags.Expand;
+
+        return remapButton;
+    }
+
+    private static Label CreateSettingKey(string actionItem)
+    {
+        var settingKeyLabel = new Label();
+
+        settingKeyLabel.Text = actionItem.Capitalize();
+        settingKeyLabel.ThemeTypeVariation = "SettingLabel";
+        settingKeyLabel.HorizontalAlignment = HorizontalAlignment.Center;
+
+        return settingKeyLabel;
     }
 }
