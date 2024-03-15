@@ -23,6 +23,8 @@ public partial class Player : CharacterBody3D
 
 	#endregion
 
+	private AnimationTree _animTree;
+	private AnimationNodeStateMachinePlayback _stateMachine;
 	private Vector3 _targetVelocity = Vector3.Zero;
 
 	private Vector3I _positionOnMap;
@@ -31,6 +33,14 @@ public partial class Player : CharacterBody3D
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+
+	public override void _Ready()
+	{
+		base._Ready();
+		_animTree = GetNode<AnimationTree>("AnimationTree");
+		_animTree.Active = true;
+		_stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -113,16 +123,19 @@ public partial class Player : CharacterBody3D
 		_targetVelocity.X = direction.X * Speed;
 		_targetVelocity.Z = direction.Z * Speed;
 
+		// Snap the target velocity to the grid cell size
+		var cellSize = GameManager.GridMap.CellSize;
+		_targetVelocity.X = Mathf.Round(_targetVelocity.X / cellSize.X) * cellSize.X;
+		_targetVelocity.Z = Mathf.Round(_targetVelocity.Z / cellSize.Z) * cellSize.Z;
+
+
 		// Vertical velocity
 		if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
 		{
 			_targetVelocity.Y -= FallAcceleration * (float)delta;
 		}
-		
-		var animTree = GetNode<AnimationTree>("AnimationTree");
-		var stateMachine = (AnimationNodeStateMachinePlayback)animTree.Get("parameters/playback");
 
-		animTree.Set("parameters/IR/blend_position", _targetVelocity.Length());
+		_animTree.Set("parameters/IR/blend_position", new Vector2(direction.X, direction.Z).Length());
 
 		// Moving the character
 		Velocity = _targetVelocity;
@@ -139,9 +152,9 @@ public partial class Player : CharacterBody3D
 
 	private void OnHit()
 	{
+		_stateMachine.Travel("Die");
 		Die();
 	}
-
 	private void OnPlaceBomb()
 	{
 		var bombToPlacePosition = GameManager.GridMap.MapToLocal(_positionOnMap);
@@ -152,8 +165,10 @@ public partial class Player : CharacterBody3D
 			return;
 		}
 
+		_stateMachine.Travel("Place");
 		var bombToPlace = CreateBomb(bombToPlacePosition);
 		GameManager.WorldEnvironment.AddChild(bombToPlace);
+
 	}
 
 	private bool CannotPlaceBomb(Vector3 bombToPlacePosition)
@@ -166,7 +181,7 @@ public partial class Player : CharacterBody3D
 	private Bomb CreateBomb(Vector3 bombToPlacePosition)
 	{
 		var bombToPlace = BombScene.Instantiate<Bomb>();
-		bombToPlace.Position = bombToPlacePosition;
+		bombToPlace.Position = new Vector3(bombToPlacePosition.X, 3f, bombToPlacePosition.Z);
 		bombToPlace.Range = PlayerBombRange;
 
 		return bombToPlace;

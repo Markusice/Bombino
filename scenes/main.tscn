@@ -18,7 +18,7 @@ transform = Transform3D(1, 0, 0, 0, 0.843091, 0.537771, 0, -0.537771, 0.843091, 
 shadow_enabled = true
 
 [node name="Marker3D" type="Marker3D" parent="WorldEnvironment"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.34179, 14.1958)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.3418, 14.1958)
 metadata/_edit_group_ = true
 
 [node name="Camera3D" type="Camera3D" parent="WorldEnvironment/Marker3D"]
