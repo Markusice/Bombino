@@ -199,36 +199,4 @@ public partial class Bomb : Area3D
 
         GameManager.GridMap.AddChild(effectInstance);
     }
-
-    private void CastRay()
-    {
-        GD.Print("start casting rays");
-        var spaceState = GetWorld3D().DirectSpaceState;
-
-        var directions = new[]
-        {
-            Vector3.Left,
-            Vector3.Right,
-            Vector3.Back,
-            Vector3.Forward,
-        };
-
-        foreach (var direction in directions)
-        {
-            var origin = GlobalPosition;
-            var end = origin + direction * (Range * 2);
-
-            // only collide with the grid map
-            var rayMask = GameManager.GridMap.CollisionMask;
-
-            var query = PhysicsRayQueryParameters3D.Create(origin, end, rayMask,
-                new Array<Rid> { GetRid() });
-
-            var result = spaceState.IntersectRay(query);
-            if (result.Count == 0) continue;
-
-            var collider = result["collider"].AsGodotObject();
-            var position = result["position"].AsVector3();
-        }
-    }
 }
