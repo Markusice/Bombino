@@ -25,8 +25,8 @@ public partial class GameManager : WorldEnvironment
 		var player1 = _playerScene.Instantiate<Player>();
 		var player2 = _playerScene.Instantiate<Player>();
 
-		player1.Position = new Vector3(0, 2, 0);
-		player2.Position = new Vector3(13, 2, 13);
+		player1.Position = new Vector3(0, 3, 0);
+		player2.Position = new Vector3(13, 3, 13);
 
 		player1.Name = PlayerColor.Red.ToString();
 		player2.Name = PlayerColor.Blue.ToString();

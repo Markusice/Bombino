@@ -135,13 +135,19 @@ public partial class Player : CharacterBody3D
 			_targetVelocity.Y -= FallAcceleration * (float)delta;
 		}
 
-		_animTree.Set("parameters/IR/blend_position", new Vector2(direction.X, direction.Z).Length());
+		// Blend the movement animation
+		BlendMovementAnimation(_targetVelocity);
 
 		// Moving the character
 		Velocity = _targetVelocity;
 		MoveAndSlide();
 
 		SetPositionOnMap();
+	}
+
+	private void BlendMovementAnimation(Vector3 direction)
+	{
+		_animTree.Set("parameters/IR/blend_position", new Vector2(direction.X, direction.Z).Length());
 	}
 
 	private void Die()
