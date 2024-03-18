@@ -1,12 +1,11 @@
+namespace Bombino.scripts.ui;
+
 using Godot;
 
-public partial class PlayButton : Button, IUIButton
+internal partial class PlayButton : Button, IUiButton
 {
     [Export]
     private PackedScene _playMenuScene;
 
-    public void OnPressed()
-    {
-        GetTree().ChangeSceneToPacked(_playMenuScene);
-    }
+    public void OnPressed() => GetTree().ChangeSceneToPacked(_playMenuScene);
 }

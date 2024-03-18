@@ -1,6 +1,7 @@
-using Godot;
-using System;
+namespace Bombino.scripts;
 
-public partial class VFX_Explosion : Node3D
+using Godot;
+
+internal partial class VFX_Explosion : Node3D
 {
 }

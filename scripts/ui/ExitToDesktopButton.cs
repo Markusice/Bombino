@@ -1,9 +1,8 @@
+namespace Bombino.scripts.ui;
+
 using Godot;
 
-public partial class ExitToDesktopButton : Button
+internal partial class ExitToDesktopButton : Button, IUiButton
 {
-    private void OnPressed()
-    {
-        GetTree().Quit();
-    }
+    public void OnPressed() => GetTree().Quit();
 }

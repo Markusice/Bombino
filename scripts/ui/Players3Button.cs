@@ -1,6 +1,8 @@
+namespace Bombino.scripts.ui;
+
 using Godot;
 
-public partial class Players3Button : Button, IUIButton
+internal partial class Players3Button : Button, IUiButton
 {
     [Export]
     private PackedScene _mapsMenuScene;
@@ -8,7 +10,7 @@ public partial class Players3Button : Button, IUIButton
     public void OnPressed()
     {
         GameManager.NumberOfPlayers = 3;
-        
+
         GetTree().ChangeSceneToPacked(_mapsMenuScene);
     }
 }

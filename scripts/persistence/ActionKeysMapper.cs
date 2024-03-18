@@ -1,10 +1,13 @@
+namespace Bombino.scripts.persistence;
+
+using ui;
 using Godot;
 
-public class ActionKeysMapper
+internal static class ActionKeysMapper
 {
     public static void CreateActionKeys(ActionKeysContainer actionKeysContainer)
     {
-        foreach (var actionItem in actionKeysContainer.ActionItems)
+        foreach (var actionItem in ActionKeysContainer.ActionItems)
         {
             var remapButton = CreateRemapButton(actionItem);
             var settingKeyLabel = CreateSettingKey(actionItem);

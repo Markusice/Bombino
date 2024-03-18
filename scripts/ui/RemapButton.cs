@@ -1,6 +1,8 @@
+namespace Bombino.scripts.ui;
+
 using Godot;
 
-public partial class RemapButton : Button
+internal partial class RemapButton : Button
 {
     private string Action { get; set; }
 

@@ -1,6 +1,8 @@
+namespace Bombino.scripts.ui;
+
 using Godot;
 
-public partial class NumberInput : LineEdit
+internal partial class NumberInput : LineEdit
 {
     private void OnTextChanged(string newText)
     {

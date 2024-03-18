@@ -1,9 +1,12 @@
+namespace Bombino.scripts.ui;
+
+using persistence;
 using Godot;
 using Godot.Collections;
 
-public partial class ActionKeysContainer : GridContainer
+internal partial class ActionKeysContainer : GridContainer
 {
-    public Array<string> ActionItems { get; } =
+    public static Array<string> ActionItems { get; } =
         new()
         {
             "move_forward", "move_back", "move_left", "move_right", "place_bomb",

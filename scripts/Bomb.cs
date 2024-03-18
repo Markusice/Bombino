@@ -1,7 +1,9 @@
+namespace Bombino.scripts;
+
 using Godot;
 using Godot.Collections;
 
-public partial class Bomb : Area3D
+internal partial class Bomb : Area3D
 {
     #region Exports
 

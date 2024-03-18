@@ -1,6 +1,8 @@
+namespace Bombino.scripts.ui;
+
 using Godot;
 
-public partial class PausedGame : CanvasLayer
+internal partial class PausedGame : CanvasLayer
 {
     public override void _Input(InputEvent @event)
     {

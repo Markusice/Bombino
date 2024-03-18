@@ -1,6 +1,10 @@
+namespace Bombino.scripts;
+
+using Godot.Collections;
+using persistence;
 using Godot;
 
-public partial class GameManager : WorldEnvironment
+internal partial class GameManager : WorldEnvironment
 {
     #region Exports
 
@@ -26,6 +30,8 @@ public partial class GameManager : WorldEnvironment
     public static string SelectedMap { get; set; }
     public static int NumberOfRounds { get; set; }
 
+    internal static Array<PlayerData> PlayersData { get; } = new();
+
     private Node _pausedGameSceneInstance;
 
     public override void _Ready()
@@ -33,10 +39,12 @@ public partial class GameManager : WorldEnvironment
         WorldEnvironment = this;
         GridMap = GetNode<GridMap>("GridMap");
 
-        SetUpPlayers();
+        CreatePlayers();
+
+        // TODO: use GameSaveHandler to load the game or create a new one
     }
 
-    private void SetUpPlayers()
+    private void CreatePlayers()
     {
         var player1 = _playerScene.Instantiate<Player>();
         var player2 = _playerScene.Instantiate<Player>();
@@ -44,8 +52,11 @@ public partial class GameManager : WorldEnvironment
         player1.Position = new Vector3(0, 2, 0);
         player2.Position = new Vector3(13, 2, 13);
 
-        player1.Name = PlayerColor.Red.ToString();
-        player2.Name = PlayerColor.Blue.ToString();
+        player1.PlayerData = new PlayerData(PlayerColor.Red, PlayersActionKeys.Player1);
+        player2.PlayerData = new PlayerData(PlayerColor.Blue, PlayersActionKeys.Player2);
+
+        PlayersData.Add(player1.PlayerData);
+        PlayersData.Add(player2.PlayerData);
 
         AddChild(player1);
         AddChild(player2);

@@ -37,6 +37,6 @@ data = {
 }
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="UI" parent="." instance=ExtResource("1_uhnt5")]
+[node name="MainUI" parent="." instance=ExtResource("1_uhnt5")]
 
 [connection signal="ResumeGame" from="WorldEnvironment" to="WorldEnvironment" method="OnResumeGame"]
