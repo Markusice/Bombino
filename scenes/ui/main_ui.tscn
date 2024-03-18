@@ -1,10 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://dwn8vy6or60pe"]
+[gd_scene load_steps=4 format=3 uid="uid://dwn8vy6or60pe"]
 
 [ext_resource type="Script" path="res://scripts/ui/MainUI.cs" id="1_733ig"]
-[ext_resource type="Texture2D" uid="uid://coogvqvpfiv15" path="res://assets/icons/bomb.png" id="1_h6m3v"]
+[ext_resource type="PackedScene" uid="uid://b8yslovrmkcuj" path="res://scenes/ui/templates/bomb_status_container.tscn" id="2_slpcp"]
+[ext_resource type="PackedScene" uid="uid://ctiw2gldrdey1" path="res://scenes/ui/templates/player_name_container.tscn" id="3_0ns4a"]
 
 [node name="MainUI" type="CanvasLayer"]
 script = ExtResource("1_733ig")
+_bombStatusContainerScene = ExtResource("2_slpcp")
+_playerNameContainerScene = ExtResource("3_0ns4a")
 
 [node name="PlayerBombsContainer" type="PanelContainer" parent="."]
 offset_right = 204.0
@@ -15,48 +18,11 @@ layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 20
 
-[node name="PlayerBombsData" type="GridContainer" parent="PlayerBombsContainer/MarginContainer"]
+[node name="PlayersBombsData" type="GridContainer" parent="PlayerBombsContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 16
 columns = 2
-
-[node name="BombStatusContainer" type="PanelContainer" parent="PlayerBombsContainer/MarginContainer/PlayerBombsData"]
-layout_mode = 2
-
-[node name="BombPicture" type="TextureRect" parent="PlayerBombsContainer/MarginContainer/PlayerBombsData/BombStatusContainer"]
-layout_mode = 2
-texture = ExtResource("1_h6m3v")
-expand_mode = 2
-stretch_mode = 4
-
-[node name="BombNumberCircle" type="Panel" parent="PlayerBombsContainer/MarginContainer/PlayerBombsData/BombStatusContainer/BombPicture"]
-layout_mode = 0
-offset_left = 38.0
-offset_top = -8.0
-offset_right = 58.0
-offset_bottom = 12.0
-theme_type_variation = &"BombNumber"
-
-[node name="BombNumber" type="Label" parent="PlayerBombsContainer/MarginContainer/PlayerBombsData/BombStatusContainer/BombPicture/BombNumberCircle"]
-layout_mode = 0
-offset_right = 20.0
-offset_bottom = 20.0
-theme_override_font_sizes/font_size = 14
-text = "x"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="PlayerBombsContainer/MarginContainer/PlayerBombsData"]
-layout_mode = 2
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="PlayerName" type="Label" parent="PlayerBombsContainer/MarginContainer/PlayerBombsData/MarginContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 28
-text = "Player1"
 
 [node name="TimerPanelContainer" type="PanelContainer" parent="."]
 anchors_preset = 5

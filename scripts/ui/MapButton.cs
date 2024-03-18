@@ -1,24 +1,20 @@
-using System;
+namespace Bombino.scripts.ui;
+
 using Godot;
 
-public partial class MapButton : Button, IUIButton
+internal partial class MapButton : Button, IUiButton
 {
     [Export]
     private PackedScene _roundsMenuScene;
 
-    private string _mapName;
-
     public void OnPressed()
     {
-        GameManager.SelectedMap = _mapName;
-
-        GameManager.SelectedMap = Name.ToString() switch
-        {
-            { } name when name.StartsWith("1") => "Map1",
-            { } name when name.StartsWith("2") => "Map2",
-            _ => "Map3"
-        };
+        SetSelectedMapAndChangeScene();
 
         GetTree().ChangeSceneToPacked(_roundsMenuScene);
+    }
+
+    private void SetSelectedMapAndChangeScene()
+    {
     }
 }
