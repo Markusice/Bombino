@@ -58,6 +58,8 @@ internal partial class GameManager : WorldEnvironment
         PlayersData.Add(player1.PlayerData);
         PlayersData.Add(player2.PlayerData);
 
+        GD.Print(GameSaveHandler.GetDataFromGameSave());
+
         AddChild(player1);
         AddChild(player2);
     }

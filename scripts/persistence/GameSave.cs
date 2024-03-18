@@ -32,19 +32,13 @@ internal class GameSave
         GetFileAccessAndLoadDataFromFile();
     }
 
-    private static bool IsSaveExits()
+    internal static bool IsSaveExits()
     {
         return FileAccess.FileExists(GameSavePath);
     }
 
     private static void GetFileAccessAndSaveDataToFile(Dictionary<string, Variant> data)
     {
-        if (!IsSaveExits())
-        {
-            Data = null;
-            return;
-        }
-
         using var file = GetFileAccess(FileAccess.ModeFlags.Write);
 
         if (IsThereFileOpenError(file)) return;
@@ -83,7 +77,7 @@ internal class GameSave
     {
         var data = GetDataFromFile(file);
 
-        LoadData(data);
+        SetData(data);
     }
 
     private static Dictionary<string, Variant> GetDataFromFile(FileAccess file)
@@ -93,7 +87,7 @@ internal class GameSave
         return data;
     }
 
-    private static void LoadData(Dictionary<string, Variant> data)
+    private static void SetData(Dictionary<string, Variant> data)
     {
         Data = data;
     }
