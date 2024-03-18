@@ -1,7 +1,10 @@
+namespace Bombino.scripts;
+
+using persistence;
 using System.Linq;
 using Godot;
 
-public partial class Player : CharacterBody3D
+internal partial class Player : CharacterBody3D
 {
     #region Signals
 
@@ -25,9 +28,9 @@ public partial class Player : CharacterBody3D
 
     private Vector3 _targetVelocity = Vector3.Zero;
 
-    private Vector3I _positionOnMap;
+    private Vector3I _mapPosition;
 
-    public int PlayerBombRange { get; private set; } = 2;
+    public PlayerData PlayerData { get; set; }
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -37,66 +40,11 @@ public partial class Player : CharacterBody3D
         // We create a local variable to store the input direction.
         var direction = Vector3.Zero;
 
-        #region PlayerRed
-
-        // We check for each move input and update the direction accordingly.
-        if (Input.IsActionPressed("move_right") && Name == PlayerColor.Red.ToString())
-        {
-            direction.X += 1.0f;
-        }
-
-        if (Input.IsActionPressed("move_left") && Name == PlayerColor.Red.ToString())
-        {
-            direction.X -= 1.0f;
-        }
-
-        if (Input.IsActionPressed("move_back") && Name == PlayerColor.Red.ToString())
-        {
-            // Notice how we are working with the vector's X and Z axes.
-            // In 3D, the XZ plane is the ground plane.
-            direction.Z += 1.0f;
-        }
-
-        if (Input.IsActionPressed("move_forward") && Name == PlayerColor.Red.ToString())
-        {
-            direction.Z -= 1.0f;
-        }
-
-        if (Input.IsActionJustPressed("place_bomb") && Name == PlayerColor.Red.ToString()) OnPlaceBomb();
-
-        #endregion
-
-        #region PlayerBlue
-
-        if (Input.IsActionPressed("move_right_p2") && Name == PlayerColor.Blue.ToString())
-        {
-            direction.X += 1.0f;
-        }
-
-        if (Input.IsActionPressed("move_left_p2") && Name == PlayerColor.Blue.ToString())
-        {
-            direction.X -= 1.0f;
-        }
-
-        if (Input.IsActionPressed("move_back_p2") && Name == PlayerColor.Blue.ToString())
-        {
-            // Notice how we are working with the vector's X and Z axes.
-            // In 3D, the XZ plane is the ground plane.
-            direction.Z += 1.0f;
-        }
-
-        if (Input.IsActionPressed("move_forward_p2") && Name == PlayerColor.Blue.ToString())
-        {
-            direction.Z -= 1.0f;
-        }
-
-        if (Input.IsActionJustPressed("place_bomb_p2") && Name == PlayerColor.Blue.ToString()) OnPlaceBomb();
-
-        #endregion
+        CheckActionKeysForInput(ref direction);
 
         if (direction != Vector3.Zero)
         {
-            Vector3 targetPosition = Position - direction;
+            var targetPosition = Position - direction;
             LookAt(targetPosition, Vector3.Up);
 
             direction = direction.Normalized();
@@ -126,36 +74,60 @@ public partial class Player : CharacterBody3D
         Velocity = _targetVelocity;
         MoveAndSlide();
 
-        SetPositionOnMap();
+        SetMapPosition();
     }
 
-    private void Die()
+    private void CheckActionKeysForInput(ref Vector3 direction)
     {
-        GD.Print($"Player die : {Name}");
-        QueueFree();
+        ModifyDirectionOnMovement(ref direction);
+        PlaceBombOnInput();
     }
 
-    private void OnHit()
+    private void ModifyDirectionOnMovement(ref Vector3 direction)
     {
-        Die();
+        foreach (var movementKey in PlayerData.ActionKeys[..4])
+        {
+            if (Input.IsActionPressed(movementKey))
+            {
+                var actionKeyDirection = movementKey[5];
+
+                switch (actionKeyDirection)
+                {
+                    case 'r':
+                        direction.X += 1.0f;
+                        break;
+                    case 'l':
+                        direction.X -= 1.0f;
+                        break;
+                    case 'b':
+                        direction.Z += 1.0f;
+                        break;
+                    case 'f':
+                        direction.Z -= 1.0f;
+                        break;
+                }
+            }
+        }
+    }
+
+    private void PlaceBombOnInput()
+    {
+        if (Input.IsActionJustPressed(PlayerData.ActionKeys[4])) OnPlaceBomb();
     }
 
     private void OnPlaceBomb()
     {
-        var bombTilePosition = GameManager.GridMap.MapToLocal(_positionOnMap);
-        var bombToPlacePosition = new Vector3(bombTilePosition.X, GameManager.GridMap.CellSize.Y + 1, bombTilePosition.Z);
+        var bombTilePosition = GameManager.GridMap.MapToLocal(_mapPosition);
+        var bombToPlacePosition =
+            new Vector3(bombTilePosition.X, GameManager.GridMap.CellSize.Y + 1, bombTilePosition.Z);
 
-        if (CannotPlaceBomb(bombToPlacePosition))
-        {
-            GD.Print("Can't place bomb here");
-            return;
-        }
+        if (IsUnableToPlaceBomb(bombToPlacePosition)) return;
 
         var bombToPlace = CreateBomb(bombToPlacePosition);
         GameManager.WorldEnvironment.AddChild(bombToPlace);
     }
 
-    private bool CannotPlaceBomb(Vector3 bombToPlacePosition)
+    private bool IsUnableToPlaceBomb(Vector3 bombToPlacePosition)
     {
         var placedBombs = GetTree().GetNodesInGroup("bombs");
 
@@ -165,18 +137,26 @@ public partial class Player : CharacterBody3D
     private Bomb CreateBomb(Vector3 bombToPlacePosition)
     {
         var bombToPlace = BombScene.Instantiate<Bomb>();
+
         bombToPlace.Position = bombToPlacePosition;
-        bombToPlace.Range = PlayerBombRange;
+        bombToPlace.Range = PlayerData.BombRange;
 
         return bombToPlace;
     }
 
-    private void SetPositionOnMap()
+    private void SetMapPosition()
     {
-        _positionOnMap = GameManager.GridMap.LocalToMap(Position);
+        _mapPosition = GameManager.GridMap.LocalToMap(Position);
+    }
 
-        // GD.Print($"localToMap: {_positionOnMap}");
-        // GD.Print($"mapToLocal: {GameManager.GridMap.MapToLocal(_positionOnMap)}");
-        // GD.Print($"real position: {Position}");
+    private void OnHit()
+    {
+        Die();
+    }
+
+    private void Die()
+    {
+        GD.Print($"Player die : {Name}");
+        QueueFree();
     }
 }

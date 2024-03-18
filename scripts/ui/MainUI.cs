@@ -1,5 +1,6 @@
 namespace Bombino.scripts.ui;
 
+using System;
 using Godot;
 
 internal partial class MainUI : CanvasLayer
@@ -20,6 +21,8 @@ internal partial class MainUI : CanvasLayer
     public override void _Ready()
     {
         SetUiFields();
+
+        SetTimerLabelText(60);
     }
 
     private void SetUiFields()
@@ -28,6 +31,11 @@ internal partial class MainUI : CanvasLayer
         TimerLabel = GetNode<Label>("TimerPanelContainer/TimerPanel/TimerLabel");
 
         CreatePlayerBombsData("Player 1", 3);
+    }
+
+    private void SetTimerLabelText(int timeInSeconds)
+    {
+        TimerLabel.Text = TimeSpan.FromSeconds(timeInSeconds).ToString(@"m\:ss");
     }
 
     private void CreatePlayerBombsData(string playerName, int bombCount)
@@ -43,5 +51,16 @@ internal partial class MainUI : CanvasLayer
 
         PlayersBombsData.AddChild(bombStatusContainer);
         PlayersBombsData.AddChild(playerNameContainer);
+    }
+
+    private void OnTimerLabelChangerTimeout()
+    {
+        var timerLabelInTotalSeconds = TimeSpan.ParseExact(TimerLabel.Text, @"m\:ss", null).TotalSeconds;
+
+        if (timerLabelInTotalSeconds > 0)
+        {
+            timerLabelInTotalSeconds--;
+            SetTimerLabelText((int)timerLabelInTotalSeconds);
+        }
     }
 }

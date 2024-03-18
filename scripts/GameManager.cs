@@ -64,9 +64,14 @@ internal partial class GameManager : WorldEnvironment
 
     public override void _Input(InputEvent @event)
     {
-        if (@event is not InputEventKey { Pressed: true, Keycode: Key.Escape }) return;
+        if (!IsEscapeKeyPressed(@event)) return;
 
         Pause();
+    }
+
+    private static bool IsEscapeKeyPressed(InputEvent @event)
+    {
+        return @event is InputEventKey { Pressed: true, Keycode: Key.Escape };
     }
 
     private void Pause()
