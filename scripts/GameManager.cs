@@ -1,8 +1,8 @@
 namespace Bombino.scripts;
 
+using Godot;
 using Godot.Collections;
 using persistence;
-using Godot;
 
 internal partial class GameManager : WorldEnvironment
 {
@@ -39,10 +39,26 @@ internal partial class GameManager : WorldEnvironment
         WorldEnvironment = this;
         GridMap = GetNode<GridMap>("GridMap");
 
-        CreatePlayers();
-
-        // TODO: use GameSaveHandler to load the game or create a new one
+        CheckForSavedDataAndSetUpGame();
     }
+
+    private void CheckForSavedDataAndSetUpGame()
+    {
+        if (!GameSaveHandler.IsThereSavedData(outputData: out var receivedData))
+        {
+            CreateNewGame();
+
+            return;
+        }
+
+        GD.Print($"received data from GameSaveHandler: {receivedData}");
+
+        CreateGameFromSavedData(receivedData);
+    }
+
+    private void CreateNewGame() { }
+
+    private void CreateGameFromSavedData(Dictionary<string, Variant> data) { }
 
     private void CreatePlayers()
     {
@@ -58,7 +74,7 @@ internal partial class GameManager : WorldEnvironment
         PlayersData.Add(player1.PlayerData);
         PlayersData.Add(player2.PlayerData);
 
-        GD.Print(GameSaveHandler.GetDataFromGameSave());
+        GameSaveHandler.SaveGame();
 
         AddChild(player1);
         AddChild(player2);
@@ -66,7 +82,8 @@ internal partial class GameManager : WorldEnvironment
 
     public override void _Input(InputEvent @event)
     {
-        if (!IsEscapeKeyPressed(@event)) return;
+        if (!IsEscapeKeyPressed(@event))
+            return;
 
         Pause();
     }

@@ -9,21 +9,8 @@ internal class GameSave
 
     internal static Dictionary<string, Variant> Data { get; private set; }
 
-    internal static void WriteSave()
+    internal static void WriteSave(Dictionary<string, Variant> data)
     {
-        var data = new Dictionary<string, Variant>();
-
-        foreach (var playerData in GameManager.PlayersData)
-        {
-            var playerDataToStore = new Dictionary<string, Variant>
-            {
-                { "BombRange", playerData.BombRange },
-                { "ActionKeys", playerData.ActionKeys }
-            };
-
-            data.Add(playerData.Color.ToString(), playerDataToStore);
-        }
-
         GetFileAccessAndSaveDataToFile(data);
     }
 
@@ -41,7 +28,8 @@ internal class GameSave
     {
         using var file = GetFileAccess(FileAccess.ModeFlags.Write);
 
-        if (IsThereFileOpenError(file)) return;
+        if (IsThereFileOpenError(file))
+            return;
 
         SaveStringifiedDataToFile(data, file);
     }
@@ -53,7 +41,8 @@ internal class GameSave
 
     private static bool IsThereFileOpenError(FileAccess file)
     {
-        if (file != null) return false;
+        if (file != null)
+            return false;
 
         GD.PrintErr(FileAccess.GetOpenError());
         return true;
@@ -68,7 +57,8 @@ internal class GameSave
     {
         using var file = GetFileAccess(FileAccess.ModeFlags.Read);
 
-        if (IsThereFileOpenError(file)) return;
+        if (IsThereFileOpenError(file))
+            return;
 
         LoadStringifiedDataFromFile(file);
     }
