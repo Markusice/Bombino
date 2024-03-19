@@ -13,7 +13,7 @@ public partial class Player : CharacterBody3D
 	#region Exports
 
 	[Export]
-	public int Speed { get; set; } = 20;
+	public int Speed { get; set; } = 12;
 
 	[Export]
 	public int FallAcceleration { get; set; } = 75;
