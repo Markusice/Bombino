@@ -1,7 +1,7 @@
 namespace Bombino.scripts.persistence;
 
-using ui;
 using Godot;
+using ui;
 
 internal static class ActionKeysMapper
 {
@@ -29,11 +29,12 @@ internal static class ActionKeysMapper
 
     private static Label CreateSettingKey(string actionItem)
     {
-        var settingKeyLabel = new Label();
-
-        settingKeyLabel.Text = actionItem.Capitalize();
-        settingKeyLabel.ThemeTypeVariation = "SettingLabel";
-        settingKeyLabel.HorizontalAlignment = HorizontalAlignment.Center;
+        var settingKeyLabel = new Label
+        {
+            Text = actionItem.Capitalize(),
+            ThemeTypeVariation = "SettingLabel",
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
 
         return settingKeyLabel;
     }
