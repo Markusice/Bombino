@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwn8vy6or60pe"]
+
+[ext_resource type="Script" path="res://scripts/ui/MainUI.cs" id="1_733ig"]
+[ext_resource type="PackedScene" uid="uid://b8yslovrmkcuj" path="res://scenes/ui/templates/bomb_status_container.tscn" id="2_slpcp"]
+[ext_resource type="PackedScene" uid="uid://ctiw2gldrdey1" path="res://scenes/ui/templates/player_name_container.tscn" id="3_0ns4a"]
+
+[node name="MainUI" type="CanvasLayer"]
+script = ExtResource("1_733ig")
+_bombStatusContainerScene = ExtResource("2_slpcp")
+_playerNameContainerScene = ExtResource("3_0ns4a")
+
+[node name="PlayerBombsContainer" type="PanelContainer" parent="."]
+offset_right = 204.0
+offset_bottom = 199.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerBombsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 20
+
+[node name="PlayersBombsData" type="GridContainer" parent="PlayerBombsContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="TimerPanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -57.5
+offset_right = 57.5
+offset_bottom = 50.0
+grow_horizontal = 2
+
+[node name="TimerPanel" type="Panel" parent="TimerPanelContainer"]
+layout_mode = 2
+theme_type_variation = &"GameTimerContainer"
+
+[node name="TimerLabel" type="Label" parent="TimerPanelContainer/TimerPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -38.0
+offset_right = 38.0
+offset_bottom = 41.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 40
+text = "0:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TimerLabelChanger" type="Timer" parent="TimerPanelContainer/TimerPanel"]
+autostart = true
+
+[connection signal="timeout" from="TimerPanelContainer/TimerPanel/TimerLabelChanger" to="." method="OnTimerLabelChangerTimeout"]
