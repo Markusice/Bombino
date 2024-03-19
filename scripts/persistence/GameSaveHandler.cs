@@ -9,16 +9,9 @@ internal static class GameSaveHandler
     {
         var data = new Dictionary<string, Variant>();
 
-        foreach (var playerData in GameManager.PlayersData)
-        {
-            var playerDataToStore = new Dictionary<string, Variant>
-            {
-                { "BombRange", playerData.BombRange },
-                { "ActionKeys", playerData.ActionKeys }
-            };
+        var playersDataRows = CreatePlayersDataRows();
 
-            data.Add(playerData.Color.ToString(), playerDataToStore);
-        }
+        AddNewRowToData(data, "PlayersData", playersDataRows);
 
         GameSave.WriteSave(data);
     }
@@ -36,5 +29,37 @@ internal static class GameSaveHandler
         outputData = GameSave.Data;
 
         return false;
+    }
+
+    private static void AddNewRowToData(
+        Dictionary<string, Variant> data,
+        string rowName,
+        Dictionary<string, Variant> row
+    )
+    {
+        data.Add(rowName, row);
+    }
+
+    private static Dictionary<string, Variant> CreatePlayersDataRows()
+    {
+        var playersDataRows = new Dictionary<string, Variant>();
+
+        foreach (var playerData in GameManager.PlayersData)
+        {
+            var playerDataToStore = CreatePlayerDataToStore(playerData);
+
+            AddNewRowToData(playersDataRows, playerData.Color.ToString(), playerDataToStore);
+        }
+
+        return playersDataRows;
+    }
+
+    private static Dictionary<string, Variant> CreatePlayerDataToStore(PlayerData playerData)
+    {
+        return new Dictionary<string, Variant>
+        {
+            { "BombRange", playerData.BombRange },
+            { "ActionKeys", playerData.ActionKeys }
+        };
     }
 }

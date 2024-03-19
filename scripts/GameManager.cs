@@ -39,6 +39,8 @@ internal partial class GameManager : WorldEnvironment
         WorldEnvironment = this;
         GridMap = GetNode<GridMap>("GridMap");
 
+        CreatePlayers();
+
         CheckForSavedDataAndSetUpGame();
     }
 
@@ -50,8 +52,6 @@ internal partial class GameManager : WorldEnvironment
 
             return;
         }
-
-        GD.Print($"received data from GameSaveHandler: {receivedData}");
 
         CreateGameFromSavedData(receivedData);
     }
@@ -73,8 +73,6 @@ internal partial class GameManager : WorldEnvironment
 
         PlayersData.Add(player1.PlayerData);
         PlayersData.Add(player2.PlayerData);
-
-        GameSaveHandler.SaveGame();
 
         AddChild(player1);
         AddChild(player2);
