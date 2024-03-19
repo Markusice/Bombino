@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://bf454a3io0ei3"]
+[gd_scene load_steps=6 format=3 uid="uid://bf454a3io0ei3"]
 
 [ext_resource type="Script" path="res://scripts/GameManager.cs" id="1_4g4o6"]
-[ext_resource type="PackedScene" uid="uid://ddvwgpvdgoyxf" path="res://scenes/player.tscn" id="1_t1l31"]
 [ext_resource type="PackedScene" uid="uid://dwn8vy6or60pe" path="res://scenes/ui/main_ui.tscn" id="1_uhnt5"]
 [ext_resource type="PackedScene" uid="uid://pvmueb3x3hwg" path="res://scenes/ui/paused_game.tscn" id="2_f6low"]
 [ext_resource type="MeshLibrary" uid="uid://c51jh4vkmx0r5" path="res://assets/meshes/TileSet.tres" id="3_u6ipw"]
@@ -14,7 +13,6 @@ tonemap_white = 4.2
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_it7wf")
 script = ExtResource("1_4g4o6")
-_playerScene = ExtResource("1_t1l31")
 _pausedGameScene = ExtResource("2_f6low")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]

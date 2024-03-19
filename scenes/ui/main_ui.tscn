@@ -25,6 +25,7 @@ theme_override_constants/v_separation = 16
 columns = 2
 
 [node name="TimerPanelContainer" type="PanelContainer" parent="."]
+visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
