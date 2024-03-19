@@ -11,6 +11,5 @@ internal partial class Players2Button : Button, IUiButton
 
     #endregion
 
-
     public void OnPressed() => GetTree().ChangeSceneToPacked(_mapsMenuScene);
 }

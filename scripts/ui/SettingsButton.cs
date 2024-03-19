@@ -11,6 +11,5 @@ internal partial class SettingsButton : Button, IUiButton
 
     #endregion
 
-
     public void OnPressed() => GetTree().ChangeSceneToPacked(_settingsMenuScene);
 }
