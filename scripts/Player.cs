@@ -88,7 +88,7 @@ internal partial class Player : CharacterBody3D
     private void BlendMovementAnimation()
     {
         var animTree = GetNode<AnimationTree>("AnimationTree");
-        animTree.Set("parameters/IR/blend_position", _targetVelocity.Length());
+        animTree.Set("parameters/IR/blend_position", new Vector2(Velocity.X, Velocity.Z).Length());
     }
 
     private void CheckActionKeysForInput(ref Vector3 direction)
