@@ -3,6 +3,7 @@ namespace Bombino.scripts;
 using Godot.Collections;
 using persistence;
 using Godot;
+using System;
 
 internal partial class GameManager : WorldEnvironment
 {
@@ -23,7 +24,7 @@ internal partial class GameManager : WorldEnvironment
     public static WorldEnvironment WorldEnvironment { get; private set; }
     public static GridMap GridMap { get; private set; }
 
-    public static int NumberOfPlayers { get; set; } = 2;
+    public static int NumberOfPlayers { get; set; } = 3;
     public static string SelectedMap { get; set; }
     public static int NumberOfRounds { get; set; }
 
@@ -45,24 +46,43 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreatePlayers()
 	{
-		_playerScene = ResourceLoader.Load<PackedScene>("res://scenes/players/blue.tscn");
-		var player1 = _playerScene.Instantiate<Player>();
-		_playerScene = ResourceLoader.Load<PackedScene>("res://scenes/players/red.tscn");
-		var player2 = _playerScene.Instantiate<Player>();
-		_playerScene = ResourceLoader.Load<PackedScene>("res://scenes/players/yellow.tscn");
-		var player3 = _playerScene.Instantiate<Player>();
+		switch (NumberOfPlayers)
+        {
+            case 2:
+                CreatePlayer("blue", new Vector3(1, 1, 1));
+                CreatePlayer("red", new Vector3(13, 1, 13));
+                break;
+            case 3:
+                CreatePlayer("blue", new Vector3(1, 1, 1));
+                CreatePlayer("red", new Vector3(13, 1, 13));
+                CreatePlayer("yellow", new Vector3(13, 1, 1));
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(NumberOfPlayers), NumberOfPlayers, null);
+        }
+    }
 
-		player1.Position = new Vector3(0, 3, 0);
-		player2.Position = new Vector3(13, 3, 13);
-		player3.Position = new Vector3(13, 3, 0);
-
-		player1.Name = PlayerColor.Blue.ToString();
-		player2.Name = PlayerColor.Red.ToString();
-		player3.Name = PlayerColor.Yellow.ToString();
-
-		AddChild(player1);
-		AddChild(player2);
-        AddChild(player3);
+    private void CreatePlayer(String playerColor, Vector3 position)
+    {
+        _playerScene = ResourceLoader.Load<PackedScene>($"res://scenes/players/{playerColor}.tscn");
+        var player = _playerScene.Instantiate<Player>();
+        player.Position = position;
+        switch (playerColor)
+        {
+            case "blue":
+                player.PlayerData = new PlayerData(PlayerColor.Blue, PlayersActionKeys.Player1);
+                break;
+            case "red":
+                player.PlayerData = new PlayerData(PlayerColor.Red, PlayersActionKeys.Player2);
+                break;
+            case "yellow":
+                player.PlayerData = new PlayerData(PlayerColor.Yellow, PlayersActionKeys.Player3);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(playerColor), playerColor, null);
+        }
+        player.Name = playerColor;
+        AddChild(player);
     }
 
 
