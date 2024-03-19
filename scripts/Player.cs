@@ -1,35 +1,41 @@
+namespace Bombino.scripts;
+
+using persistence;
 using System.Linq;
 using Godot;
 
-public partial class Player : CharacterBody3D
+internal partial class Player : CharacterBody3D
 {
-	#region Signals
+    #region Signals
 
-	[Signal]
-	public delegate void HitEventHandler();
+    [Signal]
+    public delegate void HitEventHandler();
 
-	#endregion
+    #endregion
 
-	#region Exports
+    #region Exports
 
 	[Export]
 	public int Speed { get; set; } = 12;
+    [Export]
+    public int Speed { get; set; } = 20;
 
-	[Export]
-	public int FallAcceleration { get; set; } = 75;
+    [Export]
+    public int FallAcceleration { get; set; } = 75;
 
-	[Export]
-	private PackedScene BombScene { get; set; }
+    [Export]
+    private PackedScene BombScene { get; set; }
 
-	#endregion
+    #endregion
 
 	private AnimationTree _animTree;
 	private AnimationNodeStateMachinePlayback _stateMachine;
 	private Vector3 _targetVelocity = Vector3.Zero;
+    private Vector3 _targetVelocity = Vector3.Zero;
 
-	private Vector3I _positionOnMap;
+    private Vector3I _mapPosition;
 
-	public int PlayerBombRange { get; private set; } = 2;
+    public PlayerData PlayerData { get; set; }
 
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -41,164 +47,136 @@ public partial class Player : CharacterBody3D
 		_animTree.Active = true;
 		_stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
 	}
+    // Get the gravity from the project settings to be synced with RigidBody nodes.
+    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
-	public override void _PhysicsProcess(double delta)
-	{
-		// We create a local variable to store the input direction.
-		var direction = Vector3.Zero;
+    public override void _PhysicsProcess(double delta)
+    {
+        // We create a local variable to store the input direction.
+        var direction = Vector3.Zero;
 
-		#region PlayerRed
+        CheckActionKeysForInput(ref direction);
 
-		// We check for each move input and update the direction accordingly.
-		if (Input.IsActionPressed("move_right") && Name == PlayerColor.Red.ToString())
-		{
-			direction.X += 1.0f;
-		}
+        if (direction != Vector3.Zero)
+        {
+            var targetPosition = Position - direction;
+            LookAt(targetPosition, Vector3.Up);
 
-		if (Input.IsActionPressed("move_left") && Name == PlayerColor.Red.ToString())
-		{
-			direction.X -= 1.0f;
-		}
+            direction = direction.Normalized();
 
-		if (Input.IsActionPressed("move_back") && Name == PlayerColor.Red.ToString())
-		{
-			// Notice how we are working with the vector's X and Z axes.
-			// In 3D, the XZ plane is the ground plane.
-			direction.Z += 1.0f;
-		}
+            var absoluteDirection = direction.Abs();
 
-		if (Input.IsActionPressed("move_forward") && Name == PlayerColor.Red.ToString())
-		{
-			direction.Z -= 1.0f;
-		}
+            // Player can't move diagonally
+            if (!absoluteDirection.Z.Equals(1) && !absoluteDirection.Z.Equals(0)) return;
+        }
 
-		if (Input.IsActionJustPressed("place_bomb") && Name == PlayerColor.Red.ToString()) OnPlaceBomb();
+        // Ground velocity
+        _targetVelocity.X = direction.X * Speed;
+        _targetVelocity.Z = direction.Z * Speed;
 
-		#endregion
+        // Vertical velocity
+        if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
+        {
+            _targetVelocity.Y -= FallAcceleration * (float)delta;
+        }
 
-		#region PlayerBlue
+        var animTree = GetNode<AnimationTree>("AnimationTree");
+        var stateMachine = (AnimationNodeStateMachinePlayback)animTree.Get("parameters/playback");
 
-		if (Input.IsActionPressed("move_right2") && Name == PlayerColor.Blue.ToString())
-		{
-			direction.X += 1.0f;
-		}
+        animTree.Set("parameters/IR/blend_position", _targetVelocity.Length());
 
-		if (Input.IsActionPressed("move_left2") && Name == PlayerColor.Blue.ToString())
-		{
-			direction.X -= 1.0f;
-		}
+        // Moving the character
+        Velocity = _targetVelocity;
+        MoveAndSlide();
 
-		if (Input.IsActionPressed("move_back2") && Name == PlayerColor.Blue.ToString())
-		{
-			// Notice how we are working with the vector's X and Z axes.
-			// In 3D, the XZ plane is the ground plane.
-			direction.Z += 1.0f;
-		}
+        SetMapPosition();
+    }
 
-		if (Input.IsActionPressed("move_forward2") && Name == PlayerColor.Blue.ToString())
-		{
-			direction.Z -= 1.0f;
-		}
+    private void CheckActionKeysForInput(ref Vector3 direction)
+    {
+        ModifyDirectionOnMovement(ref direction);
+        PlaceBombOnInput();
+    }
 
-		if (Input.IsActionJustPressed("place_bomb2") && Name == PlayerColor.Blue.ToString()) OnPlaceBomb();
+    private void ModifyDirectionOnMovement(ref Vector3 direction)
+    {
+        foreach (var movementKey in PlayerData.ActionKeys[..4])
+        {
+            if (Input.IsActionPressed(movementKey))
+            {
+                var actionKeyDirection = movementKey[5];
 
-		#endregion
+                switch (actionKeyDirection)
+                {
+                    case 'r':
+                        direction.X += 1.0f;
+                        break;
+                    case 'l':
+                        direction.X -= 1.0f;
+                        break;
+                    case 'b':
+                        direction.Z += 1.0f;
+                        break;
+                    case 'f':
+                        direction.Z -= 1.0f;
+                        break;
+                }
+            }
+        }
+    }
 
-		if (direction != Vector3.Zero)
-		{
+    private void PlaceBombOnInput()
+    {
+        if (Input.IsActionJustPressed(PlayerData.ActionKeys[4])) OnPlaceBomb();
+    }
 
-			Vector3 targetPosition = Position - direction;
-			LookAt(targetPosition, Vector3.Up);
+    private void OnPlaceBomb()
+    {
+        var bombTilePosition = GameManager.GridMap.MapToLocal(_mapPosition);
+        var bombToPlacePosition =
+            new Vector3(bombTilePosition.X, GameManager.GridMap.CellSize.Y + 1, bombTilePosition.Z);
 
-			direction = direction.Normalized();
+        if (IsUnableToPlaceBomb(bombToPlacePosition)) return;
 
-			var absoluteDirection = direction.Abs();
+        var bombToPlace = CreateBomb(bombToPlacePosition);
+        GameManager.WorldEnvironment.AddChild(bombToPlace);
+    }
 
-			// Player can't move diagonally
-			if (!absoluteDirection.Z.Equals(1) && !absoluteDirection.Z.Equals(0)) return;
+    private bool IsUnableToPlaceBomb(Vector3 bombToPlacePosition)
+    {
+        var placedBombs = GetTree().GetNodesInGroup("bombs");
 
-		}
-
-		// Ground velocity
-		_targetVelocity.X = direction.X * Speed;
-		_targetVelocity.Z = direction.Z * Speed;
-
-		// Snap the target velocity to the grid cell size
-		var cellSize = GameManager.GridMap.CellSize;
-		_targetVelocity.X = Mathf.Round(_targetVelocity.X / cellSize.X) * cellSize.X;
-		_targetVelocity.Z = Mathf.Round(_targetVelocity.Z / cellSize.Z) * cellSize.Z;
-
-
-		// Vertical velocity
-		if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
-		{
-			_targetVelocity.Y -= FallAcceleration * (float)delta;
-		}
-
-		// Blend the movement animation
-		BlendMovementAnimation(_targetVelocity);
-
-		// Moving the character
-		Velocity = _targetVelocity;
-		MoveAndSlide();
-
-		SetPositionOnMap();
-	}
-
-	private void BlendMovementAnimation(Vector3 direction)
-	{
-		_animTree.Set("parameters/IR/blend_position", new Vector2(direction.X, direction.Z).Length());
-	}
-
-	private void Die()
-	{
-		GD.Print($"Player die : {Name}");
-		QueueFree();
-	}
-
-	private void OnHit()
-	{
-		_stateMachine.Travel("Die");
-		Die();
-	}
-	private void OnPlaceBomb()
-	{
-		var bombToPlacePosition = GameManager.GridMap.MapToLocal(_positionOnMap);
-
-		if (CannotPlaceBomb(bombToPlacePosition))
-		{
-			GD.Print("Can't place bomb here");
-			return;
-		}
-
-		_stateMachine.Travel("Place");
-		var bombToPlace = CreateBomb(bombToPlacePosition);
-		GameManager.WorldEnvironment.AddChild(bombToPlace);
-
-	}
-
-	private bool CannotPlaceBomb(Vector3 bombToPlacePosition)
-	{
-		var placedBombs = GetTree().GetNodesInGroup("bombs");
-
-		return placedBombs.Cast<Area3D>().Any(bombArea3D => bombArea3D.Position == bombToPlacePosition);
-	}
+        return placedBombs.Cast<Area3D>().Any(bombArea3D => bombArea3D.Position == bombToPlacePosition);
+    }
 
 	private Bomb CreateBomb(Vector3 bombToPlacePosition)
 	{
 		var bombToPlace = BombScene.Instantiate<Bomb>();
 		bombToPlace.Position = new Vector3(bombToPlacePosition.X, 3f, bombToPlacePosition.Z);
 		bombToPlace.Range = PlayerBombRange;
+    private Bomb CreateBomb(Vector3 bombToPlacePosition)
+    {
+        var bombToPlace = BombScene.Instantiate<Bomb>();
 
-		return bombToPlace;
-	}
+        bombToPlace.Position = bombToPlacePosition;
+        bombToPlace.Range = PlayerData.BombRange;
 
-	private void SetPositionOnMap()
-	{
-		_positionOnMap = GameManager.GridMap.LocalToMap(Position);
+        return bombToPlace;
+    }
 
-		// GD.Print($"localToMap: {_positionOnMap}");
-		// GD.Print($"mapToLocal: {GameManager.GridMap.MapToLocal(_positionOnMap)}");
-		// GD.Print($"real position: {Position}");
-	}
+    private void SetMapPosition()
+    {
+        _mapPosition = GameManager.GridMap.LocalToMap(Position);
+    }
+
+    private void OnHit()
+    {
+        Die();
+    }
+
+    private void Die()
+    {
+        GD.Print($"Player die : {Name}");
+        QueueFree();
+    }
 }

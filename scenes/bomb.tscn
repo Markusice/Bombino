@@ -4,13 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://d3ldxy0l5gvp" path="res://scenes/vfx_explosion.tscn" id="2_hirdy"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1d2bc"]
-size = Vector3(10, 2, 2)
+size = Vector3(10, 1, 2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_0gdek"]
 size = Vector3(10, 1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x1fd5"]
-size = Vector3(2, 2, 10)
+size = Vector3(2, 1, 10)
 
 [sub_resource type="BoxMesh" id="BoxMesh_o1avs"]
 size = Vector3(1, 1, 10)
@@ -176,11 +176,13 @@ wait_time = 3.0
 one_shot = true
 
 [node name="Bomb" type="MeshInstance3D" parent="."]
-transform = Transform3D(-5.9994, -0.0843657, 0.00869018, -0.0842389, 5.99885, 0.0821348, -0.00984329, 0.0820046, -5.99943, 0, 0.492672, 0.0064261)
+transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 0.011, 0.54, -0.019)
 mesh = SubResource("ArrayMesh_yqah3")
 skeleton = NodePath("")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Bomb"]
+collision_layer = 8
+collision_mask = 11
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bomb/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_t0trf")

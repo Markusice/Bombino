@@ -1,4 +1,6 @@
-public enum PlayerColor
+namespace Bombino.scripts;
+
+internal enum PlayerColor
 {
     Red,
     Blue,
