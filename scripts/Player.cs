@@ -3,6 +3,7 @@ namespace Bombino.scripts;
 using persistence;
 using System.Linq;
 using Godot;
+using System;
 
 internal partial class Player : CharacterBody3D
 {
@@ -15,10 +16,8 @@ internal partial class Player : CharacterBody3D
 
     #region Exports
 
-	[Export]
-	public int Speed { get; set; } = 12;
     [Export]
-    public int Speed { get; set; } = 20;
+    public int Speed { get; set; } = 12;
 
     [Export]
     public int FallAcceleration { get; set; } = 75;
@@ -28,18 +27,17 @@ internal partial class Player : CharacterBody3D
 
     #endregion
 
+    private Vector3 _targetVelocity = Vector3.Zero;
+
 	private AnimationTree _animTree;
 	private AnimationNodeStateMachinePlayback _stateMachine;
-	private Vector3 _targetVelocity = Vector3.Zero;
-    private Vector3 _targetVelocity = Vector3.Zero;
 
     private Vector3I _mapPosition;
 
     public PlayerData PlayerData { get; set; }
 
-	// Get the gravity from the project settings to be synced with RigidBody nodes.
-	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-
+    // Get the gravity from the project settings to be synced with RigidBody nodes.
+    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	public override void _Ready()
 	{
 		base._Ready();
@@ -47,8 +45,6 @@ internal partial class Player : CharacterBody3D
 		_animTree.Active = true;
 		_stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
 	}
-    // Get the gravity from the project settings to be synced with RigidBody nodes.
-    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public override void _PhysicsProcess(double delta)
     {
@@ -80,16 +76,19 @@ internal partial class Player : CharacterBody3D
             _targetVelocity.Y -= FallAcceleration * (float)delta;
         }
 
-        var animTree = GetNode<AnimationTree>("AnimationTree");
-        var stateMachine = (AnimationNodeStateMachinePlayback)animTree.Get("parameters/playback");
-
-        animTree.Set("parameters/IR/blend_position", _targetVelocity.Length());
+        BlendMovementAnimation();
 
         // Moving the character
         Velocity = _targetVelocity;
         MoveAndSlide();
 
         SetMapPosition();
+    }
+
+    private void BlendMovementAnimation()
+    {
+        var animTree = GetNode<AnimationTree>("AnimationTree");
+        animTree.Set("parameters/IR/blend_position", _targetVelocity.Length());
     }
 
     private void CheckActionKeysForInput(ref Vector3 direction)
@@ -130,6 +129,12 @@ internal partial class Player : CharacterBody3D
         if (Input.IsActionJustPressed(PlayerData.ActionKeys[4])) OnPlaceBomb();
     }
 
+    private void SetStateMachine(String stateName)
+    {
+        _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
+        _stateMachine.Travel(stateName);
+    }
+
     private void OnPlaceBomb()
     {
         var bombTilePosition = GameManager.GridMap.MapToLocal(_mapPosition);
@@ -137,6 +142,8 @@ internal partial class Player : CharacterBody3D
             new Vector3(bombTilePosition.X, GameManager.GridMap.CellSize.Y + 1, bombTilePosition.Z);
 
         if (IsUnableToPlaceBomb(bombToPlacePosition)) return;
+
+        SetStateMachine("Place");
 
         var bombToPlace = CreateBomb(bombToPlacePosition);
         GameManager.WorldEnvironment.AddChild(bombToPlace);
@@ -149,11 +156,6 @@ internal partial class Player : CharacterBody3D
         return placedBombs.Cast<Area3D>().Any(bombArea3D => bombArea3D.Position == bombToPlacePosition);
     }
 
-	private Bomb CreateBomb(Vector3 bombToPlacePosition)
-	{
-		var bombToPlace = BombScene.Instantiate<Bomb>();
-		bombToPlace.Position = new Vector3(bombToPlacePosition.X, 3f, bombToPlacePosition.Z);
-		bombToPlace.Range = PlayerBombRange;
     private Bomb CreateBomb(Vector3 bombToPlacePosition)
     {
         var bombToPlace = BombScene.Instantiate<Bomb>();
@@ -171,6 +173,7 @@ internal partial class Player : CharacterBody3D
 
     private void OnHit()
     {
+        SetStateMachine("Die");
         Die();
     }
 
