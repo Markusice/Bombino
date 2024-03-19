@@ -4,8 +4,12 @@ using Godot;
 
 internal partial class MapButton : Button, IUiButton
 {
+    #region Exports
+
     [Export]
     private PackedScene _roundsMenuScene;
+
+    #endregion
 
     public void OnPressed()
     {
@@ -14,7 +18,5 @@ internal partial class MapButton : Button, IUiButton
         GetTree().ChangeSceneToPacked(_roundsMenuScene);
     }
 
-    private void SetSelectedMapAndChangeScene()
-    {
-    }
+    private void SetSelectedMapAndChangeScene() { }
 }

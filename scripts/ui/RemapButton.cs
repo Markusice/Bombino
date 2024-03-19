@@ -44,9 +44,11 @@ internal partial class RemapButton : Button
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (!@event.IsPressed()) return;
+        if (!@event.IsPressed())
+            return;
 
-        if (@event is not InputEventKey) return;
+        if (@event is not InputEventKey)
+            return;
 
         InputMap.ActionEraseEvents(Action);
         InputMap.ActionAddEvent(Action, @event);
