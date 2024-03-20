@@ -42,8 +42,24 @@ internal partial class GameManager : WorldEnvironment
 
         CreatePlayers();
 
-        // TODO: use GameSaveHandler to load the game or create a new one
+        CheckForSavedDataAndSetUpGame();
     }
+
+    private void CheckForSavedDataAndSetUpGame()
+    {
+        if (!GameSaveHandler.IsThereSavedData(outputData: out var receivedData))
+        {
+            CreateNewGame();
+
+            return;
+        }
+
+        CreateGameFromSavedData(receivedData);
+    }
+
+    private void CreateNewGame() { }
+
+    private void CreateGameFromSavedData(Dictionary<string, Variant> data) { }
 
     private void CreatePlayers()
     {
@@ -58,8 +74,6 @@ internal partial class GameManager : WorldEnvironment
 
         PlayersData.Add(player1.PlayerData);
         PlayersData.Add(player2.PlayerData);
-
-        GD.Print(GameSaveHandler.GetDataFromGameSave());
 
         AddChild(player1);
         AddChild(player2);

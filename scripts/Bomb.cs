@@ -31,14 +31,18 @@ internal partial class Bomb : Area3D
         GD.Print($"bomb position : {Position}");
         GD.Print($"tile: {GameManager.GridMap.LocalToMap(Position)}");
 
-        GetNode<Timer>("BombTimer").Start();
+        var bombTimer = GetNode<Timer>("BombTimer");
+
+        bombTimer.WaitTime = Mathf.Pi;
+        bombTimer.Start();
     }
 
     private void OnBodyEntered(Node3D body)
     {
         GD.Print($"body entered: {body}");
 
-        if (!body.IsInGroup("players")) return;
+        if (!body.IsInGroup("players"))
+            return;
 
         _bodiesToExplode.Add(body);
     }
@@ -46,7 +50,8 @@ internal partial class Bomb : Area3D
     // for bombs
     private void OnAreaEntered(Area3D area)
     {
-        if (!area.IsInGroup("bombs")) return;
+        if (!area.IsInGroup("bombs"))
+            return;
 
         GD.Print($"bomb entered: {area.Position}");
         _bombsInRange.Add(area as Bomb);
@@ -54,7 +59,8 @@ internal partial class Bomb : Area3D
 
     private void OnAreaExited(Area3D area)
     {
-        if (!area.IsInGroup("bombs")) return;
+        if (!area.IsInGroup("bombs"))
+            return;
 
         _bombsInRange.Remove(area as Bomb);
     }
@@ -87,7 +93,8 @@ internal partial class Bomb : Area3D
 
         foreach (var body in _bodiesToExplode)
         {
-            if (!body.IsInGroup("players")) return;
+            if (!body.IsInGroup("players"))
+                return;
 
             GD.Print("start casting rays");
             var spaceState = GetWorld3D().DirectSpaceState;
@@ -110,11 +117,16 @@ internal partial class Bomb : Area3D
                 // only collide with the grid map
                 var rayMask = GameManager.GridMap.CollisionMask;
 
-                var query = PhysicsRayQueryParameters3D.Create(origin, end, rayMask,
-                    new Array<Rid> { GetRid() });
+                var query = PhysicsRayQueryParameters3D.Create(
+                    origin,
+                    end,
+                    rayMask,
+                    new Array<Rid> { GetRid() }
+                );
 
                 var result = spaceState.IntersectRay(query);
-                if (result.Count == 0) continue;
+                if (result.Count == 0)
+                    continue;
 
                 var collider = result["collider"].AsGodotObject();
                 var colliderPosition = result["position"].AsVector3();
@@ -123,35 +135,39 @@ internal partial class Bomb : Area3D
 
                 var vectorFromBombToPlayer = GlobalPosition.DirectionTo(body.GlobalPosition);
 
-                var playerDirectionDotProduct = Mathf.RoundToInt(vectorFromBombToPlayer.Dot(rayDirection));
+                var playerDirectionDotProduct = Mathf.RoundToInt(
+                    vectorFromBombToPlayer.Dot(rayDirection)
+                );
                 GD.Print($"player dot product at {rayDirection}: {playerDirectionDotProduct}");
 
-                if (playerDirectionDotProduct != 1) continue;
+                if (playerDirectionDotProduct != 1)
+                    continue;
 
                 if (rayDirection == Vector3.Left)
                 {
-                    playerShouldNotDie = (colliderPosition.X - body.Position.X) >=
-                                         GameManager.GridMap.CellSize.X;
+                    playerShouldNotDie =
+                        (colliderPosition.X - body.Position.X) >= GameManager.GridMap.CellSize.X;
                 }
                 else if (rayDirection == Vector3.Right)
                 {
-                    playerShouldNotDie = (body.Position.X - colliderPosition.X) >=
-                                         GameManager.GridMap.CellSize.X;
+                    playerShouldNotDie =
+                        (body.Position.X - colliderPosition.X) >= GameManager.GridMap.CellSize.X;
                 }
                 else if (rayDirection == Vector3.Back)
                 {
-                    playerShouldNotDie = (body.Position.Z - colliderPosition.Z) >=
-                                         GameManager.GridMap.CellSize.Z;
+                    playerShouldNotDie =
+                        (body.Position.Z - colliderPosition.Z) >= GameManager.GridMap.CellSize.Z;
                 }
                 else
                 {
-                    playerShouldNotDie = (colliderPosition.Z - body.Position.Z) >=
-                                         GameManager.GridMap.CellSize.Z;
+                    playerShouldNotDie =
+                        (colliderPosition.Z - body.Position.Z) >= GameManager.GridMap.CellSize.Z;
                 }
             }
 
             GD.Print($"player should not die: {playerShouldNotDie}");
-            if (playerShouldNotDie) continue;
+            if (playerShouldNotDie)
+                continue;
 
             body.EmitSignal(Player.SignalName.Hit);
         }
@@ -161,7 +177,8 @@ internal partial class Bomb : Area3D
     {
         var bombTimer = GetNode<Timer>("BombTimer");
 
-        if (bombTimer.TimeLeft <= newTimerWaitTime) return;
+        if (bombTimer.TimeLeft <= newTimerWaitTime)
+            return;
 
         bombTimer.Stop();
 
@@ -196,7 +213,8 @@ internal partial class Bomb : Area3D
         while (effectInstanceEnumerator.MoveNext())
         {
             var child = effectInstanceEnumerator.Current;
-            if (child is GpuParticles3D gpuParticle3D) gpuParticle3D.Emitting = true;
+            if (child is GpuParticles3D gpuParticle3D)
+                gpuParticle3D.Emitting = true;
         }
 
         GameManager.GridMap.AddChild(effectInstance);
