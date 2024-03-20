@@ -7,19 +7,19 @@ internal class GameSave
 {
     private const string GameSavePath = "user://save.json";
 
-    internal static Dictionary<string, Variant> Data { get; private set; }
+    public static Dictionary<string, Variant> Data { get; private set; }
 
-    internal static void WriteSave(Dictionary<string, Variant> data)
+    public static void WriteSave(Dictionary<string, Variant> data)
     {
         GetFileAccessAndSaveDataToFile(data);
     }
 
-    internal static void LoadSave()
+    public static void LoadSave()
     {
         GetFileAccessAndLoadDataFromFile();
     }
 
-    internal static bool IsSaveExits()
+    public static bool IsSaveExits()
     {
         return FileAccess.FileExists(GameSavePath);
     }

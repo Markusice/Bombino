@@ -171,7 +171,6 @@ visible = false
 mesh = SubResource("BoxMesh_o1avs")
 
 [node name="BombTimer" type="Timer" parent="."]
-wait_time = 3.0
 one_shot = true
 
 [node name="Bomb" type="MeshInstance3D" parent="."]

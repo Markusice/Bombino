@@ -5,6 +5,12 @@ using Godot.Collections;
 
 internal static class GameSaveHandler
 {
+    /// <summary>
+    /// Saves the game data.
+    /// </summary>
+    /// <remarks>
+    /// This method creates a dictionary of game data and writes it to a save file using the <see cref="GameSave.WriteSave"/> method.
+    /// </remarks>
     public static void SaveGame()
     {
         var data = new Dictionary<string, Variant>();
