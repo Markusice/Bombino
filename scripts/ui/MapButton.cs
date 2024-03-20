@@ -6,8 +6,7 @@ internal partial class MapButton : Button, IUiButton
 {
     #region Exports
 
-    [Export]
-    private PackedScene _roundsMenuScene;
+    private string _roundsMenuScenePath = "res://scenes/ui/rounds_menu.tscn";
 
     #endregion
 
@@ -15,7 +14,7 @@ internal partial class MapButton : Button, IUiButton
     {
         SetSelectedMapAndChangeScene();
 
-        GetTree().ChangeSceneToPacked(_roundsMenuScene);
+        GetTree().ChangeSceneToFile(_roundsMenuScenePath);
     }
 
     private void SetSelectedMapAndChangeScene() { }

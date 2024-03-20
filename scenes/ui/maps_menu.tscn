@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cgka8qcma8qkj"]
+[gd_scene load_steps=2 format=3 uid="uid://cgka8qcma8qkj"]
 
 [ext_resource type="Script" path="res://scripts/ui/MapButton.cs" id="1_3ctxo"]
-[ext_resource type="PackedScene" uid="uid://tvlak70hpojg" path="res://scenes/ui/rounds_menu.tscn" id="2_1jtj5"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -55,7 +54,6 @@ offset_right = 44.0
 offset_bottom = 40.0
 theme_type_variation = &"MapButton"
 script = ExtResource("1_3ctxo")
-_roundsMenuScene = ExtResource("2_1jtj5")
 
 [node name="Map2" type="TextureRect" parent="MapsContainer/HBoxContainer"]
 layout_mode = 2

@@ -26,9 +26,6 @@ internal partial class MainUI : CanvasLayer
     public Label TimerLabel { get; private set; }
     public GridContainer PlayersBombsData { get; private set; }
 
-    private PanelContainer _bombStatusContainer;
-    private Label _bombNumberLabel;
-
     public override void _Ready()
     {
         SetUiFields();
@@ -38,11 +35,11 @@ internal partial class MainUI : CanvasLayer
 
     private void SetUiFields()
     {
+        TimerLabel = GetNode<Label>("TimerPanelContainer/TimerPanel/TimerLabel");
+
         PlayersBombsData = GetNode<GridContainer>(
             "PlayerBombsContainer/MarginContainer/PlayersBombsData"
         );
-        TimerLabel = GetNode<Label>("TimerPanelContainer/TimerPanel/TimerLabel");
-        _bombStatusContainer = _bombStatusContainerScene.Instantiate<PanelContainer>();
 
         foreach (var playerData in GameManager.PlayersData)
         {
@@ -57,20 +54,23 @@ internal partial class MainUI : CanvasLayer
 
     private void CreatePlayerBombsData(PlayerData playerData)
     {
-        SetUpBombStatusContainer(playerData);
+        var _bombStatusContainer = SetUpBombStatusContainer(playerData);
         var playerNameContainer = SetUpPlayerNameContainer(playerData);
 
         PlayersBombsData.AddChild(_bombStatusContainer);
         PlayersBombsData.AddChild(playerNameContainer);
     }
 
-    private void SetUpBombStatusContainer(PlayerData playerData)
+    private PanelContainer SetUpBombStatusContainer(PlayerData playerData)
     {
-        _bombNumberLabel = _bombStatusContainer.GetNode<Label>(
+        var _bombStatusContainer = _bombStatusContainerScene.Instantiate<PanelContainer>();
+        var _bombNumberLabel = _bombStatusContainer.GetNode<Label>(
             "BombPicture/BombNumberCircle/BombNumberLabel"
         );
 
         _bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
+
+        return _bombStatusContainer;
     }
 
     private MarginContainer SetUpPlayerNameContainer(PlayerData playerData)
@@ -85,16 +85,17 @@ internal partial class MainUI : CanvasLayer
 
     private void ChangePlayerBombNumberAndOpacity(PlayerData playerData)
     {
-        if (playerData.NumberOfAvailableBombs == 0)
-        {
-            _bombNumberLabel.Text = 0.ToString();
-            _bombNumberLabel.SelfModulate = new Color(1, 1, 1, 0.6f);
+        // TODO: Rewrite this method
+        // if (playerData.NumberOfAvailableBombs == 0)
+        // {
+        //     _bombNumberLabel.Text = 0.ToString();
+        //     _bombNumberLabel.SelfModulate = new Color(1, 1, 1, 0.6f);
 
-            return;
-        }
+        //     return;
+        // }
 
-        _bombNumberLabel.SelfModulate = new Color(1, 1, 1, 1);
-        _bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
+        // _bombNumberLabel.SelfModulate = new Color(1, 1, 1, 1);
+        // _bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
     }
 
     private void OnPlayerBombNumberChanged(PlayerData playerData)

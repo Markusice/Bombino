@@ -1,9 +1,10 @@
 namespace Bombino.scripts;
 
-using Bombino.scripts.ui;
+using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
 using persistence;
+using ui;
 
 internal partial class GameManager : WorldEnvironment
 {
@@ -14,6 +15,9 @@ internal partial class GameManager : WorldEnvironment
 
     [Export]
     private PackedScene _pausedGameScene;
+
+    [Export]
+    private PackedScene _startingScreenScene;
 
     #endregion
 
@@ -92,23 +96,18 @@ internal partial class GameManager : WorldEnvironment
         GetTree().Paused = true;
         SetProcessInput(false);
 
-        _pausedGameSceneInstance = _pausedGameScene.Instantiate();
-
-        GetParent().AddChild(_pausedGameSceneInstance);
+        SetAndAddPausedGame();
 
         PlayBlurAnimation();
 
-        var resumeButton = GetResumeButton();
-
-        resumeButton.Pressed += Resume;
+        AddEventToResumeButton();
+        AddEventToSaveAndExitButton();
     }
 
-    private TextureButton GetResumeButton()
+    private void SetAndAddPausedGame()
     {
-        var buttonsContainer = _pausedGameSceneInstance.GetNode<Control>("ButtonsContainer");
-        var gridContainer = buttonsContainer.GetNode<GridContainer>("GridContainer");
-        var resumeButton = gridContainer.GetNode<TextureButton>("ResumeButton");
-        return resumeButton;
+        _pausedGameSceneInstance = _pausedGameScene.Instantiate();
+        GetParent().AddChild(_pausedGameSceneInstance);
     }
 
     private void PlayBlurAnimation()
@@ -117,16 +116,68 @@ internal partial class GameManager : WorldEnvironment
         blurAnimation.Play("start_pause");
     }
 
-    private void Resume()
+    private void AddEventToResumeButton()
     {
+        var resumeButton = _pausedGameSceneInstance.GetNode<TextureButton>(
+            "ButtonsContainer/GridContainer/ResumeButton"
+        );
+        resumeButton.Pressed += OnResumeGame;
+    }
+
+    private void AddEventToSaveAndExitButton()
+    {
+        var saveAndExitButton = _pausedGameSceneInstance.GetNode<TextureButton>(
+            "ButtonsContainer/GridContainer/SaveAndExitButton"
+        );
+        saveAndExitButton.Pressed += OnSaveAndExit;
+    }
+
+    private void OnResumeGame()
+    {
+        Resume();
+    }
+
+    private void OnSaveAndExit()
+    {
+        GameSaveHandler.SaveGame();
+
+        GetTree().ChangeSceneToPacked(_startingScreenScene);
+    }
+
+    private async void Resume()
+    {
+        RemoveButtonsAndShowCountDownContainer();
+
+        await StartCountDown();
+
         GetParent().RemoveChild(_pausedGameSceneInstance);
 
         GetTree().Paused = false;
         SetProcessInput(true);
     }
 
-    private void OnResumeGame()
+    private void RemoveButtonsAndShowCountDownContainer()
     {
-        Resume();
+        _pausedGameSceneInstance.GetNode<PanelContainer>("ButtonsContainer").QueueFree();
+
+        var countDownContainer = _pausedGameSceneInstance.GetNode<PanelContainer>(
+            "CountDownContainer"
+        );
+        countDownContainer.Visible = true;
+    }
+
+    private async Task StartCountDown()
+    {
+        var countDownLabel = _pausedGameSceneInstance.GetNode<Label>(
+            "CountDownContainer/CountDownLabel"
+        );
+
+        int countDownNumber = 3;
+        for (int number = countDownNumber; number > 0; number--)
+        {
+            countDownLabel.Text = number.ToString();
+
+            await ToSignal(GetTree().CreateTimer(1), SceneTreeTimer.SignalName.Timeout);
+        }
     }
 }
