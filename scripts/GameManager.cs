@@ -1,5 +1,6 @@
 namespace Bombino.scripts;
 
+using Bombino.scripts.ui;
 using Godot;
 using Godot.Collections;
 using persistence;
@@ -80,15 +81,10 @@ internal partial class GameManager : WorldEnvironment
 
     public override void _Input(InputEvent @event)
     {
-        if (!IsEscapeKeyPressed(@event))
+        if (!InputEventChecker.IsEscapeKeyPressed(@event))
             return;
 
         Pause();
-    }
-
-    private static bool IsEscapeKeyPressed(InputEvent @event)
-    {
-        return @event is InputEventKey { Pressed: true, Keycode: Key.Escape };
     }
 
     private void Pause()

@@ -2,6 +2,7 @@ namespace Bombino.scripts.ui;
 
 using System;
 using Godot;
+using persistence;
 
 internal partial class MainUI : CanvasLayer
 {
@@ -15,8 +16,18 @@ internal partial class MainUI : CanvasLayer
 
     #endregion
 
-    internal Label TimerLabel { get; private set; }
-    internal GridContainer PlayersBombsData { get; private set; }
+    #region Signals
+
+    [Signal]
+    public delegate void PlayerBombNumberChangedEventHandler(PlayerData playerData);
+
+    #endregion
+
+    public Label TimerLabel { get; private set; }
+    public GridContainer PlayersBombsData { get; private set; }
+
+    private PanelContainer _bombStatusContainer;
+    private Label _bombNumberLabel;
 
     public override void _Ready()
     {
@@ -27,10 +38,16 @@ internal partial class MainUI : CanvasLayer
 
     private void SetUiFields()
     {
-        PlayersBombsData = GetNode<GridContainer>("PlayerBombsContainer/MarginContainer/PlayersBombsData");
+        PlayersBombsData = GetNode<GridContainer>(
+            "PlayerBombsContainer/MarginContainer/PlayersBombsData"
+        );
         TimerLabel = GetNode<Label>("TimerPanelContainer/TimerPanel/TimerLabel");
+        _bombStatusContainer = _bombStatusContainerScene.Instantiate<PanelContainer>();
 
-        CreatePlayerBombsData("Player 1", 3);
+        foreach (var playerData in GameManager.PlayersData)
+        {
+            CreatePlayerBombsData(playerData);
+        }
     }
 
     private void SetTimerLabelText(int timeInSeconds)
@@ -38,24 +55,58 @@ internal partial class MainUI : CanvasLayer
         TimerLabel.Text = TimeSpan.FromSeconds(timeInSeconds).ToString(@"m\:ss");
     }
 
-    private void CreatePlayerBombsData(string playerName, int bombCount)
+    private void CreatePlayerBombsData(PlayerData playerData)
     {
-        var bombStatusContainer = _bombStatusContainerScene.Instantiate<PanelContainer>();
+        SetUpBombStatusContainer(playerData);
+        var playerNameContainer = SetUpPlayerNameContainer(playerData);
+
+        PlayersBombsData.AddChild(_bombStatusContainer);
+        PlayersBombsData.AddChild(playerNameContainer);
+    }
+
+    private void SetUpBombStatusContainer(PlayerData playerData)
+    {
+        _bombNumberLabel = _bombStatusContainer.GetNode<Label>(
+            "BombPicture/BombNumberCircle/BombNumberLabel"
+        );
+
+        _bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
+    }
+
+    private MarginContainer SetUpPlayerNameContainer(PlayerData playerData)
+    {
         var playerNameContainer = _playerNameContainerScene.Instantiate<MarginContainer>();
 
-        var bombNumberLabel = bombStatusContainer.GetNode<Label>("BombPicture/BombNumberCircle/BombNumberLabel");
-        bombNumberLabel.Text = bombCount.ToString();
-
         var playerNameLabel = playerNameContainer.GetNode<Label>("PlayerNameLabel");
-        playerNameLabel.Text = playerName;
+        playerNameLabel.Text = playerData.Color.ToString();
 
-        PlayersBombsData.AddChild(bombStatusContainer);
-        PlayersBombsData.AddChild(playerNameContainer);
+        return playerNameContainer;
+    }
+
+    private void ChangePlayerBombNumberAndOpacity(PlayerData playerData)
+    {
+        if (playerData.NumberOfAvailableBombs == 0)
+        {
+            _bombNumberLabel.Text = 0.ToString();
+            _bombNumberLabel.SelfModulate = new Color(1, 1, 1, 0.6f);
+
+            return;
+        }
+
+        _bombNumberLabel.SelfModulate = new Color(1, 1, 1, 1);
+        _bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
+    }
+
+    private void OnPlayerBombNumberChanged(PlayerData playerData)
+    {
+        ChangePlayerBombNumberAndOpacity(playerData);
     }
 
     private void OnTimerLabelChangerTimeout()
     {
-        var timerLabelInTotalSeconds = TimeSpan.ParseExact(TimerLabel.Text, @"m\:ss", null).TotalSeconds;
+        var timerLabelInTotalSeconds = TimeSpan
+            .ParseExact(TimerLabel.Text, @"m\:ss", null)
+            .TotalSeconds;
 
         if (timerLabelInTotalSeconds > 0)
         {

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://tvlak70hpojg"]
+[gd_scene load_steps=4 format=3 uid="uid://tvlak70hpojg"]
 
-[ext_resource type="Script" path="res://scripts/ui/NumberInput.cs" id="1_4um45"]
+[ext_resource type="Script" path="res://scripts/ui/RoundsMenu.cs" id="1_easd3"]
+[ext_resource type="PackedScene" uid="uid://bf454a3io0ei3" path="res://scenes/main.tscn" id="2_k05dq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2bk4"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -10,6 +11,8 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_easd3")
+_mainScene = ExtResource("2_k05dq")
 
 [node name="Background" type="TextureRect" parent="."]
 offset_right = 40.0
@@ -33,7 +36,7 @@ theme_type_variation = &"TitleLabel"
 text = "Rounds"
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="RoundsContainer" type="PanelContainer" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -47,33 +50,52 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_d2bk4")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="RoundsContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="GridContainer" type="GridContainer" parent="PanelContainer/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="RoundsContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/h_separation = 40
 columns = 2
 
-[node name="NumberOfRoundsLabel" type="Label" parent="PanelContainer/MarginContainer/GridContainer"]
+[node name="NumberOfRoundsLabel" type="Label" parent="RoundsContainer/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 64
 text = "Number of rounds"
 
-[node name="NumberInput" type="LineEdit" parent="PanelContainer/MarginContainer/GridContainer"]
+[node name="NumberInput" type="LineEdit" parent="RoundsContainer/MarginContainer/GridContainer"]
 custom_minimum_size = Vector2(2.08165e-12, 80)
 layout_mode = 2
 theme_type_variation = &"InputField"
 placeholder_text = "xx"
 alignment = 1
 max_length = 2
-script = ExtResource("1_4um45")
 
-[connection signal="text_changed" from="PanelContainer/MarginContainer/GridContainer/NumberInput" to="PanelContainer/MarginContainer/GridContainer/NumberInput" method="OnTextChanged"]
-[connection signal="text_submitted" from="PanelContainer/MarginContainer/GridContainer/NumberInput" to="PanelContainer/MarginContainer/GridContainer/NumberInput" method="OnTextSubmitted"]
+[node name="ErrorContainer" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -369.0
+offset_top = -211.0
+offset_right = 370.0
+offset_bottom = -154.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ErrorLabel" type="Label" parent="ErrorContainer"]
+custom_minimum_size = Vector2(739, 57)
+layout_mode = 2
+theme_type_variation = &"ErrorLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[connection signal="text_submitted" from="RoundsContainer/MarginContainer/GridContainer/NumberInput" to="." method="OnNumberInputSubmitted"]
