@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bf454a3io0ei3"]
+[gd_scene load_steps=4 format=3 uid="uid://bf454a3io0ei3"]
 
 [ext_resource type="Script" path="res://scripts/GameManager.cs" id="1_4g4o6"]
 [ext_resource type="PackedScene" uid="uid://dwn8vy6or60pe" path="res://scenes/ui/main_ui.tscn" id="1_uhnt5"]
-[ext_resource type="PackedScene" uid="uid://dfmjn8ynn45eg" path="res://scenes/maps/Wide.tscn" id="2_t44yv"]
 
 [sub_resource type="Environment" id="Environment_it7wf"]
 tonemap_white = 4.2
@@ -24,7 +23,5 @@ metadata/_edit_group_ = true
 [node name="Camera3D" type="Camera3D" parent="WorldEnvironment/Marker3D"]
 transform = Transform3D(1, 0, 0, 0, 0.319688, 0.947523, 0, -0.947523, 0.319688, -0.742738, 14.1994, -2.94342)
 fov = 60.0
-
-[node name="GridMap" parent="WorldEnvironment" instance=ExtResource("2_t44yv")]
 
 [node name="MainUI" parent="." instance=ExtResource("1_uhnt5")]

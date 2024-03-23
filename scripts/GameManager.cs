@@ -25,7 +25,7 @@ internal partial class GameManager : WorldEnvironment
     public static GridMap GameMap { get; private set; }
 
     public static int NumberOfPlayers { get; set; } = 3;
-    public static MapType SelectedMap { get; set; } = MapType.Wide;
+    public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
 
     internal static Array<PlayerData> PlayersData { get; } = new();
