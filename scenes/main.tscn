@@ -1,11 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://bf454a3io0ei3"]
+[gd_scene load_steps=5 format=3 uid="uid://bf454a3io0ei3"]
 
 [ext_resource type="Script" path="res://scripts/GameManager.cs" id="1_4g4o6"]
 [ext_resource type="PackedScene" uid="uid://dwn8vy6or60pe" path="res://scenes/ui/main_ui.tscn" id="1_uhnt5"]
-[ext_resource type="PackedScene" uid="uid://ddvwgpvdgoyxf" path="res://scenes/player.tscn" id="2_255uw"]
 [ext_resource type="PackedScene" uid="uid://pvmueb3x3hwg" path="res://scenes/ui/paused_game.tscn" id="2_f6low"]
-[ext_resource type="MeshLibrary" uid="uid://c51jh4vkmx0r5" path="res://assets/meshes/TileSet.tres" id="3_u6ipw"]
-[ext_resource type="PackedScene" uid="uid://wpo1q3hd2yct" path="res://scenes/ui/starting_screen.tscn" id="4_ucxeq"]
 
 [sub_resource type="Environment" id="Environment_it7wf"]
 tonemap_white = 4.2
@@ -15,9 +12,7 @@ tonemap_white = 4.2
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_it7wf")
 script = ExtResource("1_4g4o6")
-_playerScene = ExtResource("2_255uw")
 _pausedGameScene = ExtResource("2_f6low")
-_startingScreenScene = ExtResource("4_ucxeq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, 0.843091, 0.537771, 0, -0.537771, 0.843091, 0, 3.30227, 0)

@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dfmjn8ynn45eg"]
+[gd_scene load_steps=3 format=3 uid="uid://d22lh6is8pmgd"]
 
-[ext_resource type="MeshLibrary" uid="uid://bmq7qwn8qctd5" path="res://assets/meshes/tileset.tres" id="1_2785w"]
+[ext_resource type="MeshLibrary" uid="uid://hqw8mogcy4uv" path="res://assets/meshes/tileset.tres" id="1_2785w"]
 [ext_resource type="Script" path="res://scripts/InteractiveGridMap.cs" id="2_7gmwq"]
 
 [node name="GridMap" type="GridMap"]
