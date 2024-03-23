@@ -39,49 +39,51 @@ internal partial class GameManager : WorldEnvironment
         WorldEnvironment = this;
         GridMap = GetNode<GridMap>("GridMap");
 
-        CreatePlayers();
+        CheckNumberOfPlayersAndCreateThem();
 
         // TODO: use GameSaveHandler to load the game or create a new one
     }
 
-    private void CreatePlayers()
+    private void CheckNumberOfPlayersAndCreateThem()
 	{
-		switch (NumberOfPlayers)
+		if (NumberOfPlayers == 3)
         {
-            case 2:
-                CreatePlayer("blue", new Vector3(1, 1, 1));
-                CreatePlayer("red", new Vector3(13, 1, 13));
-                break;
-            case 3:
-                CreatePlayer("blue", new Vector3(1, 1, 1));
-                CreatePlayer("red", new Vector3(13, 1, 13));
-                CreatePlayer("yellow", new Vector3(13, 1, 1));
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(NumberOfPlayers), NumberOfPlayers, null);
+            CreateThreePlayers();
+            return;
         }
+
+        CreateTwoPlayers();
     }
 
-    private void CreatePlayer(String playerColor, Vector3 position)
+    private void CreateThreePlayers()
     {
-        _playerScene = ResourceLoader.Load<PackedScene>($"res://scenes/players/{playerColor}.tscn");
+        CreatePlayer(PlayerColor.Blue, new Vector3(1, 1, 1));
+        CreatePlayer(PlayerColor.Red, new Vector3(13, 1, 1));
+        CreatePlayer(PlayerColor.Yellow, new Vector3(7, 1, 13));
+    }
+
+    private void CreateTwoPlayers()
+    {
+        CreatePlayer(PlayerColor.Blue, new Vector3(1, 1, 1));
+        CreatePlayer(PlayerColor.Red, new Vector3(13, 1, 1));
+    }
+    private void CreatePlayer(PlayerColor playerColor, Vector3 position)
+    {
+        var scenePath = $"res://scenes/players/{playerColor}.tscn";
+        _playerScene = ResourceLoader.Load<PackedScene>(scenePath);
         var player = _playerScene.Instantiate<Player>();
+
         player.Position = position;
-        switch (playerColor)
+        player.Name = playerColor.ToString();
+
+        player.PlayerData = playerColor switch
         {
-            case "blue":
-                player.PlayerData = new PlayerData(PlayerColor.Blue, PlayersActionKeys.Player1);
-                break;
-            case "red":
-                player.PlayerData = new PlayerData(PlayerColor.Red, PlayersActionKeys.Player2);
-                break;
-            case "yellow":
-                player.PlayerData = new PlayerData(PlayerColor.Yellow, PlayersActionKeys.Player3);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(playerColor), playerColor, null);
-        }
-        player.Name = playerColor;
+            PlayerColor.Blue => new PlayerData(playerColor, PlayersActionKeys.Player1),
+            PlayerColor.Red => new PlayerData(playerColor, PlayersActionKeys.Player2),
+            PlayerColor.Yellow => new PlayerData(playerColor, PlayersActionKeys.Player3),
+            _ => throw new ArgumentOutOfRangeException(nameof(playerColor), playerColor, null),
+        };
+
         AddChild(player);
     }
 
