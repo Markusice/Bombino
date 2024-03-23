@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=32 format=3 uid="uid://hyhf73h5hes8"]
+[gd_resource type="Theme" load_steps=32 format=3 uid="uid://djmr4s3lma1ss"]
 
 [ext_resource type="FontFile" uid="uid://bn4sm0qhcg0jm" path="res://assets/fonts/Spoon-Bold.ttf" id="1_2hswg"]
 [ext_resource type="Texture2D" uid="uid://bg2w4kkpxvm3s" path="res://assets/textures/button-style.png" id="2_b00xl"]
@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cdupnusw5y5s1" path="res://assets/textures/button-style-mirrored.png" id="4_r83be"]
 [ext_resource type="Texture2D" uid="uid://dbiifxvvrqmy3" path="res://assets/textures/button-style-mirrored--pressed.png" id="5_ygea2"]
 [ext_resource type="Texture2D" uid="uid://yqgp7axbku10" path="res://assets/textures/BqPanelBotton.png" id="6_nrrav"]
-[ext_resource type="FontFile" uid="uid://bhlncvaa1t1ud" path="res://assets/fonts/Montserrat-Medium.ttf" id="7_gpc4g"]
+[ext_resource type="FontFile" uid="uid://cjlwvspgkq57s" path="res://assets/fonts/Montserrat-Medium.ttf" id="7_gpc4g"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yohbn"]
 bg_color = Color(0.737255, 0.290196, 0.290196, 1)

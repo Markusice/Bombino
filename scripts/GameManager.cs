@@ -5,13 +5,11 @@ using Godot;
 using Godot.Collections;
 using persistence;
 using ui;
+using System;
 
 internal partial class GameManager : WorldEnvironment
 {
     #region Exports
-
-    [Export]
-    private PackedScene _playerScene;
 
     [Export]
     private PackedScene _pausedGameScene;
@@ -29,22 +27,25 @@ internal partial class GameManager : WorldEnvironment
     #endregion
 
     public static WorldEnvironment WorldEnvironment { get; private set; }
-    public static GridMap GridMap { get; private set; }
+    public static GridMap GameMap { get; private set; }
 
-    public static int NumberOfPlayers { get; set; } = 2;
-    public static string SelectedMap { get; set; }
+    public static int NumberOfPlayers { get; set; } = 3;
+    public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
 
     internal static Array<PlayerData> PlayersData { get; } = new();
 
     private Node _pausedGameSceneInstance;
 
+    private static PackedScene _playerScene;
+
     public override void _Ready()
     {
         WorldEnvironment = this;
-        GridMap = GetNode<GridMap>("GridMap");
+        
+        CheckMapTypeAndCreateIt();
 
-        CreatePlayers();
+        CheckNumberOfPlayersAndCreateThem();
 
         CheckForSavedDataAndSetUpGame();
     }
@@ -65,23 +66,57 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreateGameFromSavedData(Dictionary<string, Variant> data) { }
 
-    private void CreatePlayers()
+    private void CheckMapTypeAndCreateIt()
     {
-        var player1 = _playerScene.Instantiate<Player>();
-        var player2 = _playerScene.Instantiate<Player>();
-
-        player1.Position = new Vector3(0, 2, 0);
-        player2.Position = new Vector3(13, 2, 13);
-
-        player1.PlayerData = new PlayerData(PlayerColor.Red, PlayersActionKeys.Player1);
-        player2.PlayerData = new PlayerData(PlayerColor.Blue, PlayersActionKeys.Player2);
-
-        PlayersData.Add(player1.PlayerData);
-        PlayersData.Add(player2.PlayerData);
-
-        AddChild(player1);
-        AddChild(player2);
+        var scenePath = $"res://scenes/maps/{SelectedMap}.tscn";
+        var mapScene = ResourceLoader.Load<PackedScene>(scenePath);
+        GameMap = mapScene.Instantiate<GridMap>();
+        AddChild(GameMap);
     }
+
+    private void CheckNumberOfPlayersAndCreateThem()
+	{
+		if (NumberOfPlayers == 3)
+        {
+            CreateThreePlayers();
+            return;
+        }
+
+        CreateTwoPlayers();
+    }
+
+    private void CreateThreePlayers()
+    {
+        CreatePlayer(PlayerColor.Blue, new Vector3(-13, 2, -14));
+        CreatePlayer(PlayerColor.Red, new Vector3(-13, 2, 10));
+        CreatePlayer(PlayerColor.Yellow, new Vector3(11, 2, 10));
+    }
+
+    private void CreateTwoPlayers()
+    {
+        CreatePlayer(PlayerColor.Blue, new Vector3(1, 2, 1));
+        CreatePlayer(PlayerColor.Red, new Vector3(13, 2, 1));
+    }
+    private void CreatePlayer(PlayerColor playerColor, Vector3 position)
+    {
+        var scenePath = $"res://scenes/players/{playerColor}.tscn";
+        _playerScene = ResourceLoader.Load<PackedScene>(scenePath);
+        var player = _playerScene.Instantiate<Player>();
+
+        player.Position = position;
+        player.Name = playerColor.ToString();
+
+        player.PlayerData = playerColor switch
+        {
+            PlayerColor.Blue => new PlayerData(playerColor, PlayersActionKeys.Player1),
+            PlayerColor.Red => new PlayerData(playerColor, PlayersActionKeys.Player2),
+            PlayerColor.Yellow => new PlayerData(playerColor, PlayersActionKeys.Player3),
+            _ => throw new ArgumentOutOfRangeException(nameof(playerColor), playerColor, null),
+        };
+
+        AddChild(player);
+    }
+
 
     public override void _Input(InputEvent @event)
     {
