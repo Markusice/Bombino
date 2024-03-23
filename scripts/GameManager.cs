@@ -22,7 +22,7 @@ internal partial class GameManager : WorldEnvironment
     #endregion
 
     public static WorldEnvironment WorldEnvironment { get; private set; }
-    public static GridMap GridMap { get; private set; }
+    public static GridMap GameMap { get; private set; }
 
     public static int NumberOfPlayers { get; set; } = 3;
     public static string SelectedMap { get; set; }
@@ -32,16 +32,28 @@ internal partial class GameManager : WorldEnvironment
 
     private Node _pausedGameSceneInstance;
 
+    private Node _gameMap;
+
     private static PackedScene _playerScene;
 
     public override void _Ready()
     {
         WorldEnvironment = this;
-        GridMap = GetNode<GridMap>("GridMap");
+        
+        SelectedMap = "basic";
+        CheckMapTypeAndCreateIt();
 
         CheckNumberOfPlayersAndCreateThem();
 
         // TODO: use GameSaveHandler to load the game or create a new one
+    }
+
+    private void CheckMapTypeAndCreateIt()
+    {
+        var scenePath = $"res://scenes/maps/{SelectedMap}.tscn";
+        var mapScene = ResourceLoader.Load<PackedScene>(scenePath);
+        GameMap = mapScene.Instantiate<InteractiveGridMap>();
+        AddChild(GameMap);
     }
 
     private void CheckNumberOfPlayersAndCreateThem()
@@ -57,15 +69,15 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreateThreePlayers()
     {
-        CreatePlayer(PlayerColor.Blue, new Vector3(1, 1, 1));
-        CreatePlayer(PlayerColor.Red, new Vector3(13, 1, 1));
-        CreatePlayer(PlayerColor.Yellow, new Vector3(7, 1, 13));
+        CreatePlayer(PlayerColor.Blue, new Vector3(-13, 2, -14));
+        CreatePlayer(PlayerColor.Red, new Vector3(-13, 2, 10));
+        CreatePlayer(PlayerColor.Yellow, new Vector3(11, 2, 10));
     }
 
     private void CreateTwoPlayers()
     {
-        CreatePlayer(PlayerColor.Blue, new Vector3(1, 1, 1));
-        CreatePlayer(PlayerColor.Red, new Vector3(13, 1, 1));
+        CreatePlayer(PlayerColor.Blue, new Vector3(1, 2, 1));
+        CreatePlayer(PlayerColor.Red, new Vector3(13, 2, 1));
     }
     private void CreatePlayer(PlayerColor playerColor, Vector3 position)
     {

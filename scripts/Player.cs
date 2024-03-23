@@ -17,7 +17,7 @@ internal partial class Player : CharacterBody3D
     #region Exports
 
     [Export]
-    public int Speed { get; set; } = 12;
+    public int Speed { get; set; } = 10;
 
     [Export]
     public int FallAcceleration { get; set; } = 75;
@@ -50,6 +50,8 @@ internal partial class Player : CharacterBody3D
     {
         // We create a local variable to store the input direction.
         var direction = Vector3.Zero;
+
+        GD.Print($"Player {_mapPosition}");
 
         CheckActionKeysForInput(ref direction);
 
@@ -137,9 +139,9 @@ internal partial class Player : CharacterBody3D
 
     private void OnPlaceBomb()
     {
-        var bombTilePosition = GameManager.GridMap.MapToLocal(_mapPosition);
+        var bombTilePosition = GameManager.GameMap.MapToLocal(_mapPosition);
         var bombToPlacePosition =
-            new Vector3(bombTilePosition.X, GameManager.GridMap.CellSize.Y + 1, bombTilePosition.Z);
+            new Vector3(bombTilePosition.X, GameManager.GameMap.CellSize.Y + 1, bombTilePosition.Z);
 
         if (IsUnableToPlaceBomb(bombToPlacePosition)) return;
 
@@ -168,7 +170,7 @@ internal partial class Player : CharacterBody3D
 
     private void SetMapPosition()
     {
-        _mapPosition = GameManager.GridMap.LocalToMap(Position);
+        _mapPosition = GameManager.GameMap.LocalToMap(Position);
     }
 
     private void OnHit()
