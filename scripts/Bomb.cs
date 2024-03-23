@@ -29,12 +29,9 @@ internal partial class Bomb : Area3D
     public override void _Ready()
     {
         GD.Print($"bomb position : {Position}");
-        GD.Print($"tile: {GameManager.GridMap.LocalToMap(Position)}");
+        GD.Print($"tile: {GameManager.GameMap.LocalToMap(Position)}");
 
-        var bombTimer = GetNode<Timer>("BombTimer");
-
-        bombTimer.WaitTime = Mathf.Pi;
-        bombTimer.Start();
+        GetNode<Timer>("BombTimer").Start();
     }
 
     private void OnBodyEntered(Node3D body)
@@ -115,7 +112,7 @@ internal partial class Bomb : Area3D
                 var end = origin + rayDirection * (Range * 2);
 
                 // only collide with the grid map
-                var rayMask = GameManager.GridMap.CollisionMask;
+                var rayMask = GameManager.GameMap.CollisionMask;
 
                 var query = PhysicsRayQueryParameters3D.Create(
                     origin,
@@ -145,23 +142,23 @@ internal partial class Bomb : Area3D
 
                 if (rayDirection == Vector3.Left)
                 {
-                    playerShouldNotDie =
-                        (colliderPosition.X - body.Position.X) >= GameManager.GridMap.CellSize.X;
+                    playerShouldNotDie = (colliderPosition.X - body.Position.X) >=
+                                         GameManager.GameMap.CellSize.X;
                 }
                 else if (rayDirection == Vector3.Right)
                 {
-                    playerShouldNotDie =
-                        (body.Position.X - colliderPosition.X) >= GameManager.GridMap.CellSize.X;
+                    playerShouldNotDie = (body.Position.X - colliderPosition.X) >=
+                                         GameManager.GameMap.CellSize.X;
                 }
                 else if (rayDirection == Vector3.Back)
                 {
-                    playerShouldNotDie =
-                        (body.Position.Z - colliderPosition.Z) >= GameManager.GridMap.CellSize.Z;
+                    playerShouldNotDie = (body.Position.Z - colliderPosition.Z) >=
+                                         GameManager.GameMap.CellSize.Z;
                 }
                 else
                 {
-                    playerShouldNotDie =
-                        (colliderPosition.Z - body.Position.Z) >= GameManager.GridMap.CellSize.Z;
+                    playerShouldNotDie = (colliderPosition.Z - body.Position.Z) >=
+                                         GameManager.GameMap.CellSize.Z;
                 }
             }
 
@@ -217,6 +214,6 @@ internal partial class Bomb : Area3D
                 gpuParticle3D.Emitting = true;
         }
 
-        GameManager.GridMap.AddChild(effectInstance);
+        GameManager.GameMap.AddChild(effectInstance);
     }
 }

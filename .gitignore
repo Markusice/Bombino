@@ -23,3 +23,6 @@ mono_crash.*.json
 # VSCode-specific ignores
 .vs
 .vscode
+
+# Dotnet-tools specific ignores
+.config
