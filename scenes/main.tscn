@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/GameManager.cs" id="1_4g4o6"]
 [ext_resource type="PackedScene" uid="uid://dwn8vy6or60pe" path="res://scenes/ui/main_ui.tscn" id="1_uhnt5"]
-[ext_resource type="PackedScene" uid="uid://dfmjn8ynn45eg" path="res://scenes/maps/basic.tscn" id="2_t44yv"]
+[ext_resource type="PackedScene" uid="uid://dfmjn8ynn45eg" path="res://scenes/maps/Basic.tscn" id="2_t44yv"]
 
 [sub_resource type="Environment" id="Environment_it7wf"]
 tonemap_white = 4.2

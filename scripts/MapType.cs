@@ -1,6 +1,6 @@
 namespace Bombino.scripts;
 
-internal enum Map
+internal enum MapType
 {
     Basic,
     Wide,

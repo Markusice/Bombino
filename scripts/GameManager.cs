@@ -25,14 +25,12 @@ internal partial class GameManager : WorldEnvironment
     public static GridMap GameMap { get; private set; }
 
     public static int NumberOfPlayers { get; set; } = 3;
-    public static string SelectedMap { get; set; }
+    public static MapType SelectedMap { get; set; } = MapType.Wide;
     public static int NumberOfRounds { get; set; }
 
     internal static Array<PlayerData> PlayersData { get; } = new();
 
     private Node _pausedGameSceneInstance;
-
-    private Node _gameMap;
 
     private static PackedScene _playerScene;
 
@@ -40,7 +38,6 @@ internal partial class GameManager : WorldEnvironment
     {
         WorldEnvironment = this;
         
-        SelectedMap = "basic";
         CheckMapTypeAndCreateIt();
 
         CheckNumberOfPlayersAndCreateThem();
@@ -52,7 +49,7 @@ internal partial class GameManager : WorldEnvironment
     {
         var scenePath = $"res://scenes/maps/{SelectedMap}.tscn";
         var mapScene = ResourceLoader.Load<PackedScene>(scenePath);
-        GameMap = mapScene.Instantiate<InteractiveGridMap>();
+        GameMap = mapScene.Instantiate<GridMap>();
         AddChild(GameMap);
     }
 

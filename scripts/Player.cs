@@ -31,7 +31,6 @@ internal partial class Player : CharacterBody3D
 
 	private AnimationTree _animTree;
 	private AnimationNodeStateMachinePlayback _stateMachine;
-
     private Vector3I _mapPosition;
 
     public PlayerData PlayerData { get; set; }
@@ -50,8 +49,6 @@ internal partial class Player : CharacterBody3D
     {
         // We create a local variable to store the input direction.
         var direction = Vector3.Zero;
-
-        GD.Print($"Player {_mapPosition}");
 
         CheckActionKeysForInput(ref direction);
 
@@ -144,7 +141,6 @@ internal partial class Player : CharacterBody3D
             new Vector3(bombTilePosition.X, GameManager.GameMap.CellSize.Y + 1, bombTilePosition.Z);
 
         if (IsUnableToPlaceBomb(bombToPlacePosition)) return;
-
         SetStateMachine("Place");
 
         var bombToPlace = CreateBomb(bombToPlacePosition);
