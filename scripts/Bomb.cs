@@ -31,9 +31,6 @@ internal partial class Bomb : Area3D
 
     public override void _Ready()
     {
-        GD.Print($"bomb position : {Position}");
-        GD.Print($"tile: {GameManager.GameMap.LocalToMap(Position)}");
-
         var timer = GetNode<Timer>("BombTimer");
 
         timer.WaitTime = _explodeTime;
@@ -181,8 +178,6 @@ internal partial class Bomb : Area3D
 
     private void SendSignalToBombsInRange()
     {
-        GD.Print($"bombs in range: {_bombsInRange}");
-
         foreach (var bomb in _bombsInRange)
         {
             var distanceBetweenTwoBombs = (Position - bomb.Position).Length();
