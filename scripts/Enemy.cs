@@ -3,10 +3,16 @@
 using System;
 using Godot;
 
+/// <summary>
+/// Represents an enemy character in the game.
+/// </summary>
 internal partial class Enemy : CharacterBody3D
 {
     #region Signals
 
+    /// <summary>
+    /// Signal emitted when the enemy is hit.
+    /// </summar
     [Signal]
     public delegate void HitEventHandler();
 
@@ -26,6 +32,9 @@ internal partial class Enemy : CharacterBody3D
 
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
+    /// <summary>
+    /// Called when the node is added to the scene.
+    /// </summary>
     public override void _Ready()
     {
         GD.Print($"Enemy created at: {Position}");
@@ -50,6 +59,10 @@ internal partial class Enemy : CharacterBody3D
         MoveAndSlide();
     }
 
+    /// <summary>
+    /// Called every frame during the physics process.
+    /// </summary>
+    /// <param name="delta">The time elapsed since the previous frame.</param>
     public override void _PhysicsProcess(double delta)
     {
         // Vertical velocity
@@ -81,6 +94,11 @@ internal partial class Enemy : CharacterBody3D
         GD.Print($"CanMoveToTileOnRight: {CanMoveToTileOnRight(Position)}");
     }
 
+    /// <summary>
+    /// Checks if the enemy can move to the tile on the right.
+    /// </summary>
+    /// <param name="position">The current position of the enemy.</param>
+    /// <returns>True if the enemy can move to the tile on the right; otherwise, false.</returns>
     private static bool CanMoveToTileOnRight(Vector3 position)
     {
         var mapCoordinates = GameManager.GameMap.LocalToMap(
@@ -91,6 +109,11 @@ internal partial class Enemy : CharacterBody3D
         return tileId == -1;
     }
 
+    /// <summary>
+    /// Gets a random direction from the specified array of directions.
+    /// </summary>
+    /// <param name="directions">An array of directions to choose from.</param>
+    /// <returns>A random direction.</returns>
     private static Vector3 GetRandomDirection(Vector3[] directions)
     {
         var randomIndex = new Random().Next(0, directions.Length);
@@ -98,6 +121,11 @@ internal partial class Enemy : CharacterBody3D
         return directions[randomIndex];
     }
 
+    /// <summary>
+    /// Changes the direction based on the selected direction.
+    /// </summary>
+    /// <param name="selectedDirection">The selected direction.</param>
+    /// <param name="direction">The current direction.</param>
     private static void ChangeDirectionOnSelectedDirection(
         Vector3 selectedDirection,
         ref Vector3 direction
@@ -120,6 +148,9 @@ internal partial class Enemy : CharacterBody3D
         }
     }
 
+    /// <summary>
+    /// Handler for the Hit event.
+    /// </summary>
     private void OnHit()
     {
         QueueFree();
