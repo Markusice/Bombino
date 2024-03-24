@@ -7,6 +7,9 @@ internal partial class Bomb : Area3D
 {
     #region Exports
 
+    [Export(PropertyHint.Range, "1,4")]
+    private float _explodeTime = Mathf.Pi;
+
     [Export]
     private PackedScene _effect;
 
@@ -31,17 +34,25 @@ internal partial class Bomb : Area3D
         GD.Print($"bomb position : {Position}");
         GD.Print($"tile: {GameManager.GameMap.LocalToMap(Position)}");
 
-        GetNode<Timer>("BombTimer").Start();
+        var timer = GetNode<Timer>("BombTimer");
+
+        timer.WaitTime = _explodeTime;
+        timer.Start();
     }
 
+    // for players / monsters
     private void OnBodyEntered(Node3D body)
     {
-        GD.Print($"body entered: {body}");
-
         if (!body.IsInGroup("players"))
             return;
 
         _bodiesToExplode.Add(body);
+    }
+
+    // for players / monsters
+    private void OnBodyExited(Node3D body)
+    {
+        _bodiesToExplode.Remove(body);
     }
 
     // for bombs
@@ -50,10 +61,10 @@ internal partial class Bomb : Area3D
         if (!area.IsInGroup("bombs"))
             return;
 
-        GD.Print($"bomb entered: {area.Position}");
         _bombsInRange.Add(area as Bomb);
     }
 
+    // for bombs
     private void OnAreaExited(Area3D area)
     {
         if (!area.IsInGroup("bombs"))
@@ -62,112 +73,96 @@ internal partial class Bomb : Area3D
         _bombsInRange.Remove(area as Bomb);
     }
 
-    // for players / monsters
-    private void OnBodyExited(Node3D body)
-    {
-        _bodiesToExplode.Remove(body);
-
-        GD.Print($"body exited: {body}");
-    }
-
     private void OnTimerTimeout()
     {
-        GD.Print("Bomb exploded");
+        PlayExplodeAnimation();
 
-        PlayExplosion();
+        CreateExplosionsOnTilesOnXAndZAxis();
 
         ExplodeBodies();
 
         SendSignalToBombsInRange();
 
-        // remove bomb from scene
         QueueFree();
     }
 
     private void ExplodeBodies()
     {
-        GD.Print($"bodies to explode: {_bodiesToExplode}");
-
         foreach (var body in _bodiesToExplode)
         {
             if (!body.IsInGroup("players"))
                 return;
 
-            GD.Print("start casting rays");
-            var spaceState = GetWorld3D().DirectSpaceState;
+            var rayDirections = GetRayCastDirections();
 
-            var playerShouldNotDie = false;
+            var playerShouldNotDie = CastRaysInDirectionsAndCheckIfPlayerShouldDie(
+                body,
+                rayDirections
+            );
 
-            var rayDirections = new[]
-            {
-                Vector3.Left,
-                Vector3.Right,
-                Vector3.Back,
-                Vector3.Forward,
-            };
-
-            foreach (var rayDirection in rayDirections)
-            {
-                var origin = GlobalPosition;
-                var end = origin + rayDirection * (Range * 2);
-
-                // only collide with the grid map
-                var rayMask = GameManager.GameMap.CollisionMask;
-
-                var query = PhysicsRayQueryParameters3D.Create(
-                    origin,
-                    end,
-                    rayMask,
-                    new Array<Rid> { GetRid() }
-                );
-
-                var result = spaceState.IntersectRay(query);
-                if (result.Count == 0)
-                    continue;
-
-                var collider = result["collider"].AsGodotObject();
-                var colliderPosition = result["position"].AsVector3();
-                GD.Print($"collider: {collider} at position: {colliderPosition}");
-                GD.Print($"player: {body} at position: {body.GlobalPosition}");
-
-                var vectorFromBombToPlayer = GlobalPosition.DirectionTo(body.GlobalPosition);
-
-                var playerDirectionDotProduct = Mathf.RoundToInt(
-                    vectorFromBombToPlayer.Dot(rayDirection)
-                );
-                GD.Print($"player dot product at {rayDirection}: {playerDirectionDotProduct}");
-
-                if (playerDirectionDotProduct != 1)
-                    continue;
-
-                if (rayDirection == Vector3.Left)
-                {
-                    playerShouldNotDie = (colliderPosition.X - body.Position.X) >=
-                                         GameManager.GameMap.CellSize.X;
-                }
-                else if (rayDirection == Vector3.Right)
-                {
-                    playerShouldNotDie = (body.Position.X - colliderPosition.X) >=
-                                         GameManager.GameMap.CellSize.X;
-                }
-                else if (rayDirection == Vector3.Back)
-                {
-                    playerShouldNotDie = (body.Position.Z - colliderPosition.Z) >=
-                                         GameManager.GameMap.CellSize.Z;
-                }
-                else
-                {
-                    playerShouldNotDie = (colliderPosition.Z - body.Position.Z) >=
-                                         GameManager.GameMap.CellSize.Z;
-                }
-            }
-
-            GD.Print($"player should not die: {playerShouldNotDie}");
             if (playerShouldNotDie)
                 continue;
 
             body.EmitSignal(Player.SignalName.Hit);
         }
+    }
+
+    private static Vector3[] GetRayCastDirections()
+    {
+        return new[] { Vector3.Left, Vector3.Right, Vector3.Back, Vector3.Forward, };
+    }
+
+    private bool CastRaysInDirectionsAndCheckIfPlayerShouldDie(Node3D body, Vector3[] rayDirections)
+    {
+        var playerShouldNotDie = false;
+
+        foreach (var rayDirection in rayDirections)
+        {
+            if (playerShouldNotDie)
+                break;
+
+            var origin = GlobalPosition;
+            var end = origin + rayDirection * (Range * 2);
+            var rayMask = GameManager.GameMap.CollisionMask;
+
+            var result = CastRayAndGetResult(origin, end, rayMask);
+
+            if (result.Count == 0)
+                continue;
+
+            var colliderPosition = result["position"].AsVector3();
+
+            playerShouldNotDie = rayDirection switch
+            {
+                _ when rayDirection == Vector3.Left
+                    => (colliderPosition.X - body.Position.X) >= GameManager.GameMap.CellSize.X,
+                _ when rayDirection == Vector3.Right
+                    => (body.Position.X - colliderPosition.X) >= GameManager.GameMap.CellSize.X,
+                _ when rayDirection == Vector3.Back
+                    => (body.Position.Z - colliderPosition.Z) >= GameManager.GameMap.CellSize.Z,
+                _ when rayDirection == Vector3.Forward
+                    => (colliderPosition.Z - body.Position.Z) >= GameManager.GameMap.CellSize.Z,
+                _ => false
+            };
+        }
+
+        return playerShouldNotDie;
+    }
+
+    private Dictionary CastRayAndGetResult(Vector3 origin, Vector3 end, uint rayMask)
+    {
+        var spaceState = GetWorld3D().DirectSpaceState;
+
+        var query = PhysicsRayQueryParameters3D.Create(
+            origin,
+            end,
+            rayMask,
+            new Array<Rid> { GetRid() }
+        );
+
+        var result = spaceState.IntersectRay(query);
+
+        return result;
     }
 
     private void OnExplodeSooner(float newTimerWaitTime)
@@ -199,21 +194,72 @@ internal partial class Bomb : Area3D
         }
     }
 
-    private void PlayExplosion()
+    private void PlayExplodeAnimation()
+    {
+        var animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+
+        animationPlayer.Play("explode");
+    }
+
+    private void CreateExplosionsOnTilesOnXAndZAxis()
+    {
+        CreateExplosionsOnTilesOnAxis(ExplosionAxis.X);
+        CreateExplosionsOnTilesOnAxis(ExplosionAxis.Z);
+    }
+
+    private void CreateExplosionsOnTilesOnAxis(ExplosionAxis explosionAxis)
+    {
+        for (var axis = -1; axis < 1; axis++)
+        {
+            for (var nthTile = 1; nthTile <= Range; nthTile++)
+            {
+                var effectPosition = GetEffectPositionOnAxis(explosionAxis, axis, nthTile);
+
+                if (!CanCreateExplosionAtPosition(effectPosition))
+                    break;
+
+                CreateExplosionAtPosition(effectPosition);
+            }
+        }
+    }
+
+    private Vector3 GetEffectPositionOnAxis(ExplosionAxis explosionAxis, int axis, int nthTile)
+    {
+        if (explosionAxis == ExplosionAxis.X)
+            return new Vector3(
+                axis < 0
+                    ? Position.X - (nthTile * GameManager.GameMap.CellSize.X)
+                    : Position.X + (nthTile * GameManager.GameMap.CellSize.X),
+                Position.Y,
+                Position.Z
+            );
+
+        return new Vector3(
+            Position.X,
+            Position.Y,
+            axis < 0
+                ? Position.Z - (nthTile * GameManager.GameMap.CellSize.Z)
+                : Position.Z + (nthTile * GameManager.GameMap.CellSize.Z)
+        );
+    }
+
+    private static bool CanCreateExplosionAtPosition(Vector3 position)
+    {
+        var mapCoordinates = GameManager.GameMap.LocalToMap(position);
+        var tileId = GameManager.GameMap.GetCellItem(mapCoordinates);
+
+        return tileId == -1;
+    }
+
+    private void CreateExplosionAtPosition(Vector3 position)
     {
         var effectInstance = _effect.Instantiate<VFX_Explosion>();
-        effectInstance.Position = Position;
+        effectInstance.Position = position;
 
-        var effectInstances = effectInstance.GetChildren();
-
-        using var effectInstanceEnumerator = effectInstances.GetEnumerator();
-        while (effectInstanceEnumerator.MoveNext())
-        {
-            var child = effectInstanceEnumerator.Current;
-            if (child is GpuParticles3D gpuParticle3D)
-                gpuParticle3D.Emitting = true;
-        }
+        var animationPlayer = effectInstance.GetNode<AnimationPlayer>("AnimationPlayer");
 
         GameManager.GameMap.AddChild(effectInstance);
+
+        animationPlayer.Play("explosionEffect");
     }
 }
