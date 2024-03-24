@@ -17,6 +17,9 @@ internal partial class GameManager : WorldEnvironment
     [Export]
     private PackedScene _startingScreenScene;
 
+    [Export]
+    private PackedScene _enemyScene;
+
     #endregion
 
     #region Signals
