@@ -287,12 +287,12 @@ internal partial class Bomb : Area3D
         {
             for (var nthTile = 1; nthTile <= Range; nthTile++)
             {
-                var effectPosition = GetEffectPositionOnAxis(explosionAxis, axis, nthTile);
+                var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(explosionAxis, axis, nthTile);
 
-                if (!CanCreateExplosionAtPosition(effectPosition))
+                if (!CanCreateExplosionAtPosition(effectPositionOnNthTile))
                     break;
 
-                CreateExplosionAtPosition(effectPosition);
+                CreateExplosionAtPosition(effectPositionOnNthTile);
             }
         }
     }
@@ -304,7 +304,7 @@ internal partial class Bomb : Area3D
     /// <param name="axis"></param>
     /// <param name="nthTile"></param>
     /// <returns></returns>
-    private Vector3 GetEffectPositionOnAxis(ExplosionAxis explosionAxis, int axis, int nthTile)
+    private Vector3 GetEffectPositionOnAxisOnNthTile(ExplosionAxis explosionAxis, int axis, int nthTile)
     {
         if (explosionAxis == ExplosionAxis.X)
             return new Vector3(
