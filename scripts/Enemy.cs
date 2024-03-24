@@ -46,6 +46,7 @@ internal partial class Enemy : CharacterBody3D
         LookAt(targetPosition, Vector3.Up);
 
         Velocity = _targetVelocity;
+
         MoveAndSlide();
     }
 
@@ -57,13 +58,40 @@ internal partial class Enemy : CharacterBody3D
             _targetVelocity.Y -= gravity * (float)delta;
         }
 
+        if (IsOnWall())
+        {
+            var direction = Vector3.Zero;
+
+            var randomDirection = GetRandomDirection(directions);
+            ChangeDirectionOnSelectedDirection(randomDirection, ref direction);
+
+            GD.Print($"Enemy random direction: {randomDirection}");
+
+            _targetVelocity.X = direction.X * _speed;
+            _targetVelocity.Z = direction.Z * _speed;
+
+            var targetPosition = Position - direction;
+            LookAt(targetPosition, Vector3.Up);
+        }
+
         Velocity = _targetVelocity;
 
-        GD.Print($"Enemy velocity: {Velocity}");
         MoveAndSlide();
+
+        GD.Print($"CanMoveToTileOnRight: {CanMoveToTileOnRight(Position)}");
     }
 
-    private Vector3 GetRandomDirection(Vector3[] directions)
+    private static bool CanMoveToTileOnRight(Vector3 position)
+    {
+        var mapCoordinates = GameManager.GameMap.LocalToMap(
+            new Vector3(position.X + 1, position.Y + 1, position.Z)
+        );
+        var tileId = GameManager.GameMap.GetCellItem(mapCoordinates);
+
+        return tileId == -1;
+    }
+
+    private static Vector3 GetRandomDirection(Vector3[] directions)
     {
         var randomIndex = new Random().Next(0, directions.Length);
 
@@ -90,5 +118,10 @@ internal partial class Enemy : CharacterBody3D
                 direction.Z -= 1.0f;
                 break;
         }
+    }
+
+    private void OnHit()
+    {
+        QueueFree();
     }
 }

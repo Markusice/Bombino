@@ -99,13 +99,13 @@ internal partial class GameManager : WorldEnvironment
     private void CreateThreePlayers()
     {
         CreateTwoPlayers();
-        CreatePlayer(PlayerColor.Yellow, new Vector3I(-4, 1, 0));
+        CreatePlayer(PlayerColor.Yellow, new Vector3I(5, 1, 4));
     }
 
     private void CreateTwoPlayers()
     {
-        CreatePlayer(PlayerColor.Blue, new Vector3I(0, 1, 0));
-        CreatePlayer(PlayerColor.Red, new Vector3I(4, 1, 2));
+        CreatePlayer(PlayerColor.Blue, new Vector3I(-7, 1, -8));
+        CreatePlayer(PlayerColor.Red, new Vector3I(-7, 1, 4));
     }
 
     private void CreatePlayer(PlayerColor playerColor, Vector3I position)

@@ -25,7 +25,7 @@ internal partial class Bomb : Area3D
     private readonly Array<Node3D> _bodiesToExplode = new();
     private readonly Array<Bomb> _bombsInRange = new();
 
-    private const float ExplosionDistanceDivider = 5.0f;
+    private const float ExplosionDistanceDivider = Mathf.E;
 
     public int Range { get; set; }
 
@@ -40,7 +40,7 @@ internal partial class Bomb : Area3D
     // for players / monsters
     private void OnBodyEntered(Node3D body)
     {
-        if (!body.IsInGroup("players"))
+        if (!body.IsInGroup("players") && !body.IsInGroup("enemies"))
             return;
 
         _bodiesToExplode.Add(body);
@@ -49,6 +49,9 @@ internal partial class Bomb : Area3D
     // for players / monsters
     private void OnBodyExited(Node3D body)
     {
+        if (!body.IsInGroup("players") && !body.IsInGroup("enemies"))
+            return;
+
         _bodiesToExplode.Remove(body);
     }
 
@@ -87,20 +90,22 @@ internal partial class Bomb : Area3D
     {
         foreach (var body in _bodiesToExplode)
         {
-            if (!body.IsInGroup("players"))
+            if (!body.IsInGroup("players") && !body.IsInGroup("enemies"))
                 return;
 
             var rayDirections = GetRayCastDirections();
 
-            var playerShouldNotDie = CastRaysInDirectionsAndCheckIfPlayerShouldDie(
+            var bodyShouldNotDie = CastRaysInDirectionsAndCheckIfPlayerShouldDie(
                 body,
                 rayDirections
             );
 
-            if (playerShouldNotDie)
+            if (bodyShouldNotDie)
                 continue;
 
-            body.EmitSignal(Player.SignalName.Hit);
+            body.EmitSignal(
+                body.IsInGroup("players") ? Player.SignalName.Hit : Enemy.SignalName.Hit
+            );
         }
     }
 
