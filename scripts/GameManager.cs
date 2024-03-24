@@ -52,7 +52,7 @@ internal partial class GameManager : WorldEnvironment
 
         CheckForSavedDataAndSetUpGame();
 
-        CreateEnemy(new Vector3(-12, 2, -14));
+        CreateEnemy(new Vector3(-10, 2, -14));
     }
 
     private void CheckForSavedDataAndSetUpGame()
