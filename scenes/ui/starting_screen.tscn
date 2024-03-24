@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://wpo1q3hd2yct"]
+[gd_scene load_steps=6 format=3 uid="uid://wpo1q3hd2yct"]
 
 [ext_resource type="Script" path="res://scripts/ui/PlayButton.cs" id="1_3bbu4"]
 [ext_resource type="PackedScene" uid="uid://mwftlefv7r0j" path="res://scenes/ui/play_menu.tscn" id="2_hg56s"]
 [ext_resource type="Script" path="res://scripts/ui/SettingsButton.cs" id="3_obgcj"]
+[ext_resource type="PackedScene" uid="uid://73bcenf68jtr" path="res://scenes/ui/settings_menu.tscn" id="4_0khod"]
 [ext_resource type="Script" path="res://scripts/ui/ExitToDesktopButton.cs" id="4_sest6"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
@@ -61,6 +62,7 @@ theme_type_variation = &"ButtonMirrored"
 theme_override_font_sizes/font_size = 80
 text = "Settings"
 script = ExtResource("3_obgcj")
+_settingsMenuScene = ExtResource("4_0khod")
 
 [node name="ExitButtonContainer" type="PanelContainer" parent="."]
 anchors_preset = 7
