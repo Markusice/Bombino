@@ -36,7 +36,6 @@ internal partial class Player : CharacterBody3D
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	public override void _Ready()
 	{
-		base._Ready();
 		_animTree = GetNode<AnimationTree>("AnimationTree");
 		_animTree.Active = true;
 		_stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
