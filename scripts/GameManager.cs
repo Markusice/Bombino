@@ -7,6 +7,9 @@ using Godot.Collections;
 using persistence;
 using ui;
 
+/// <summary>
+/// A class that manages the game.
+/// </summary>
 internal partial class GameManager : WorldEnvironment
 {
     #region Exports
@@ -24,6 +27,9 @@ internal partial class GameManager : WorldEnvironment
 
     #region Signals
 
+    /// <summary>
+    /// A signal that is emitted when the game is resumed.
+    /// </summary>
     [Signal]
     public delegate void ResumeGameEventHandler();
 
@@ -42,6 +48,9 @@ internal partial class GameManager : WorldEnvironment
 
     private static PackedScene _playerScene;
 
+    /// <summary>
+    /// Called when the node enters the scene tree for the first time.
+    /// </summary>
     public override void _Ready()
     {
         WorldEnvironment = this;
@@ -55,11 +64,19 @@ internal partial class GameManager : WorldEnvironment
         CreateEnemy(new Vector3I(-10, 2, -15));
     }
 
+    /// <summary>
+    /// Gets the position on the tile map.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
     private static Vector3 GetPositionOnTileMap(Vector3I position)
     {
         return GameMap.MapToLocal(position);
     }
 
+    /// <summary>
+    /// Checks for saved data and sets up the game.
+    /// </summary>
     private void CheckForSavedDataAndSetUpGame()
     {
         if (!GameSaveHandler.IsThereSavedData(outputData: out var receivedData))
@@ -72,10 +89,20 @@ internal partial class GameManager : WorldEnvironment
         CreateGameFromSavedData(receivedData);
     }
 
+    /// <summary>
+    /// Creates a new game.
+    /// </summary>
     private void CreateNewGame() { }
 
+    /// <summary>
+    /// Creates a game from the saved data.
+    /// </summary>
+    /// <param name="data"></param>
     private void CreateGameFromSavedData(Dictionary<string, Variant> data) { }
 
+    /// <summary>
+    /// Checks the map type and creates it.
+    /// </summary>
     private void CheckMapTypeAndCreateIt()
     {
         var scenePath = $"res://scenes/maps/{SelectedMap}.tscn";
@@ -85,6 +112,9 @@ internal partial class GameManager : WorldEnvironment
         AddChild(GameMap);
     }
 
+    /// <summary>
+    /// Checks the number of players and creates them.
+    /// </summary>
     private void CheckNumberOfPlayersAndCreateThem()
     {
         if (NumberOfPlayers == 3)
@@ -96,18 +126,30 @@ internal partial class GameManager : WorldEnvironment
         CreateTwoPlayers();
     }
 
+    /// <summary>
+    /// Creates three players.
+    /// </summary>
     private void CreateThreePlayers()
     {
         CreateTwoPlayers();
         CreatePlayer(PlayerColor.Yellow, new Vector3I(5, 1, 4));
     }
 
+    /// <summary>
+    /// Creates two players.
+    /// </summary>
     private void CreateTwoPlayers()
     {
         CreatePlayer(PlayerColor.Blue, new Vector3I(-7, 1, -8));
         CreatePlayer(PlayerColor.Red, new Vector3I(-7, 1, 4));
     }
 
+    /// <summary>
+    /// Creates a player.
+    /// </summary>
+    /// <param name="playerColor"></param>
+    /// <param name="position"></param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     private void CreatePlayer(PlayerColor playerColor, Vector3I position)
     {
         var scenePath = $"res://scenes/players/{playerColor}.tscn";
@@ -130,6 +172,10 @@ internal partial class GameManager : WorldEnvironment
         AddChild(player);
     }
 
+    /// <summary>
+    /// Creates an enemy.
+    /// </summary>
+    /// <param name="position"></param>
     private void CreateEnemy(Vector3 position)
     {
         var enemy = _enemyScene.Instantiate<Enemy>();
@@ -138,6 +184,10 @@ internal partial class GameManager : WorldEnvironment
         AddChild(enemy);
     }
 
+    /// <summary>
+    /// Called every frame. 'delta' is the elapsed time since the previous frame.
+    /// </summary>
+    /// <param name="delta">The time elapsed since the previous frame.</param>
     public override void _Input(InputEvent @event)
     {
         if (!InputEventChecker.IsEscapeKeyPressed(@event))
@@ -146,6 +196,9 @@ internal partial class GameManager : WorldEnvironment
         Pause();
     }
 
+    /// <summary>
+    /// Pauses the game.
+    /// </summary>
     private void Pause()
     {
         GetTree().Paused = true;
@@ -159,18 +212,27 @@ internal partial class GameManager : WorldEnvironment
         AddEventToSaveAndExitButton();
     }
 
+    /// <summary>
+    /// Sets and adds the paused game.
+    /// </summary>
     private void SetAndAddPausedGame()
     {
         _pausedGameSceneInstance = _pausedGameScene.Instantiate();
         GetParent().AddChild(_pausedGameSceneInstance);
     }
 
+    /// <summary>
+    /// Plays the blur animation.
+    /// </summary>
     private void PlayBlurAnimation()
     {
         var blurAnimation = _pausedGameSceneInstance.GetNode<AnimationPlayer>("BlurAnimation");
         blurAnimation.Play("start_pause");
     }
 
+    /// <summary>
+    /// Adds an event to the resume button.
+    /// </summary>
     private void AddEventToResumeButton()
     {
         var resumeButton = _pausedGameSceneInstance.GetNode<TextureButton>(
@@ -179,6 +241,9 @@ internal partial class GameManager : WorldEnvironment
         resumeButton.Pressed += OnResumeGame;
     }
 
+    /// <summary>
+    /// Adds an event to the save and exit button.
+    /// </summary>
     private void AddEventToSaveAndExitButton()
     {
         var saveAndExitButton = _pausedGameSceneInstance.GetNode<TextureButton>(
@@ -187,11 +252,17 @@ internal partial class GameManager : WorldEnvironment
         saveAndExitButton.Pressed += OnSaveAndExit;
     }
 
+    /// <summary>
+    /// Event handler for the resume game event.
+    /// </summary>
     private void OnResumeGame()
     {
         Resume();
     }
 
+    /// <summary>
+    /// Event handler for the save and exit event.
+    /// </summary>
     private void OnSaveAndExit()
     {
         GameSaveHandler.SaveGame();
@@ -199,6 +270,9 @@ internal partial class GameManager : WorldEnvironment
         GetTree().ChangeSceneToPacked(_startingScreenScene);
     }
 
+    /// <summary>
+    /// Resumes the game.
+    /// </summary>
     private async void Resume()
     {
         RemoveButtonsAndShowCountDownContainer();
@@ -211,6 +285,9 @@ internal partial class GameManager : WorldEnvironment
         SetProcessInput(true);
     }
 
+    /// <summary>
+    /// Removes the buttons and shows the countdown container.
+    /// </summary>
     private void RemoveButtonsAndShowCountDownContainer()
     {
         _pausedGameSceneInstance.GetNode<PanelContainer>("ButtonsContainer").QueueFree();
@@ -221,6 +298,10 @@ internal partial class GameManager : WorldEnvironment
         countDownContainer.Visible = true;
     }
 
+    /// <summary>
+    /// Starts the countdown.
+    /// </summary>
+    /// <returns></returns>
     private async Task StartCountDown()
     {
         var countDownLabel = _pausedGameSceneInstance.GetNode<Label>(
