@@ -52,7 +52,12 @@ internal partial class GameManager : WorldEnvironment
 
         CheckForSavedDataAndSetUpGame();
 
-        CreateEnemy(new Vector3(-13, 2, -14));
+        CreateEnemy(new Vector3I(-10, 2, -15));
+    }
+
+    private static Vector3 GetPositionOnTileMap(Vector3I position)
+    {
+        return GameMap.MapToLocal(position);
     }
 
     private void CheckForSavedDataAndSetUpGame()
@@ -93,25 +98,26 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreateThreePlayers()
     {
-        CreatePlayer(PlayerColor.Blue, new Vector3(-13, 2, -14));
-        CreatePlayer(PlayerColor.Red, new Vector3(-13, 2, 10));
-        CreatePlayer(PlayerColor.Yellow, new Vector3(11, 2, 10));
+        CreateTwoPlayers();
+        CreatePlayer(PlayerColor.Yellow, new Vector3I(-4, 1, 0));
     }
 
     private void CreateTwoPlayers()
     {
-        CreatePlayer(PlayerColor.Blue, new Vector3(1, 2, 1));
-        CreatePlayer(PlayerColor.Red, new Vector3(13, 2, 1));
+        CreatePlayer(PlayerColor.Blue, new Vector3I(0, 1, 0));
+        CreatePlayer(PlayerColor.Red, new Vector3I(4, 1, 2));
     }
 
-    private void CreatePlayer(PlayerColor playerColor, Vector3 position)
+    private void CreatePlayer(PlayerColor playerColor, Vector3I position)
     {
         var scenePath = $"res://scenes/players/{playerColor}.tscn";
         _playerScene = ResourceLoader.Load<PackedScene>(scenePath);
         var player = _playerScene.Instantiate<Player>();
 
-        player.Position = position;
+        player.Position = GetPositionOnTileMap(position);
         player.Name = playerColor.ToString();
+
+        GD.Print($"{player.Name} pos: {player.Position}");
 
         player.PlayerData = playerColor switch
         {

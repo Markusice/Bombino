@@ -34,7 +34,7 @@ internal partial class Enemy : CharacterBody3D
 
         var randomDirection = GetRandomDirection(directions);
 
-        ChangeDirectionOnSelectedDirection(Vector3.Back, ref direction);
+        ChangeDirectionOnSelectedDirection(Vector3.Right, ref direction);
 
         GD.Print($"Enemy random direction: {randomDirection}");
         GD.Print($"Enemy direction: {direction}");
@@ -58,6 +58,8 @@ internal partial class Enemy : CharacterBody3D
         }
 
         Velocity = _targetVelocity;
+
+        GD.Print($"Enemy velocity: {Velocity}");
         MoveAndSlide();
     }
 
