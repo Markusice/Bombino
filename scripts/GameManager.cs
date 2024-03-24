@@ -1,11 +1,11 @@
 namespace Bombino.scripts;
 
+using System;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
 using persistence;
 using ui;
-using System;
 
 internal partial class GameManager : WorldEnvironment
 {
@@ -45,12 +45,14 @@ internal partial class GameManager : WorldEnvironment
     public override void _Ready()
     {
         WorldEnvironment = this;
-        
+
         CheckMapTypeAndCreateIt();
 
         CheckNumberOfPlayersAndCreateThem();
 
         CheckForSavedDataAndSetUpGame();
+
+        CreateEnemy(new Vector3(-12, 2, -14));
     }
 
     private void CheckForSavedDataAndSetUpGame()
@@ -74,12 +76,13 @@ internal partial class GameManager : WorldEnvironment
         var scenePath = $"res://scenes/maps/{SelectedMap}.tscn";
         var mapScene = ResourceLoader.Load<PackedScene>(scenePath);
         GameMap = mapScene.Instantiate<GridMap>();
+
         AddChild(GameMap);
     }
 
     private void CheckNumberOfPlayersAndCreateThem()
-	{
-		if (NumberOfPlayers == 3)
+    {
+        if (NumberOfPlayers == 3)
         {
             CreateThreePlayers();
             return;
@@ -100,6 +103,7 @@ internal partial class GameManager : WorldEnvironment
         CreatePlayer(PlayerColor.Blue, new Vector3(1, 2, 1));
         CreatePlayer(PlayerColor.Red, new Vector3(13, 2, 1));
     }
+
     private void CreatePlayer(PlayerColor playerColor, Vector3 position)
     {
         var scenePath = $"res://scenes/players/{playerColor}.tscn";
@@ -120,6 +124,13 @@ internal partial class GameManager : WorldEnvironment
         AddChild(player);
     }
 
+    private void CreateEnemy(Vector3 position)
+    {
+        var enemy = _enemyScene.Instantiate<Enemy>();
+        enemy.Position = position;
+
+        AddChild(enemy);
+    }
 
     public override void _Input(InputEvent @event)
     {
