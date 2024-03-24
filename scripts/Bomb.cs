@@ -191,9 +191,17 @@ internal partial class Bomb : Area3D
 
     private void PlayExplodeAnimation()
     {
-        var animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+        var bombMeshInstance3D = GetNode<MeshInstance3D>("Bomb");
+        bombMeshInstance3D.Hide();
 
-        animationPlayer.Play("explode");
+        var effectInstance = _effect.Instantiate<VFX_Explosion>();
+        effectInstance.Position = Position;
+
+        var effectAnimationPlayer = effectInstance.GetNode<AnimationPlayer>("AnimationPlayer");
+
+        GameManager.GameMap.AddChild(effectInstance);
+
+        effectAnimationPlayer.Play("explosionEffect");
     }
 
     private void CreateExplosionsOnTilesOnXAndZAxis()
