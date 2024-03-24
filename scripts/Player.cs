@@ -20,9 +20,6 @@ internal partial class Player : CharacterBody3D
     public int Speed { get; set; } = 10;
 
     [Export]
-    public int FallAcceleration { get; set; } = 75;
-
-    [Export]
     private PackedScene BombScene { get; set; }
 
     #endregion
@@ -72,7 +69,7 @@ internal partial class Player : CharacterBody3D
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
         {
-            _targetVelocity.Y -= FallAcceleration * (float)delta;
+            _targetVelocity.Y -= gravity * (float)delta;
         }
 
         BlendMovementAnimation();
