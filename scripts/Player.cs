@@ -5,10 +5,16 @@ using System.Linq;
 using Godot;
 using System;
 
+/// <summary>
+/// Represents the player character in the game.
+/// </summary>
 internal partial class Player : CharacterBody3D
 {
     #region Signals
 
+    /// <summary>
+    /// Signal emitted when the player is hit.
+    /// </summary>
     [Signal]
     public delegate void HitEventHandler();
 
@@ -18,9 +24,6 @@ internal partial class Player : CharacterBody3D
 
     [Export]
     public int Speed { get; set; } = 10;
-
-    [Export]
-    public int FallAcceleration { get; set; } = 75;
 
     [Export]
     private PackedScene BombScene { get; set; }
@@ -37,14 +40,21 @@ internal partial class Player : CharacterBody3D
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-	public override void _Ready()
+	
+    /// <summary>
+    /// Called when the node enters the scene tree for the first time.
+    /// </summary>
+    public override void _Ready()
 	{
-		base._Ready();
 		_animTree = GetNode<AnimationTree>("AnimationTree");
 		_animTree.Active = true;
 		_stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
 	}
 
+    /// <summary>
+    /// Called every frame. 'delta' is the elapsed time since the previous frame.
+    /// </summary>
+    /// <param name="delta"></param>
     public override void _PhysicsProcess(double delta)
     {
         // We create a local variable to store the input direction.
@@ -72,7 +82,7 @@ internal partial class Player : CharacterBody3D
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
         {
-            _targetVelocity.Y -= FallAcceleration * (float)delta;
+            _targetVelocity.Y -= gravity * (float)delta;
         }
 
         BlendMovementAnimation();
@@ -84,18 +94,29 @@ internal partial class Player : CharacterBody3D
         SetMapPosition();
     }
 
+    /// <summary>
+    /// Called when the player enters the area.
+    /// </summary>
     private void BlendMovementAnimation()
     {
         var animTree = GetNode<AnimationTree>("AnimationTree");
         animTree.Set("parameters/IR/blend_position", new Vector2(Velocity.X, Velocity.Z).Length());
     }
 
+    /// <summary>
+    /// Checks the action keys for input.
+    /// </summary>
+    /// <param name="direction"></param>
     private void CheckActionKeysForInput(ref Vector3 direction)
     {
         ModifyDirectionOnMovement(ref direction);
         PlaceBombOnInput();
     }
 
+    /// <summary>
+    /// Modifies the direction based on the movement keys.
+    /// </summary>
+    /// <param name="direction"></param>
     private void ModifyDirectionOnMovement(ref Vector3 direction)
     {
         foreach (var movementKey in PlayerData.ActionKeys[..4])
@@ -123,17 +144,27 @@ internal partial class Player : CharacterBody3D
         }
     }
 
+    /// <summary>
+    /// Places a bomb on input.
+    /// </summary>
     private void PlaceBombOnInput()
     {
         if (Input.IsActionJustPressed(PlayerData.ActionKeys[4])) OnPlaceBomb();
     }
 
+    /// <summary>
+    /// Sets the state machine.
+    /// </summary>
+    /// <param name="stateName"></param>
     private void SetStateMachine(String stateName)
     {
         _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
         _stateMachine.Travel(stateName);
     }
 
+    /// <summary>
+    /// Called when the player enters the area.
+    /// </summary>
     private void OnPlaceBomb()
     {
         var bombTilePosition = GameManager.GameMap.MapToLocal(_mapPosition);
@@ -147,6 +178,11 @@ internal partial class Player : CharacterBody3D
         GameManager.WorldEnvironment.AddChild(bombToPlace);
     }
 
+    /// <summary>
+    /// Checks if the player is unable to place a bomb.
+    /// </summary>
+    /// <param name="bombToPlacePosition"></param>
+    /// <returns></returns>
     private bool IsUnableToPlaceBomb(Vector3 bombToPlacePosition)
     {
         var placedBombs = GetTree().GetNodesInGroup("bombs");
@@ -154,6 +190,11 @@ internal partial class Player : CharacterBody3D
         return placedBombs.Cast<Area3D>().Any(bombArea3D => bombArea3D.Position == bombToPlacePosition);
     }
 
+    /// <summary>
+    /// Creates a bomb.
+    /// </summary>
+    /// <param name="bombToPlacePosition"></param>
+    /// <returns></returns>
     private Bomb CreateBomb(Vector3 bombToPlacePosition)
     {
         var bombToPlace = BombScene.Instantiate<Bomb>();
@@ -164,17 +205,26 @@ internal partial class Player : CharacterBody3D
         return bombToPlace;
     }
 
+    /// <summary>
+    /// Sets the map position.
+    /// </summary>
     private void SetMapPosition()
     {
         _mapPosition = GameManager.GameMap.LocalToMap(Position);
     }
 
+    /// <summary>
+    /// Called when the player enters the area.
+    /// </summary>
     private void OnHit()
     {
         SetStateMachine("Die");
         Die();
     }
 
+    /// <summary>
+    /// Kills the player.
+    /// </summary>
     private void Die()
     {
         GD.Print($"Player die : {Name}");

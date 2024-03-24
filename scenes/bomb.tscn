@@ -175,7 +175,7 @@ mesh = SubResource("BoxMesh_o1avs")
 one_shot = true
 
 [node name="Bomb" type="MeshInstance3D" parent="."]
-transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 0.011, 0.54, -0.019)
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0.011, 0.037091, -0.019)
 mesh = SubResource("ArrayMesh_yqah3")
 skeleton = NodePath("")
 
