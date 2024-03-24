@@ -12,44 +12,53 @@ internal partial class Enemy : CharacterBody3D
 
     #endregion
 
-    private const int _speed = 10;
+    private const int _speed = 6;
 
     private Vector3 _targetVelocity = Vector3.Zero;
 
-    private readonly Vector3[] directions = { Vector3.Right, Vector3.Left, Vector3.Back, Vector3.Forward };
+    private readonly Vector3[] directions =
+    {
+        Vector3.Right,
+        Vector3.Left,
+        Vector3.Back,
+        Vector3.Forward
+    };
+
+    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public override void _Ready()
-	{
+    {
         GD.Print($"Enemy created at: {Position}");
 
         var direction = Vector3.Zero;
-        
-		var randomDirection = GetRandomDirection(directions);
 
-        ChangeDirectionOnSelectedDirection(randomDirection, ref direction);
+        var randomDirection = GetRandomDirection(directions);
+
+        ChangeDirectionOnSelectedDirection(Vector3.Back, ref direction);
+
+        GD.Print($"Enemy random direction: {randomDirection}");
+        GD.Print($"Enemy direction: {direction}");
 
         _targetVelocity.X = direction.X * _speed;
         _targetVelocity.Z = direction.Z * _speed;
 
+        var targetPosition = Position - direction;
+        LookAt(targetPosition, Vector3.Up);
+
+        Velocity = _targetVelocity;
         MoveAndSlide();
-	}
-
-    // public override void _PhysicsProcess(double delta)
-    // {
-    //     var direction = Vector3.Zero;
-
-
-    //     var randomDirection = GetRandomDirection(directions);
-
-    //     ChangeDirectionOnSelectedDirection(randomDirection, ref direction);
-
-    //     _targetVelocity.X = direction.X * _speed;
-    //     _targetVelocity.Z = direction.Z * _speed;
-    // }
+    }
 
     public override void _PhysicsProcess(double delta)
     {
-        GD.Print(Position);
+        // Vertical velocity
+        if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
+        {
+            _targetVelocity.Y -= gravity * (float)delta;
+        }
+
+        Velocity = _targetVelocity;
+        MoveAndSlide();
     }
 
     private Vector3 GetRandomDirection(Vector3[] directions)
@@ -59,7 +68,10 @@ internal partial class Enemy : CharacterBody3D
         return directions[randomIndex];
     }
 
-    private void ChangeDirectionOnSelectedDirection(Vector3 selectedDirection, ref Vector3 direction)
+    private static void ChangeDirectionOnSelectedDirection(
+        Vector3 selectedDirection,
+        ref Vector3 direction
+    )
     {
         switch (selectedDirection)
         {
