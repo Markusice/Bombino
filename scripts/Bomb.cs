@@ -30,9 +30,11 @@ internal partial class Bomb : Area3D
     #endregion
 
     private readonly Array<Node3D> _bodiesToExplode = new();
-    private readonly Array<Bomb> _bombsInRange = new();
+    private readonly Array<Area3D> _bombsInRange = new();
 
     private const float ExplosionDistanceDivider = Mathf.E;
+
+    private Area3D _bombObject;
 
     public int Range { get; set; }
 
@@ -41,6 +43,7 @@ internal partial class Bomb : Area3D
     /// </summary>
     public override void _Ready()
     {
+        _bombObject = GetNode<Area3D>("Bomb/BombObject");
         var timer = GetNode<Timer>("BombTimer");
 
         timer.WaitTime = _explodeTime;
@@ -80,10 +83,18 @@ internal partial class Bomb : Area3D
     /// <param name="area"></param>
     private void OnAreaEntered(Area3D area)
     {
-        if (!area.IsInGroup("bombs"))
+        if (!area.IsInGroup("bombobjects"))
             return;
 
-        _bombsInRange.Add(area as Bomb);
+        if (_bombObject.GetRid() == area.GetRid())
+            return;
+
+        _bombsInRange.Add(GetBombFromBombObject(area));
+    }
+
+    private static Area3D GetBombFromBombObject(Area3D area)
+    {
+        return area.GetParent<MeshInstance3D>().GetParent<Area3D>();
     }
 
     // for bombs
@@ -93,10 +104,13 @@ internal partial class Bomb : Area3D
     /// <param name="area"></param>
     private void OnAreaExited(Area3D area)
     {
-        if (!area.IsInGroup("bombs"))
+        if (!area.IsInGroup("bombobjects"))
             return;
 
-        _bombsInRange.Remove(area as Bomb);
+        if (_bombObject.GetRid() == area.GetRid())
+            return;
+
+        _bombsInRange.Remove(GetBombFromBombObject(area));
     }
 
     /// <summary>
@@ -244,7 +258,9 @@ internal partial class Bomb : Area3D
             var distanceBetweenTwoBombs = (Position - bomb.Position).Length();
             var bombTimeoutTime = distanceBetweenTwoBombs / ExplosionDistanceDivider;
 
-            GD.Print($"sent signal to bomb: {bomb} with timeout time: {bombTimeoutTime}");
+            GD.Print(
+                $"sent signal to bomb: {bomb} timeout time: {bombTimeoutTime} (distance: {distanceBetweenTwoBombs})"
+            );
 
             bomb.EmitSignal(SignalName.ExplodeSooner, bombTimeoutTime);
         }
@@ -287,7 +303,11 @@ internal partial class Bomb : Area3D
         {
             for (var nthTile = 1; nthTile <= Range; nthTile++)
             {
-                var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(explosionAxis, axis, nthTile);
+                var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(
+                    explosionAxis,
+                    axis,
+                    nthTile
+                );
 
                 if (!CanCreateExplosionAtPosition(effectPositionOnNthTile))
                     break;
@@ -304,7 +324,11 @@ internal partial class Bomb : Area3D
     /// <param name="axis"></param>
     /// <param name="nthTile"></param>
     /// <returns></returns>
-    private Vector3 GetEffectPositionOnAxisOnNthTile(ExplosionAxis explosionAxis, int axis, int nthTile)
+    private Vector3 GetEffectPositionOnAxisOnNthTile(
+        ExplosionAxis explosionAxis,
+        int axis,
+        int nthTile
+    )
     {
         if (explosionAxis == ExplosionAxis.X)
             return new Vector3(
