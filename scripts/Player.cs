@@ -39,7 +39,7 @@ internal partial class Player : CharacterBody3D
     public PlayerData PlayerData { get; set; }
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
-    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+    private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	
     /// <summary>
     /// Called when the node enters the scene tree for the first time.
@@ -82,7 +82,7 @@ internal partial class Player : CharacterBody3D
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
         {
-            _targetVelocity.Y -= gravity * (float)delta;
+            _targetVelocity.Y -= _gravity * (float)delta;
         }
 
         BlendMovementAnimation();

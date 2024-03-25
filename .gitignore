@@ -19,6 +19,7 @@ mono_crash.*.json
 
 # Rider-specific ignores
 .idea
+Folder.DotSettings.user
 
 # VSCode-specific ignores
 .vs

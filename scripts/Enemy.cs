@@ -18,11 +18,11 @@ internal partial class Enemy : CharacterBody3D
 
     #endregion
 
-    private const int _speed = 6;
+    private const int Speed = 6;
 
     private Vector3 _targetVelocity = Vector3.Zero;
 
-    private readonly Vector3[] directions =
+    private readonly Vector3[] _directions =
     {
         Vector3.Right,
         Vector3.Left,
@@ -30,7 +30,7 @@ internal partial class Enemy : CharacterBody3D
         Vector3.Forward
     };
 
-    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+    private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     /// <summary>
     /// Called when the node is added to the scene.
@@ -41,15 +41,15 @@ internal partial class Enemy : CharacterBody3D
 
         var direction = Vector3.Zero;
 
-        var randomDirection = GetRandomDirection(directions);
+        var randomDirection = GetRandomDirection(_directions);
 
         ChangeDirectionOnSelectedDirection(Vector3.Right, ref direction);
 
         GD.Print($"Enemy random direction: {randomDirection}");
         GD.Print($"Enemy direction: {direction}");
 
-        _targetVelocity.X = direction.X * _speed;
-        _targetVelocity.Z = direction.Z * _speed;
+        _targetVelocity.X = direction.X * Speed;
+        _targetVelocity.Z = direction.Z * Speed;
 
         var targetPosition = Position - direction;
         LookAt(targetPosition, Vector3.Up);
@@ -68,20 +68,20 @@ internal partial class Enemy : CharacterBody3D
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
         {
-            _targetVelocity.Y -= gravity * (float)delta;
+            _targetVelocity.Y -= _gravity * (float)delta;
         }
 
         if (IsOnWall())
         {
             var direction = Vector3.Zero;
 
-            var randomDirection = GetRandomDirection(directions);
+            var randomDirection = GetRandomDirection(_directions);
             ChangeDirectionOnSelectedDirection(randomDirection, ref direction);
 
             GD.Print($"Enemy random direction: {randomDirection}");
 
-            _targetVelocity.X = direction.X * _speed;
-            _targetVelocity.Z = direction.Z * _speed;
+            _targetVelocity.X = direction.X * Speed;
+            _targetVelocity.Z = direction.Z * Speed;
 
             var targetPosition = Position - direction;
             LookAt(targetPosition, Vector3.Up);

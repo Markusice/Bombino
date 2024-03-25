@@ -4,7 +4,7 @@ using System;
 using Godot;
 using persistence;
 
-internal partial class MainUI : CanvasLayer
+internal partial class MainUi : CanvasLayer
 {
     #region Exports
 
@@ -23,8 +23,8 @@ internal partial class MainUI : CanvasLayer
 
     #endregion
 
-    public Label TimerLabel { get; private set; }
-    public GridContainer PlayersBombsData { get; private set; }
+    private Label TimerLabel { get; set; }
+    private GridContainer PlayersBombsData { get; set; }
 
     public override void _Ready()
     {
@@ -54,23 +54,23 @@ internal partial class MainUI : CanvasLayer
 
     private void CreatePlayerBombsData(PlayerData playerData)
     {
-        var _bombStatusContainer = SetUpBombStatusContainer(playerData);
+        var bombStatusContainer = SetUpBombStatusContainer(playerData);
         var playerNameContainer = SetUpPlayerNameContainer(playerData);
 
-        PlayersBombsData.AddChild(_bombStatusContainer);
+        PlayersBombsData.AddChild(bombStatusContainer);
         PlayersBombsData.AddChild(playerNameContainer);
     }
 
     private PanelContainer SetUpBombStatusContainer(PlayerData playerData)
     {
-        var _bombStatusContainer = _bombStatusContainerScene.Instantiate<PanelContainer>();
-        var _bombNumberLabel = _bombStatusContainer.GetNode<Label>(
+        var bombStatusContainer = _bombStatusContainerScene.Instantiate<PanelContainer>();
+        var bombNumberLabel = bombStatusContainer.GetNode<Label>(
             "BombPicture/BombNumberCircle/BombNumberLabel"
         );
 
-        _bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
+        bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
 
-        return _bombStatusContainer;
+        return bombStatusContainer;
     }
 
     private MarginContainer SetUpPlayerNameContainer(PlayerData playerData)
