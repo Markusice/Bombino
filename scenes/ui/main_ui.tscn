@@ -1,13 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dwn8vy6or60pe"]
+[gd_scene load_steps=2 format=3 uid="uid://dwn8vy6or60pe"]
 
-[ext_resource type="Script" path="res://scripts/ui/MainUI.cs" id="1_733ig"]
-[ext_resource type="PackedScene" uid="uid://b8yslovrmkcuj" path="res://scenes/ui/templates/bomb_status_container.tscn" id="2_slpcp"]
-[ext_resource type="PackedScene" uid="uid://ctiw2gldrdey1" path="res://scenes/ui/templates/player_name_container.tscn" id="3_0ns4a"]
+[ext_resource type="Script" path="res://scripts/ui/MainUi.cs" id="1_c6rma"]
 
 [node name="MainUI" type="CanvasLayer"]
-script = ExtResource("1_733ig")
-_bombStatusContainerScene = ExtResource("2_slpcp")
-_playerNameContainerScene = ExtResource("3_0ns4a")
+script = ExtResource("1_c6rma")
 
 [node name="PlayerBombsContainer" type="PanelContainer" parent="."]
 offset_right = 204.0
