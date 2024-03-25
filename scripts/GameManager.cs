@@ -65,16 +65,6 @@ internal partial class GameManager : WorldEnvironment
     }
 
     /// <summary>
-    /// Gets the position on the tile map.
-    /// </summary>
-    /// <param name="position"></param>
-    /// <returns></returns>
-    private static Vector3 GetPositionOnTileMap(Vector3I position)
-    {
-        return GameMap.MapToLocal(position);
-    }
-
-    /// <summary>
     /// Checks for saved data and sets up the game.
     /// </summary>
     private void CheckForSavedDataAndSetUpGame()
@@ -132,7 +122,7 @@ internal partial class GameManager : WorldEnvironment
     private void CreateThreePlayers()
     {
         CreateTwoPlayers();
-        CreatePlayer(PlayerColor.Yellow, new Vector3I(5, 1, 4));
+        CreatePlayer(PlayerColor.Yellow, new Vector3(11, 2, 9));
     }
 
     /// <summary>
@@ -140,8 +130,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CreateTwoPlayers()
     {
-        CreatePlayer(PlayerColor.Blue, new Vector3I(-7, 1, -8));
-        CreatePlayer(PlayerColor.Red, new Vector3I(-7, 1, 4));
+        CreatePlayer(PlayerColor.Blue, new Vector3(-13, 2, -15));
+        CreatePlayer(PlayerColor.Red, new Vector3(-13, 2, 9));
     }
 
     /// <summary>
@@ -150,16 +140,14 @@ internal partial class GameManager : WorldEnvironment
     /// <param name="playerColor"></param>
     /// <param name="position"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    private void CreatePlayer(PlayerColor playerColor, Vector3I position)
+    private void CreatePlayer(PlayerColor playerColor, Vector3 position)
     {
         var scenePath = $"res://scenes/players/{playerColor}.tscn";
         _playerScene = ResourceLoader.Load<PackedScene>(scenePath);
         var player = _playerScene.Instantiate<Player>();
 
-        player.Position = GetPositionOnTileMap(position);
+        player.Position = position;
         player.Name = playerColor.ToString();
-
-        GD.Print($"{player.Name} pos: {player.Position}");
 
         player.PlayerData = playerColor switch
         {
