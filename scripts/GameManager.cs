@@ -187,7 +187,7 @@ internal partial class GameManager : WorldEnvironment
     /// <summary>
     /// Called every frame. 'delta' is the elapsed time since the previous frame.
     /// </summary>
-    /// <param name="delta">The time elapsed since the previous frame.</param>
+    /// <param name="event">Event when a key is pressed.</param>
     public override void _Input(InputEvent @event)
     {
         if (!InputEventChecker.IsEscapeKeyPressed(@event))

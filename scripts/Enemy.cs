@@ -12,7 +12,7 @@ internal partial class Enemy : CharacterBody3D
 
     /// <summary>
     /// Signal emitted when the enemy is hit.
-    /// </summar
+    /// </summary>
     [Signal]
     public delegate void HitEventHandler();
 
