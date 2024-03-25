@@ -1,6 +1,6 @@
 [gd_scene load_steps=27 format=3 uid="uid://d3ldxy0l5gvp"]
 
-[ext_resource type="Script" path="res://scripts/VFX_Explosion.cs" id="1_bs1wf"]
+[ext_resource type="Script" path="res://scripts/VfxExplosion.cs" id="1_bs1wf"]
 [ext_resource type="Texture2D" uid="uid://bx76yvworn11d" path="res://assets/explosion/Flare00.PNG" id="1_ie1fp"]
 [ext_resource type="Material" uid="uid://c0sytdro3fiho" path="res://assets/materials/Mat_Flare00.tres" id="2_f1hed"]
 

@@ -258,7 +258,7 @@ internal partial class Bomb : Area3D
         var bombMeshInstance3D = GetNode<MeshInstance3D>("Bomb");
         bombMeshInstance3D.Hide();
 
-        var effectInstance = _effect.Instantiate<VFX_Explosion>();
+        var effectInstance = _effect.Instantiate<VfxExplosion>();
         effectInstance.Position = Position;
 
         var effectAnimationPlayer = effectInstance.GetNode<AnimationPlayer>("AnimationPlayer");
@@ -343,7 +343,7 @@ internal partial class Bomb : Area3D
     /// <param name="position"></param>
     private void CreateExplosionAtPosition(Vector3 position)
     {
-        var effectInstance = _effect.Instantiate<VFX_Explosion>();
+        var effectInstance = _effect.Instantiate<VfxExplosion>();
         effectInstance.Position = position;
 
         var animationPlayer = effectInstance.GetNode<AnimationPlayer>("AnimationPlayer");
