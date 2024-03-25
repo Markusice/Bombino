@@ -3,8 +3,15 @@ namespace Bombino.scripts.persistence;
 using Godot;
 using ui;
 
+/// <summary>
+/// Provides methods to create action keys for an <see cref="ActionKeysContainer"/>.
+/// </summary>
 internal static class ActionKeysMapper
 {
+    /// <summary>
+    /// Creates action keys for the specified <paramref name="actionKeysContainer"/>.
+    /// </summary>
+    /// <param name="actionKeysContainer">The action keys container to create action keys for.</param>
     public static void CreateActionKeys(ActionKeysContainer actionKeysContainer)
     {
         foreach (var actionItem in ActionKeysContainer.ActionItems)
@@ -17,6 +24,9 @@ internal static class ActionKeysMapper
         }
     }
 
+    /// <summary>
+    /// Represents a button used for remapping actions.
+    /// </summary>
     private static RemapButton CreateRemapButton(string actionItem)
     {
         var remapButton = new RemapButton();
@@ -27,6 +37,9 @@ internal static class ActionKeysMapper
         return remapButton;
     }
 
+    /// <summary>
+    /// Represents a control that displays a single line of read-only text.
+    /// </summary>
     private static Label CreateSettingKey(string actionItem)
     {
         var settingKeyLabel = new Label

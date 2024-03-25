@@ -22,6 +22,11 @@ internal static class GameSaveHandler
         GameSave.WriteSave(data);
     }
 
+    /// <summary>
+    /// Checks if there is saved data and retrieves it.
+    /// </summary>
+    /// <param name="outputData">The dictionary containing the saved game data.</param>
+    /// <returns><c>true</c> if saved data exists, <c>false</c> otherwise.</returns>
     public static bool IsThereSavedData(out Dictionary<string, Variant> outputData)
     {
         if (GameSave.IsSaveExits())
@@ -37,6 +42,12 @@ internal static class GameSaveHandler
         return false;
     }
 
+    /// <summary>
+    /// Adds a new row to the data dictionary.
+    /// </summary>
+    /// <param name="data">The dictionary to add the row to.</param>
+    /// <param name="rowName">The name of the row.</param>
+    /// <param name="row">The dictionary representing the row.</param>
     private static void AddNewRowToData(
         Dictionary<string, Variant> data,
         string rowName,
@@ -46,6 +57,10 @@ internal static class GameSaveHandler
         data.Add(rowName, row);
     }
 
+    /// <summary>
+    /// Creates a dictionary of players' data rows.
+    /// </summary>
+    /// <returns>A dictionary containing players' data rows.</returns>
     private static Dictionary<string, Variant> CreatePlayersDataRows()
     {
         var playersDataRows = new Dictionary<string, Variant>();
@@ -60,6 +75,11 @@ internal static class GameSaveHandler
         return playersDataRows;
     }
 
+    /// <summary>
+    /// Creates a dictionary of player data to store.
+    /// </summary>
+    /// <param name="playerData">The player data to be stored.</param>
+    /// <returns>A dictionary containing the player data.</returns>
     private static Dictionary<string, Variant> CreatePlayerDataToStore(PlayerData playerData)
     {
         return new Dictionary<string, Variant>

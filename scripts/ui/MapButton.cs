@@ -2,6 +2,9 @@ namespace Bombino.scripts.ui;
 
 using Godot;
 
+/// <summary>
+/// Represents a button used for selecting a map in the UI.
+/// </summary>
 internal partial class MapButton : Button, IUiButton
 {
     #region Exports
@@ -10,6 +13,10 @@ internal partial class MapButton : Button, IUiButton
 
     #endregion
 
+    /// <summary>
+    /// Called when the map button is pressed.
+    /// Sets the selected map and changes the scene to the rounds menu.
+    /// </summary>
     public void OnPressed()
     {
         SetSelectedMapAndChangeScene();
@@ -17,5 +24,8 @@ internal partial class MapButton : Button, IUiButton
         GetTree().ChangeSceneToFile(_roundsMenuScenePath);
     }
 
+    /// <summary>
+    /// Sets the selected map and changes the scene.
+    /// </summary>
     private void SetSelectedMapAndChangeScene() { }
 }
