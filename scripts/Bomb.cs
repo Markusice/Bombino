@@ -29,6 +29,8 @@ internal partial class Bomb : Area3D
 
     #endregion
 
+    #region Fields
+
     private readonly Array<Node3D> _bodiesToExplode = new();
     private readonly Array<Area3D> _bombsInRange = new();
 
@@ -38,16 +40,39 @@ internal partial class Bomb : Area3D
 
     public int Range { get; set; }
 
+    #endregion
+
     /// <summary>
     /// Called when the node enters the scene tree for the first time.
     /// </summary>
     public override void _Ready()
     {
         _bombObject = GetNode<Area3D>("Bomb/BombObject");
-        var timer = GetNode<Timer>("BombTimer");
 
+        var timer = GetNode<Timer>("BombTimer");
         timer.WaitTime = _explodeTime;
+
         timer.Start();
+    }
+
+    #region MethodsForSignals
+
+    /// <summary>
+    /// Called when the bomb explodes sooner.
+    /// </summary>
+    /// <param name="newTimerWaitTime"></param>
+    private void OnExplodeSooner(float newTimerWaitTime)
+    {
+        var bombTimer = GetNode<Timer>("BombTimer");
+
+        if (bombTimer.TimeLeft <= newTimerWaitTime)
+            return;
+
+        bombTimer.Stop();
+
+        bombTimer.WaitTime = newTimerWaitTime;
+
+        bombTimer.Start();
     }
 
     // for players / monsters
@@ -128,6 +153,8 @@ internal partial class Bomb : Area3D
 
         QueueFree();
     }
+
+    #endregion
 
     /// <summary>
     /// Explodes the bodies in the area.
@@ -228,24 +255,6 @@ internal partial class Bomb : Area3D
         var result = spaceState.IntersectRay(query);
 
         return result;
-    }
-
-    /// <summary>
-    /// Called when the bomb explodes sooner.
-    /// </summary>
-    /// <param name="newTimerWaitTime"></param>
-    private void OnExplodeSooner(float newTimerWaitTime)
-    {
-        var bombTimer = GetNode<Timer>("BombTimer");
-
-        if (bombTimer.TimeLeft <= newTimerWaitTime)
-            return;
-
-        bombTimer.Stop();
-
-        bombTimer.WaitTime = newTimerWaitTime;
-
-        bombTimer.Start();
     }
 
     /// <summary>
