@@ -1,5 +1,6 @@
 namespace Bombino.scripts;
 
+using System;
 using Godot;
 using Godot.Collections;
 
@@ -75,7 +76,6 @@ internal partial class Bomb : Area3D
         bombTimer.Start();
     }
 
-    // for players / monsters
     /// <summary>
     /// Called when a body enters the area.
     /// </summary>
@@ -88,7 +88,6 @@ internal partial class Bomb : Area3D
         _bodiesToExplode.Add(body);
     }
 
-    // for players / monsters
     /// <summary>
     /// Called when a body exits the area.
     /// </summary>
@@ -161,23 +160,23 @@ internal partial class Bomb : Area3D
     /// </summary>
     private void ExplodeBodies()
     {
-        foreach (var body in _bodiesToExplode)
+        foreach (var bodyToExplode in _bodiesToExplode)
         {
-            if (!body.IsInGroup("players") && !body.IsInGroup("enemies"))
+            if (!bodyToExplode.IsInGroup("players") && !bodyToExplode.IsInGroup("enemies"))
                 return;
 
             var rayDirections = GetRayCastDirections();
 
-            var bodyShouldNotDie = CastRaysInDirectionsAndCheckIfPlayerShouldDie(
-                body,
+            var bodyShouldNotDie = CastRaysInDirectionsAndGetBodyShouldNotDie(
+                bodyToExplode,
                 rayDirections
             );
 
             if (bodyShouldNotDie)
                 continue;
 
-            body.EmitSignal(
-                body.IsInGroup("players") ? Player.SignalName.Hit : Enemy.SignalName.Hit
+            bodyToExplode.EmitSignal(
+                bodyToExplode.IsInGroup("players") ? Player.SignalName.Hit : Enemy.SignalName.Hit
             );
         }
     }
@@ -194,18 +193,18 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Casts rays in the specified directions and checks if the player should die.
     /// </summary>
-    /// <param name="body"></param>
+    /// <param name="bodyToExplode"></param>
     /// <param name="rayDirections"></param>
     /// <returns></returns>
-    private bool CastRaysInDirectionsAndCheckIfPlayerShouldDie(Node3D body, Vector3[] rayDirections)
+    private bool CastRaysInDirectionsAndGetBodyShouldNotDie(
+        Node3D bodyToExplode,
+        Vector3[] rayDirections
+    )
     {
-        var playerShouldNotDie = false;
+        var bodyShouldNotDie = false;
 
         foreach (var rayDirection in rayDirections)
         {
-            if (playerShouldNotDie)
-                break;
-
             var origin = GlobalPosition;
             var end = origin + rayDirection * (Range * 2);
             var rayMask = GameManager.GameMap.CollisionMask;
@@ -217,21 +216,57 @@ internal partial class Bomb : Area3D
 
             var colliderPosition = result["position"].AsVector3();
 
-            playerShouldNotDie = rayDirection switch
-            {
-                _ when rayDirection == Vector3.Left
-                    => (colliderPosition.X - body.Position.X) >= GameManager.GameMap.CellSize.X,
-                _ when rayDirection == Vector3.Right
-                    => (body.Position.X - colliderPosition.X) >= GameManager.GameMap.CellSize.X,
-                _ when rayDirection == Vector3.Back
-                    => (body.Position.Z - colliderPosition.Z) >= GameManager.GameMap.CellSize.Z,
-                _ when rayDirection == Vector3.Forward
-                    => (colliderPosition.Z - body.Position.Z) >= GameManager.GameMap.CellSize.Z,
-                _ => false
-            };
+            bodyShouldNotDie = GetBodyShouldNotDieInDirection(
+                rayDirection,
+                colliderPosition,
+                bodyToExplode
+            );
+
+            if (bodyShouldNotDie)
+                break;
         }
 
-        return playerShouldNotDie;
+        return bodyShouldNotDie;
+    }
+
+    private static bool GetBodyShouldNotDieInDirection(
+        Vector3 direction,
+        Vector3 colliderPosition,
+        Node3D body
+    )
+    {
+        var isBodySafeInDirections = new System.Collections.Generic.Dictionary<
+            Vector3,
+            Func<Vector3, Node3D, bool>
+        >
+        {
+            { Vector3.Left, IsBodySafeFromBombOnLeft },
+            { Vector3.Right, IsBodySafeFromBombOnRight },
+            { Vector3.Back, IsBodySafeFromBombOnBack },
+            { Vector3.Forward, IsBodySafeFromBombOnForward }
+        };
+
+        return isBodySafeInDirections[direction].Invoke(colliderPosition, body);
+    }
+
+    private static bool IsBodySafeFromBombOnLeft(Vector3 colliderPosition, Node3D body)
+    {
+        return (colliderPosition.X - body.Position.X) >= GameManager.GameMap.CellSize.X;
+    }
+
+    private static bool IsBodySafeFromBombOnRight(Vector3 colliderPosition, Node3D body)
+    {
+        return (body.Position.X - colliderPosition.X) >= GameManager.GameMap.CellSize.X;
+    }
+
+    private static bool IsBodySafeFromBombOnBack(Vector3 colliderPosition, Node3D body)
+    {
+        return (body.Position.Z - colliderPosition.Z) >= GameManager.GameMap.CellSize.Z;
+    }
+
+    private static bool IsBodySafeFromBombOnForward(Vector3 colliderPosition, Node3D body)
+    {
+        return (colliderPosition.Z - body.Position.Z) >= GameManager.GameMap.CellSize.Z;
     }
 
     /// <summary>
