@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://mwftlefv7r0j"]
 
-[ext_resource type="Script" path="res://scripts/ui/Players2Button.cs" id="1_olaa4"]
+[ext_resource type="Script" path="res://scripts/ui/play_menu/Players2Button.cs" id="1_3jhk4"]
 [ext_resource type="PackedScene" uid="uid://cgka8qcma8qkj" path="res://scenes/ui/maps_menu.tscn" id="2_dcjl4"]
-[ext_resource type="Script" path="res://scripts/ui/Players3Button.cs" id="2_fciy4"]
+[ext_resource type="Script" path="res://scripts/ui/play_menu/Players3Button.cs" id="3_t0xty"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -47,7 +47,7 @@ size_flags_horizontal = 4
 layout_mode = 2
 theme_override_font_sizes/font_size = 95
 text = "2 Players"
-script = ExtResource("1_olaa4")
+script = ExtResource("1_3jhk4")
 _mapsMenuScene = ExtResource("2_dcjl4")
 
 [node name="TextureRect" type="TextureRect" parent="MainActionsContainer/HBoxContainer"]
@@ -58,7 +58,7 @@ layout_mode = 2
 theme_type_variation = &"ButtonMirrored"
 theme_override_font_sizes/font_size = 95
 text = "3 Players"
-script = ExtResource("2_fciy4")
+script = ExtResource("3_t0xty")
 _mapsMenuScene = ExtResource("2_dcjl4")
 
 [connection signal="pressed" from="MainActionsContainer/HBoxContainer/Players2Button" to="MainActionsContainer/HBoxContainer/Players2Button" method="OnPressed"]
