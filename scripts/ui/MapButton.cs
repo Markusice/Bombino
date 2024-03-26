@@ -7,11 +7,7 @@ using Godot;
 /// </summary>
 internal partial class MapButton : Button, IUiButton
 {
-    #region Exports
-
     private string _roundsMenuScenePath = "res://scenes/ui/rounds_menu.tscn";
-
-    #endregion
 
     /// <summary>
     /// Called when the map button is pressed.

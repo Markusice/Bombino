@@ -18,6 +18,8 @@ internal partial class Enemy : CharacterBody3D
 
     #endregion
 
+    #region Fields
+
     private const int Speed = 6;
 
     private Vector3 _targetVelocity = Vector3.Zero;
@@ -31,6 +33,8 @@ internal partial class Enemy : CharacterBody3D
     };
 
     private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+
+    #endregion
 
     /// <summary>
     /// Called when the node is added to the scene.
@@ -94,6 +98,18 @@ internal partial class Enemy : CharacterBody3D
         GD.Print($"CanMoveToTileOnRight: {CanMoveToTileOnRight(Position)}");
     }
 
+    #region MethodsForSignals
+
+    /// <summary>
+    /// Handler for the Hit event.
+    /// </summary>
+    private void OnHit()
+    {
+        QueueFree();
+    }
+
+    #endregion
+
     /// <summary>
     /// Checks if the enemy can move to the tile on the right.
     /// </summary>
@@ -146,13 +162,5 @@ internal partial class Enemy : CharacterBody3D
                 direction.Z -= 1.0f;
                 break;
         }
-    }
-
-    /// <summary>
-    /// Handler for the Hit event.
-    /// </summary>
-    private void OnHit()
-    {
-        QueueFree();
     }
 }

@@ -154,7 +154,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.75, 2.08165e-1
 collision_layer = 8
 collision_mask = 23
 script = ExtResource("1_1hr57")
-_effect = ExtResource("2_hirdy")
+_effectScene = ExtResource("2_hirdy")
 metadata/_edit_group_ = true
 
 [node name="CollisionShapeX" type="CollisionShape3D" parent="."]

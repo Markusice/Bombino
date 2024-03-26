@@ -35,6 +35,8 @@ internal partial class GameManager : WorldEnvironment
 
     #endregion
 
+    #region Fields
+
     public static WorldEnvironment WorldEnvironment { get; private set; }
     public static GridMap GameMap { get; private set; }
 
@@ -42,11 +44,12 @@ internal partial class GameManager : WorldEnvironment
     public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
 
-    internal static Array<PlayerData> PlayersData { get; } = new();
+    public static Array<PlayerData> PlayersData { get; } = new();
 
     private Node _pausedGameSceneInstance;
+    private PackedScene _playerScene;
 
-    private static PackedScene _playerScene;
+    #endregion
 
     /// <summary>
     /// Called when the node enters the scene tree for the first time.
@@ -63,6 +66,18 @@ internal partial class GameManager : WorldEnvironment
 
         CreateEnemy(new Vector3I(-10, 2, -15));
     }
+
+    #region MethodsForSignals
+
+    /// <summary>
+    /// Event handler for the resume game event.
+    /// </summary>
+    private void OnResumeGame()
+    {
+        Resume();
+    }
+
+    #endregion
 
     /// <summary>
     /// Checks for saved data and sets up the game.
@@ -238,14 +253,6 @@ internal partial class GameManager : WorldEnvironment
             "ButtonsContainer/GridContainer/SaveAndExitButton"
         );
         saveAndExitButton.Pressed += OnSaveAndExit;
-    }
-
-    /// <summary>
-    /// Event handler for the resume game event.
-    /// </summary>
-    private void OnResumeGame()
-    {
-        Resume();
     }
 
     /// <summary>
