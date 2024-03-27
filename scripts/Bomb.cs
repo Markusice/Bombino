@@ -374,9 +374,11 @@ internal partial class Bomb : Area3D
         int nthTile
     )
     {
+        var isAxisDirectionNegative = axis < 0;
+
         if (explosionAxis == ExplosionAxis.X)
             return new Vector3(
-                axis < 0
+                isAxisDirectionNegative
                     ? Position.X - (nthTile * GameManager.GameMap.CellSize.X)
                     : Position.X + (nthTile * GameManager.GameMap.CellSize.X),
                 Position.Y,
@@ -386,7 +388,7 @@ internal partial class Bomb : Area3D
         return new Vector3(
             Position.X,
             Position.Y,
-            axis < 0
+            isAxisDirectionNegative
                 ? Position.Z - (nthTile * GameManager.GameMap.CellSize.Z)
                 : Position.Z + (nthTile * GameManager.GameMap.CellSize.Z)
         );
