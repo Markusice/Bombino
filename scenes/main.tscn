@@ -31,3 +31,5 @@ transform = Transform3D(1, 0, 0, 0, 0.319688, 0.947523, 0, -0.947523, 0.319688, 
 fov = 60.0
 
 [node name="MainUI" parent="." instance=ExtResource("1_uhnt5")]
+
+[connection signal="ResumeGame" from="WorldEnvironment" to="WorldEnvironment" method="OnResumeGame"]

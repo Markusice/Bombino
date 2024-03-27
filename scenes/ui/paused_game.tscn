@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://pvmueb3x3hwg"]
+[gd_scene load_steps=11 format=3 uid="uid://pvmueb3x3hwg"]
 
 [ext_resource type="Material" uid="uid://dgrf62p003e8f" path="res://assets/materials/blur.tres" id="1_fu6uk"]
 [ext_resource type="Script" path="res://scripts/ui/PausedGame.cs" id="1_y8mo4"]
@@ -9,18 +9,6 @@
 
 [sub_resource type="Animation" id="Animation_3w1tt"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Blur:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
 
 [sub_resource type="Animation" id="Animation_kinmj"]
 resource_name = "start_pause"
@@ -37,10 +25,26 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_g2c2e"]
+resource_name = "start_resume"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Blur:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b3hyr"]
 _data = {
 "RESET": SubResource("Animation_3w1tt"),
-"start_pause": SubResource("Animation_kinmj")
+"start_pause": SubResource("Animation_kinmj"),
+"start_resume": SubResource("Animation_g2c2e")
 }
 
 [node name="PausedGameUI" type="CanvasLayer"]
@@ -54,6 +58,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(1, 1, 1, 0)
 
 [node name="ButtonsContainer" type="PanelContainer" parent="."]
 anchors_preset = 8

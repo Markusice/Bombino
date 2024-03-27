@@ -270,15 +270,23 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private async void Resume()
     {
+        if (CannotResumeGame())
+            return;
+
         RemoveButtonsAndShowCountDownContainer();
+
+        PlayUnBlurAnimation();
 
         await StartCountDown();
 
-        GetParent().RemoveChild(_pausedGameSceneInstance);
+        _pausedGameSceneInstance.QueueFree();
 
         GetTree().Paused = false;
         SetProcessInput(true);
     }
+
+    private bool CannotResumeGame() =>
+        _pausedGameSceneInstance.GetNodeOrNull<PanelContainer>("ButtonsContainer") == null;
 
     /// <summary>
     /// Removes the buttons and shows the countdown container.
@@ -291,6 +299,12 @@ internal partial class GameManager : WorldEnvironment
             "CountDownContainer"
         );
         countDownContainer.Visible = true;
+    }
+
+    private void PlayUnBlurAnimation()
+    {
+        var blurAnimation = _pausedGameSceneInstance.GetNode<AnimationPlayer>("BlurAnimation");
+        blurAnimation.Play("start_resume");
     }
 
     /// <summary>
