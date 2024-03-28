@@ -37,7 +37,7 @@ internal partial class Bomb : Area3D
 
     private const float ExplosionDistanceDivider = Mathf.E;
 
-    private Area3D _bombObject;
+    private StaticBody3D _bombObject;
 
     public int Range { get; set; }
 
@@ -48,7 +48,7 @@ internal partial class Bomb : Area3D
     /// </summary>
     public override void _Ready()
     {
-        _bombObject = GetNode<Area3D>("Bomb/BombObject");
+        _bombObject = GetNode<StaticBody3D>("Bomb/BombObject");
 
         var timer = GetNode<Timer>("BombTimer");
         timer.WaitTime = _explodeTime;
@@ -82,10 +82,10 @@ internal partial class Bomb : Area3D
     /// <param name="body"></param>
     private void OnBodyEntered(Node3D body)
     {
-        if (!body.IsInGroup("players") && !body.IsInGroup("enemies"))
-            return;
-
-        _bodiesToExplode.Add(body);
+        if (body.IsInGroup("players") || body.IsInGroup("enemies"))
+            _bodiesToExplode.Add(body);
+        else if (body.IsInGroup("bombobjects") && _bombObject != body)
+            _bombsInRange.Add(GetBombFromBombObject(body));
     }
 
     /// <summary>
@@ -94,47 +94,15 @@ internal partial class Bomb : Area3D
     /// <param name="body"></param>
     private void OnBodyExited(Node3D body)
     {
-        if (!body.IsInGroup("players") && !body.IsInGroup("enemies"))
-            return;
-
-        _bodiesToExplode.Remove(body);
+        if (body.IsInGroup("players") || body.IsInGroup("enemies"))
+            _bodiesToExplode.Remove(body);
+        else if (body.IsInGroup("bombobjects") && _bombObject != body)
+            _bombsInRange.Remove(GetBombFromBombObject(body));
     }
 
-    // for bombs
-    /// <summary>
-    /// Called when an area enters the area.
-    /// </summary>
-    /// <param name="area"></param>
-    private void OnAreaEntered(Area3D area)
+    private static Area3D GetBombFromBombObject(Node3D body)
     {
-        if (!area.IsInGroup("bombobjects"))
-            return;
-
-        if (_bombObject.GetRid() == area.GetRid())
-            return;
-
-        _bombsInRange.Add(GetBombFromBombObject(area));
-    }
-
-    private static Area3D GetBombFromBombObject(Area3D area)
-    {
-        return area.GetParent<MeshInstance3D>().GetParent<Area3D>();
-    }
-
-    // for bombs
-    /// <summary>
-    /// Called when an area exits the area.
-    /// </summary>
-    /// <param name="area"></param>
-    private void OnAreaExited(Area3D area)
-    {
-        if (!area.IsInGroup("bombobjects"))
-            return;
-
-        if (_bombObject.GetRid() == area.GetRid())
-            return;
-
-        _bombsInRange.Remove(GetBombFromBombObject(area));
+        return body.GetParent<MeshInstance3D>().GetParent<Area3D>();
     }
 
     /// <summary>

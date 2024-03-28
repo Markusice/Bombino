@@ -114,7 +114,4 @@ place_bomb_p3={
 3d_physics/layer_2="players"
 3d_physics/layer_3="enemies"
 3d_physics/layer_4="bombs"
-
-[rendering]
-
-anti_aliasing/quality/use_taa=true
+3d_physics/layer_5="bomb_object"

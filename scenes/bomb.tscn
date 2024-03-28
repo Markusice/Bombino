@@ -179,9 +179,9 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0.011, 0.187495, -0.019)
 mesh = SubResource("ArrayMesh_yqah3")
 skeleton = NodePath("")
 
-[node name="BombObject" type="Area3D" parent="Bomb" groups=["bombobjects"]]
+[node name="BombObject" type="StaticBody3D" parent="Bomb" groups=["bombobjects"]]
 collision_layer = 16
-collision_mask = 0
+collision_mask = 6
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bomb/BombObject"]
 shape = SubResource("ConcavePolygonShape3D_t0trf")
