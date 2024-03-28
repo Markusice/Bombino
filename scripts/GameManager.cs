@@ -110,7 +110,7 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CheckMapTypeAndCreateIt()
     {
-        var scenePath = $"res://scenes/maps/{SelectedMap}.tscn";
+        var scenePath = $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
         var mapScene = ResourceLoader.Load<PackedScene>(scenePath);
         GameMap = mapScene.Instantiate<GridMap>();
 
@@ -157,7 +157,7 @@ internal partial class GameManager : WorldEnvironment
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     private void CreatePlayer(PlayerColor playerColor, Vector3 position)
     {
-        var scenePath = $"res://scenes/players/{playerColor}.tscn";
+        var scenePath = $"res://scenes/players/{playerColor.ToString().ToLower()}.tscn";
         _playerScene = ResourceLoader.Load<PackedScene>(scenePath);
         var player = _playerScene.Instantiate<Player>();
 
