@@ -28,6 +28,14 @@ internal partial class RoundsMenu : CanvasLayer
         _errorLabel = _errorContainer.GetNode<Label>("ErrorLabel");
     }
 
+    public override void _Process(double delta)
+    {
+        var sceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mainScene.ResourcePath);
+
+        if (sceneLoadStatus == ResourceLoader.ThreadLoadStatus.Loaded)
+            GetTree().ChangeSceneToPacked(_mainScene);
+    }
+
     /// <summary>
     /// Event handler for when the number input is submitted.
     /// </summary>
@@ -49,7 +57,8 @@ internal partial class RoundsMenu : CanvasLayer
         HideError();
 
         GameManager.NumberOfRounds = number;
-        GetTree().ChangeSceneToPacked(_mainScene);
+
+        ResourceLoader.LoadThreadedRequest(_mainScene.ResourcePath);
     }
 
     /// <summary>
