@@ -192,6 +192,9 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void OnPlaceBomb()
     {
+        var collisionObject = this as CollisionObject3D;
+        collisionObject.SetCollisionMaskValue(5, false);
+
         var bombTilePosition = GameManager.GameMap.MapToLocal(_mapPosition);
         var bombToPlacePosition = new Vector3(
             bombTilePosition.X,
