@@ -37,7 +37,7 @@ internal partial class Bomb : Area3D
 
     private const float ExplosionDistanceDivider = Mathf.E;
 
-    private Area3D _bombObject;
+    private Area3D _bombMaskArea;
 
     public int Range { get; set; }
 
@@ -48,7 +48,8 @@ internal partial class Bomb : Area3D
     /// </summary>
     public override void _Ready()
     {
-        _bombObject = GetNode<Area3D>("Bomb/BombObject");
+        GD.Print($"bomb pos: {Position}");
+        _bombMaskArea = GetNode<Area3D>("Bomb/MaskArea");
 
         var timer = GetNode<Timer>("BombTimer");
         timer.WaitTime = _explodeTime;
@@ -82,10 +83,8 @@ internal partial class Bomb : Area3D
     /// <param name="body"></param>
     private void OnBodyEntered(Node3D body)
     {
-        if (!body.IsInGroup("players") && !body.IsInGroup("enemies"))
-            return;
-
-        _bodiesToExplode.Add(body);
+        if (body.IsInGroup("players") || body.IsInGroup("enemies"))
+            _bodiesToExplode.Add(body);
     }
 
     /// <summary>
@@ -94,47 +93,30 @@ internal partial class Bomb : Area3D
     /// <param name="body"></param>
     private void OnBodyExited(Node3D body)
     {
-        if (!body.IsInGroup("players") && !body.IsInGroup("enemies"))
-            return;
-
-        _bodiesToExplode.Remove(body);
+        if (body.IsInGroup("players") || body.IsInGroup("enemies"))
+            _bodiesToExplode.Remove(body);
     }
 
-    // for bombs
-    /// <summary>
-    /// Called when an area enters the area.
-    /// </summary>
-    /// <param name="area"></param>
     private void OnAreaEntered(Area3D area)
     {
         if (!area.IsInGroup("bombobjects"))
             return;
 
-        if (_bombObject.GetRid() == area.GetRid())
+        if (_bombMaskArea.GetRid() == area.GetRid())
             return;
 
         _bombsInRange.Add(GetBombFromBombObject(area));
     }
 
-    private static Area3D GetBombFromBombObject(Area3D area)
+    private void OnEnableCollisionMaskOnPlacer(Node3D body)
     {
-        return area.GetParent<MeshInstance3D>().GetParent<Area3D>();
-    }
-
-    // for bombs
-    /// <summary>
-    /// Called when an area exits the area.
-    /// </summary>
-    /// <param name="area"></param>
-    private void OnAreaExited(Area3D area)
-    {
-        if (!area.IsInGroup("bombobjects"))
+        if (!body.IsInGroup("players"))
             return;
 
-        if (_bombObject.GetRid() == area.GetRid())
-            return;
+        var bombCollisionObject = this as CollisionObject3D;
 
-        _bombsInRange.Remove(GetBombFromBombObject(area));
+        if (!bombCollisionObject.GetCollisionMaskValue(2))
+            bombCollisionObject.SetCollisionMaskValue(2, true);
     }
 
     /// <summary>
@@ -154,6 +136,11 @@ internal partial class Bomb : Area3D
     }
 
     #endregion
+
+    private static Area3D GetBombFromBombObject(Node3D body)
+    {
+        return body.GetParent<MeshInstance3D>().GetParent<Area3D>();
+    }
 
     /// <summary>
     /// Explodes the bodies in the area.
@@ -297,6 +284,7 @@ internal partial class Bomb : Area3D
     /// </summary>
     private void SendSignalToBombsInRange()
     {
+        GD.Print($"bombsInRange: {_bombsInRange}");
         foreach (var bomb in _bombsInRange)
         {
             var distanceBetweenTwoBombs = (Position - bomb.Position).Length();
