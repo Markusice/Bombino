@@ -10,7 +10,7 @@ internal partial class RoundsMenu : CanvasLayer
     #region Exports
 
     [Export]
-    private PackedScene _mainScene;
+    private PackedScene _loadingScene;
 
     #endregion
 
@@ -49,7 +49,7 @@ internal partial class RoundsMenu : CanvasLayer
         HideError();
 
         GameManager.NumberOfRounds = number;
-        GetTree().ChangeSceneToPacked(_mainScene);
+        GetTree().ChangeSceneToPacked(_loadingScene);
     }
 
     /// <summary>
