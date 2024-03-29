@@ -80,9 +80,10 @@ internal partial class Enemy : CharacterBody3D
             var direction = Vector3.Zero;
 
             var randomDirection = GetRandomDirection(_directions);
+
             ChangeDirectionOnSelectedDirection(randomDirection, ref direction);
 
-            GD.Print($"Enemy random direction: {randomDirection}");
+            //GD.Print($"Enemy random direction: {randomDirection}");
 
             _targetVelocity.X = direction.X * Speed;
             _targetVelocity.Z = direction.Z * Speed;
@@ -94,8 +95,6 @@ internal partial class Enemy : CharacterBody3D
         Velocity = _targetVelocity;
 
         MoveAndSlide();
-
-        GD.Print($"CanMoveToTileOnRight: {CanMoveToTileOnRight(Position)}");
     }
 
     #region MethodsForSignals
@@ -111,16 +110,45 @@ internal partial class Enemy : CharacterBody3D
     #endregion
 
     /// <summary>
-    /// Checks if the enemy can move to the tile on the right.
+    /// Checks if the enemy can move to the specified tile.
     /// </summary>
-    /// <param name="position">The current position of the enemy.</param>
-    /// <returns>True if the enemy can move to the tile on the right; otherwise, false.</returns>
-    private static bool CanMoveToTileOnRight(Vector3 position)
+    /// <param name="position"></param>
+    /// <returns></returns>
+    private static bool CanMoveToTile(Vector3 position)
     {
-        var mapCoordinates = GameManager.GameMap.LocalToMap(
-            new Vector3(position.X + 1, position.Y + 1, position.Z)
-        );
-        var tileId = GameManager.GameMap.GetCellItem(mapCoordinates);
+        var canMoveToTileOnDirections = new System.Collections.Generic.Dictionary<
+            Vector3,
+            Vector3I
+        >()
+        {
+            {
+                Vector3.Right,
+                GameManager.GameMap.LocalToMap(
+                    new Vector3(position.X + 1, position.Y + 1, position.Z)
+                )
+            },
+            {
+                Vector3.Left,
+                GameManager.GameMap.LocalToMap(
+                    new Vector3(position.X - 1, position.Y + 1, position.Z)
+                )
+            },
+            {
+                Vector3.Forward,
+                GameManager.GameMap.LocalToMap(
+                    new Vector3(position.X, position.Y + 1, position.Z + 1)
+                )
+            },
+            {
+                Vector3.Back,
+                GameManager.GameMap.LocalToMap(
+                    new Vector3(position.X, position.Y + 1, position.Z - 1)
+                )
+            }
+        };
+
+        var canMoveToTileOnDirection = canMoveToTileOnDirections[position];
+        var tileId = GameManager.GameMap.GetCellItem(canMoveToTileOnDirection);
 
         return tileId == -1;
     }
@@ -161,6 +189,18 @@ internal partial class Enemy : CharacterBody3D
             case var _ when selectedDirection == Vector3.Forward:
                 direction.Z -= 1.0f;
                 break;
+        }
+    }
+
+    /// <summary>
+    /// Called when the area enters the enemy's area.
+    /// </summary>
+    /// <param name="body"></param>
+    private void OnAreaEntered(Node3D body)
+    {   
+        if (body.IsInGroup("players"))
+        {
+            body.EmitSignal(Player.SignalName.Hit);
         }
     }
 }
