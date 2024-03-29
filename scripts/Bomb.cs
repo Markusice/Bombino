@@ -108,6 +108,17 @@ internal partial class Bomb : Area3D
         _bombsInRange.Add(GetBombFromBombObject(area));
     }
 
+    private void OnAreaExited(Area3D area)
+    {
+        if (!area.IsInGroup("bombobjects"))
+            return;
+
+        if (_bombMaskArea.GetRid() == area.GetRid())
+            return;
+
+        _bombsInRange.Remove(GetBombFromBombObject(area));
+    }
+
     private void OnEnableCollisionMaskOnPlacer(Node3D body)
     {
         if (!body.IsInGroup("players"))
