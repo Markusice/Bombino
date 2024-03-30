@@ -67,6 +67,8 @@ internal partial class GameManager : WorldEnvironment
 
     private Godot.Collections.Array _playerSceneLoadProgress = new();
 
+    private bool _isEverythingLoaded;
+
     #endregion
 
     /// <summary>
@@ -84,7 +86,7 @@ internal partial class GameManager : WorldEnvironment
 
     public override void _Process(double delta)
     {
-        if (_playersScenePathAndData == null)
+        if (_isEverythingLoaded)
             return;
 
         // If map scene is not loaded then get its status and send signal with progress
@@ -157,7 +159,8 @@ internal partial class GameManager : WorldEnvironment
         }
 
         EmitSignal(SignalName.EverythingLoaded);
-        _playersScenePathAndData = null;
+        _isEverythingLoaded = true;
+        SetProcessInput(true);
     }
 
     #region MethodsForSignals
