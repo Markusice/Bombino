@@ -33,6 +33,12 @@ internal partial class GameManager : WorldEnvironment
     [Signal]
     public delegate void ResumeGameEventHandler();
 
+    [Signal]
+    public delegate void SceneLoadEventHandler(double progress);
+
+    [Signal]
+    public delegate void EverythingLoadedEventHandler();
+
     #endregion
 
     #region Fields
@@ -47,7 +53,19 @@ internal partial class GameManager : WorldEnvironment
     public static Array<PlayerData> PlayersData { get; } = new();
 
     private Node _pausedGameSceneInstance;
-    private PackedScene _playerScene;
+
+    private readonly string _mapScenePath =
+        $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
+
+    private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
+    private Godot.Collections.Array _mapSceneLoadProgress = new();
+
+    private Dictionary<string, PlayerData> _playersScenePathAndData = new();
+
+    private Dictionary<string, ResourceLoader.ThreadLoadStatus> _playersScenePathAndLoadStatus =
+        new();
+
+    private Godot.Collections.Array _playerSceneLoadProgress = new();
 
     #endregion
 
@@ -56,15 +74,90 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     public override void _Ready()
     {
+        SetProcessInput(false);
         WorldEnvironment = this;
 
-        CheckMapTypeAndCreateIt();
+        // CheckForSavedDataAndSetUpGame();
 
-        CheckNumberOfPlayersAndCreateThem();
+        // CreateEnemy(new Vector3I(-10, 2, -15));
+    }
 
-        CheckForSavedDataAndSetUpGame();
+    public override void _Process(double delta)
+    {
+        if (_playersScenePathAndData == null)
+            return;
 
-        CreateEnemy(new Vector3I(-10, 2, -15));
+        // If map scene is not loaded then get its status and send signal with progress
+
+        if (_mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded)
+        {
+            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(
+                _mapScenePath,
+                _mapSceneLoadProgress
+            );
+
+            EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
+
+            return;
+        }
+
+        // mapScene is loaded
+        // Get the game map scene and instantiate it
+
+        var gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
+        if (gameMapScene != null) // If gameMapScene is not null then instantiate it
+        {
+            GameMap = gameMapScene.Instantiate<GridMap>();
+            AddChild(GameMap);
+        }
+
+        var playerSceneLoadProgressSum = 0.0;
+
+        var loadedPlayersScenes = new Array<string>();
+
+        foreach (var item in _playersScenePathAndData)
+        {
+            if (_playersScenePathAndLoadStatus[item.Key] != ResourceLoader.ThreadLoadStatus.Loaded)
+            {
+                _playersScenePathAndLoadStatus[item.Key] = ResourceLoader.LoadThreadedGetStatus(
+                    item.Key,
+                    _playerSceneLoadProgress
+                );
+
+                playerSceneLoadProgressSum += (double)_playerSceneLoadProgress[0];
+
+                continue;
+            }
+
+            // playerScene is loaded
+
+            var playerScene = (PackedScene)ResourceLoader.LoadThreadedGet(item.Key);
+            var player = playerScene.Instantiate<Player>();
+
+            player.PlayerData = item.Value;
+
+            AddChild(player);
+
+            loadedPlayersScenes.Add(item.Key);
+        }
+
+        foreach (var loadedPlayerScene in loadedPlayersScenes)
+        {
+            _playersScenePathAndData.Remove(loadedPlayerScene);
+        }
+
+        if (_playersScenePathAndData.Count != 0) // If there are still players to load then return
+        {
+            var playerSceneLoadProgressAverage =
+                playerSceneLoadProgressSum / _playersScenePathAndData.Count;
+
+            EmitSignal(SignalName.SceneLoad, playerSceneLoadProgressAverage);
+
+            return;
+        }
+
+        EmitSignal(SignalName.EverythingLoaded);
+        _playersScenePathAndData = null;
     }
 
     #region MethodsForSignals
@@ -97,24 +190,27 @@ internal partial class GameManager : WorldEnvironment
     /// <summary>
     /// Creates a new game.
     /// </summary>
-    private void CreateNewGame() { }
+    public void CreateNewGame()
+    {
+        CheckMapTypeAndCreateIt();
+
+        CheckNumberOfPlayersAndCreateThem();
+    }
 
     /// <summary>
     /// Creates a game from the saved data.
     /// </summary>
     /// <param name="data"></param>
-    private void CreateGameFromSavedData(Dictionary<string, Variant> data) { }
+    private void CreateGameFromSavedData(Dictionary<string, Variant> data)
+    {
+    }
 
     /// <summary>
     /// Checks the map type and creates it.
     /// </summary>
     private void CheckMapTypeAndCreateIt()
     {
-        var scenePath = $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
-        var mapScene = ResourceLoader.Load<PackedScene>(scenePath);
-        GameMap = mapScene.Instantiate<GridMap>();
-
-        AddChild(GameMap);
+        ResourceLoader.LoadThreadedRequest(_mapScenePath);
     }
 
     /// <summary>
@@ -157,22 +253,16 @@ internal partial class GameManager : WorldEnvironment
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     private void CreatePlayer(PlayerColor playerColor, Vector3 position)
     {
-        var scenePath = $"res://scenes/players/{playerColor.ToString().ToLower()}.tscn";
-        _playerScene = ResourceLoader.Load<PackedScene>(scenePath);
-        var player = _playerScene.Instantiate<Player>();
+        var playerScenePath = $"res://scenes/players/{playerColor.ToString().ToLower()}.tscn";
+        var playerData = new PlayerData(position, playerColor);
 
-        player.Position = position;
-        player.Name = playerColor.ToString();
+        _playersScenePathAndData.Add(playerScenePath, playerData);
+        _playersScenePathAndLoadStatus.Add(
+            playerScenePath,
+            ResourceLoader.ThreadLoadStatus.InProgress
+        );
 
-        player.PlayerData = playerColor switch
-        {
-            PlayerColor.Blue => new PlayerData(playerColor, PlayersActionKeys.Player1),
-            PlayerColor.Red => new PlayerData(playerColor, PlayersActionKeys.Player2),
-            PlayerColor.Yellow => new PlayerData(playerColor, PlayersActionKeys.Player3),
-            _ => throw new ArgumentOutOfRangeException(nameof(playerColor), playerColor, null),
-        };
-
-        AddChild(player);
+        ResourceLoader.LoadThreadedRequest(playerScenePath);
     }
 
     /// <summary>
