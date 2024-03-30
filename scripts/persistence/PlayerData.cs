@@ -1,3 +1,5 @@
+using Bombino.scripts.factories;
+
 namespace Bombino.scripts.persistence;
 
 using Godot;
@@ -48,16 +50,19 @@ internal partial class PlayerData : Resource
     /// Initializes a new instance of the <see cref="PlayerData"/> class with default values.
     /// </summary>
     public PlayerData()
-        : this(0, null) { }
+        : this(Vector3.Zero, 0)
+    {
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PlayerData"/> class with the specified color and action keys.
     /// </summary>
+    /// <param name="position"></param>
     /// <param name="color">The color of the player.</param>
-    /// <param name="actionKeys">The action keys for the player.</param>
-    public PlayerData(PlayerColor color, Array<string> actionKeys)
+    public PlayerData(Vector3 position, PlayerColor color)
     {
+        Position = position;
         Color = color;
-        ActionKeys = actionKeys;
+        ActionKeys = PlayerActionKeysFactory.GetInstance(color).CreateActionKeys();
     }
 }

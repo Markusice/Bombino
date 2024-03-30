@@ -48,6 +48,8 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     public override void _Ready()
     {
+        Position = PlayerData.Position;
+
         _animTree = GetNode<AnimationTree>("AnimationTree");
         _animTree.Active = true;
         _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
