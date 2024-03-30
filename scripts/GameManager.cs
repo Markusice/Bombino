@@ -407,8 +407,8 @@ internal partial class GameManager : WorldEnvironment
             "CountDownContainer/CountDownLabel"
         );
 
-        int countDownNumber = 3;
-        for (int number = countDownNumber; number > 0; number--)
+        const int countDownStartingNumber = 3;
+        for (var number = countDownStartingNumber; number > 0; number--)
         {
             countDownLabel.Text = number.ToString();
 
