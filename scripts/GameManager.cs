@@ -1,6 +1,6 @@
 namespace Bombino.scripts;
 
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
@@ -56,18 +56,29 @@ internal partial class GameManager : WorldEnvironment
 
     private readonly string _mapScenePath =
         $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
-
     private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
-    private Godot.Collections.Array _mapSceneLoadProgress = new();
+    private Array _mapSceneLoadProgress = new();
 
-    private Dictionary<string, PlayerData> _playersScenePathAndData = new();
-
-    private Dictionary<string, ResourceLoader.ThreadLoadStatus> _playersScenePathAndLoadStatus =
-        new();
-
-    private Godot.Collections.Array _playerSceneLoadProgress = new();
+    private Godot.Collections.Dictionary<string, PlayerData> _playersScenePathAndData = new();
+    private Godot.Collections.Dictionary<
+        string,
+        ResourceLoader.ThreadLoadStatus
+    > _playersScenePathAndLoadStatus = new();
+    private Array _playerSceneLoadProgress = new();
 
     private bool _isEverythingLoaded;
+
+    #endregion
+
+    #region MethodsForSignals
+
+    /// <summary>
+    /// Event handler for the resume game event.
+    /// </summary>
+    private void OnResumeGame()
+    {
+        Resume();
+    }
 
     #endregion
 
@@ -89,91 +100,130 @@ internal partial class GameManager : WorldEnvironment
         if (_isEverythingLoaded)
             return;
 
-        // If map scene is not loaded then get its status and send signal with progress
-
-        if (_mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded)
+        if (IsMapSceneNotLoaded())
         {
-            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(
-                _mapScenePath,
-                _mapSceneLoadProgress
-            );
-
-            EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
+            SetMapLoadStatusAndEmitSignalWithProgress();
 
             return;
         }
 
-        // mapScene is loaded
-        // Get the game map scene and instantiate it
+        AddGameMapIfNotAdded();
 
-        var gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
-        if (gameMapScene != null) // If gameMapScene is not null then instantiate it
+        var loadedPlayerScenes = new Array<string>();
+        var playerSceneLoadProgressSum =
+            AddPlayerScenesIfLoaded_GetLoadProgressSum_And_SaveLoadedPlayerScenes(
+                loadedPlayerScenes
+            );
+
+        RemoveLoadedPlayerScenes(loadedPlayerScenes);
+
+        if (IsTherePlayerScenesToLoad())
         {
-            GameMap = gameMapScene.Instantiate<GridMap>();
-            AddChild(GameMap);
+            EmitSignalWithPlayerScenesAverageLoadProgress(playerSceneLoadProgressSum);
+
+            return;
         }
 
+        EmitSignalEverythingLoaded_SetBooleanFlag_And_EnableInputProcess();
+    }
+
+    private bool IsMapSceneNotLoaded()
+    {
+        return _mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded;
+    }
+
+    private void SetMapLoadStatusAndEmitSignalWithProgress()
+    {
+        _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(
+            _mapScenePath,
+            _mapSceneLoadProgress
+        );
+
+        EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
+    }
+
+    private void AddGameMapIfNotAdded()
+    {
+        var gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
+        if (gameMapScene == null)
+            return;
+
+        GameMap = gameMapScene.Instantiate<GridMap>();
+        AddChild(GameMap);
+    }
+
+    private double AddPlayerScenesIfLoaded_GetLoadProgressSum_And_SaveLoadedPlayerScenes(
+        ICollection<string> loadedPlayerScenes
+    )
+    {
         var playerSceneLoadProgressSum = 0.0;
 
-        var loadedPlayersScenes = new Array<string>();
-
-        foreach (var item in _playersScenePathAndData)
+        foreach (var playerScenePathAndData in _playersScenePathAndData)
         {
-            if (_playersScenePathAndLoadStatus[item.Key] != ResourceLoader.ThreadLoadStatus.Loaded)
+            if (IsPlayerSceneNotLoaded(playerScenePathAndData))
             {
-                _playersScenePathAndLoadStatus[item.Key] = ResourceLoader.LoadThreadedGetStatus(
-                    item.Key,
-                    _playerSceneLoadProgress
-                );
+                SetPlayerSceneLoadStatusAndProgress(playerScenePathAndData);
 
                 playerSceneLoadProgressSum += (double)_playerSceneLoadProgress[0];
 
                 continue;
             }
 
-            // playerScene is loaded
-
-            var playerScene = (PackedScene)ResourceLoader.LoadThreadedGet(item.Key);
+            var playerScene = (PackedScene)
+                ResourceLoader.LoadThreadedGet(playerScenePathAndData.Key);
             var player = playerScene.Instantiate<Player>();
 
-            player.PlayerData = item.Value;
+            player.PlayerData = playerScenePathAndData.Value;
 
             AddChild(player);
 
-            loadedPlayersScenes.Add(item.Key);
+            loadedPlayerScenes.Add(playerScenePathAndData.Key);
         }
 
-        foreach (var loadedPlayerScene in loadedPlayersScenes)
+        return playerSceneLoadProgressSum;
+    }
+
+    private bool IsPlayerSceneNotLoaded(KeyValuePair<string, PlayerData> item)
+    {
+        return _playersScenePathAndLoadStatus[item.Key] != ResourceLoader.ThreadLoadStatus.Loaded;
+    }
+
+    private void SetPlayerSceneLoadStatusAndProgress(KeyValuePair<string, PlayerData> item)
+    {
+        _playersScenePathAndLoadStatus[item.Key] = ResourceLoader.LoadThreadedGetStatus(
+            item.Key,
+            _playerSceneLoadProgress
+        );
+    }
+
+    private void RemoveLoadedPlayerScenes(Array<string> loadedPlayerScenes)
+    {
+        foreach (var loadedPlayerScene in loadedPlayerScenes)
         {
             _playersScenePathAndData.Remove(loadedPlayerScene);
         }
+    }
 
-        if (_playersScenePathAndData.Count != 0) // If there are still players to load then return
-        {
-            var playerSceneLoadProgressAverage =
-                playerSceneLoadProgressSum / _playersScenePathAndData.Count;
+    private bool IsTherePlayerScenesToLoad()
+    {
+        return _playersScenePathAndData.Count != 0;
+    }
 
-            EmitSignal(SignalName.SceneLoad, playerSceneLoadProgressAverage);
+    private void EmitSignalWithPlayerScenesAverageLoadProgress(double playerSceneLoadProgressSum)
+    {
+        var playerSceneLoadProgressAverage =
+            playerSceneLoadProgressSum / _playersScenePathAndData.Count;
 
-            return;
-        }
+        EmitSignal(SignalName.SceneLoad, playerSceneLoadProgressAverage);
+    }
 
+    private void EmitSignalEverythingLoaded_SetBooleanFlag_And_EnableInputProcess()
+    {
         EmitSignal(SignalName.EverythingLoaded);
         _isEverythingLoaded = true;
+
         SetProcessInput(true);
     }
-
-    #region MethodsForSignals
-
-    /// <summary>
-    /// Event handler for the resume game event.
-    /// </summary>
-    private void OnResumeGame()
-    {
-        Resume();
-    }
-
-    #endregion
 
     /// <summary>
     /// Checks for saved data and sets up the game.
@@ -204,9 +254,7 @@ internal partial class GameManager : WorldEnvironment
     /// Creates a game from the saved data.
     /// </summary>
     /// <param name="data"></param>
-    private void CreateGameFromSavedData(Dictionary<string, Variant> data)
-    {
-    }
+    private void CreateGameFromSavedData(Godot.Collections.Dictionary<string, Variant> data) { }
 
     /// <summary>
     /// Checks the map type and creates it.
@@ -253,7 +301,6 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     /// <param name="playerColor"></param>
     /// <param name="position"></param>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
     private void CreatePlayer(PlayerColor playerColor, Vector3 position)
     {
         var playerScenePath = $"res://scenes/players/{playerColor.ToString().ToLower()}.tscn";
