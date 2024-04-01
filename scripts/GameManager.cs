@@ -64,7 +64,7 @@ internal partial class GameManager : WorldEnvironment
 
         CheckForSavedDataAndSetUpGame();
 
-        CreateEnemy(new Vector3I(-10, 2, -15));
+        CreateEnemy(new Vector3I(11, 2, -15));
     }
 
     #region MethodsForSignals

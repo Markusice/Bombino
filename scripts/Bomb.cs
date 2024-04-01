@@ -135,6 +135,8 @@ internal partial class Bomb : Area3D
     /// </summary>
     private void OnTimerTimeout()
     {
+        DestroyCratesOnXAndZAxis();
+
         PlayExplodeAnimation();
 
         CreateExplosionsOnTilesOnXAndZAxis();
@@ -307,6 +309,63 @@ internal partial class Bomb : Area3D
 
             bomb.EmitSignal(SignalName.ExplodeSooner, bombTimeoutTime);
         }
+    }
+
+    /// <summary>
+    /// Destroys the crates on the X and Z axis.
+    /// </summary>
+    private void DestroyCratesOnXAndZAxis()
+    {
+        DestroyCratesOnAxis(ExplosionAxis.X);
+        DestroyCratesOnAxis(ExplosionAxis.Z);
+    }
+
+    /// <summary>
+    /// Destroys the first crates on the specified axis.
+    /// </summary>
+    private void DestroyCratesOnAxis(ExplosionAxis explosionAxis)
+    {
+        for (var axis = -1; axis < 1; axis++)
+        {
+            for (var nthTile = 1; nthTile <= Range; nthTile++)
+            {
+                var positionOnNthTile = GetEffectPositionOnAxisOnNthTile(
+                    explosionAxis,
+                    axis,
+                    nthTile
+                );
+
+                if (IsTileTypeAtPosition(positionOnNthTile, 3)) 
+                    break;
+                
+                if (IsTileTypeAtPosition(positionOnNthTile, -1))
+                    continue;
+
+                if (IsTileTypeAtPosition(positionOnNthTile, 2))
+                    DestroyCrateAtPosition(positionOnNthTile);
+                    break;
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Checks if the tile type is at the specified position.
+    /// </summary>
+    private static bool IsTileTypeAtPosition(Vector3 position, long tileType)
+    {
+        var mapCoordinates = GameManager.GameMap.LocalToMap(position);
+        var tileId = GameManager.GameMap.GetCellItem(mapCoordinates);
+        return tileId == tileType;
+    }
+
+    /// <summary>
+    /// Destroys the crate at the specified position.
+    /// </summary>
+    private static void DestroyCrateAtPosition(Vector3 position)
+    {
+        var mapCoordinates = GameManager.GameMap.LocalToMap(position);
+        GameManager.GameMap.SetCellItem(mapCoordinates, -1);
     }
 
     /// <summary>
