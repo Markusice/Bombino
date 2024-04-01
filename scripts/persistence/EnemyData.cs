@@ -13,5 +13,7 @@ internal partial class EnemyData : Resource
     }
 
     public EnemyData()
-        : this(Vector3.Zero) { }
+        : this(Vector3.Zero)
+    {
+    }
 }

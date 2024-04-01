@@ -50,6 +50,7 @@ internal partial class GameManager : WorldEnvironment
     public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
     public static Array<PlayerData> PlayersData { get; } = new();
+
     public static Array<EnemyData> EnemiesData { get; } = new();
 
     private LoadingScene _pausedGameSceneInstance;
@@ -67,10 +68,7 @@ internal partial class GameManager : WorldEnvironment
     private Array _playerSceneLoadProgress = new();
 
     private Godot.Collections.Dictionary<string, EnemyData> _enemyScenesPathAndData = new();
-    private Godot.Collections.Dictionary<
-        string,
-        ResourceLoader.ThreadLoadStatus
-    > _enemyScenesPathAndLoadStatus = new();
+    private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus> _enemyScenesPathAndLoadStatus = new();
     private Array _enemySceneLoadProgress = new();
 
     private bool _isEverythingLoaded;
@@ -119,35 +117,31 @@ internal partial class GameManager : WorldEnvironment
         AddGameMapIfNotAdded();
 
         var loadedPlayerScenes = new Array<string>();
-        var playerSceneLoadProgressSum = GetLoadProgressSum_AddAndSaveLoadedPlayerScenes(
-            loadedPlayerScenes
-        );
+        var playerSceneLoadProgressSum =
+            GetLoadProgressSum_AddAndSaveLoadedPlayerScenes(
+                loadedPlayerScenes
+            );
 
         RemoveLoadedScenesFromDictionary(loadedPlayerScenes, _playerScenesPathAndData);
 
         if (IsThereScenesToLoadInDictionary(_playerScenesPathAndData))
         {
-            EmitSignalWithScenesAverageLoadProgressFromDictionary(
-                playerSceneLoadProgressSum,
-                _playerScenesPathAndData
-            );
+            EmitSignalWithScenesAverageLoadProgressFromDictionary(playerSceneLoadProgressSum, _playerScenesPathAndData);
 
             return;
         }
 
         var loadedEnemyScenes = new Array<string>();
-        var enemySceneLoadProgressSum = GetLoadProgressSum_AddAndSaveLoadedEnemyScenes(
-            loadedEnemyScenes
-        );
+        var enemySceneLoadProgressSum =
+            GetLoadProgressSum_AddAndSaveLoadedEnemyScenes(
+                loadedEnemyScenes
+            );
 
         RemoveLoadedScenesFromDictionary(loadedEnemyScenes, _enemyScenesPathAndData);
 
         if (IsThereScenesToLoadInDictionary(_enemyScenesPathAndData))
         {
-            EmitSignalWithScenesAverageLoadProgressFromDictionary(
-                enemySceneLoadProgressSum,
-                _enemyScenesPathAndData
-            );
+            EmitSignalWithScenesAverageLoadProgressFromDictionary(enemySceneLoadProgressSum, _enemyScenesPathAndData);
 
             return;
         }
@@ -169,8 +163,7 @@ internal partial class GameManager : WorldEnvironment
 
     #endregion
 
-    private bool IsMapSceneNotLoaded() =>
-        _mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded;
+    private bool IsMapSceneNotLoaded() => _mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded;
 
     private void SetMapLoadStatusAndEmitSignalWithProgress()
     {
@@ -200,15 +193,10 @@ internal partial class GameManager : WorldEnvironment
 
         foreach (var playerScenePathAndData in _playerScenesPathAndData)
         {
-            if (
-                IsSceneNotLoadedInDictionary(playerScenePathAndData, _playerScenesPathAndLoadStatus)
-            )
+            if (IsSceneNotLoadedInDictionary(playerScenePathAndData, _playerScenesPathAndLoadStatus))
             {
-                SetSceneLoadStatus_And_ProgressInDictionaryAndArray(
-                    playerScenePathAndData,
-                    _playerScenesPathAndLoadStatus,
-                    _playerSceneLoadProgress
-                );
+                SetSceneLoadStatus_And_ProgressInDictionaryAndArray(playerScenePathAndData,
+                    _playerScenesPathAndLoadStatus, _playerSceneLoadProgress);
 
                 playerSceneLoadProgressSum += (double)_playerSceneLoadProgress[0];
 
@@ -229,35 +217,30 @@ internal partial class GameManager : WorldEnvironment
         return playerSceneLoadProgressSum;
     }
 
-    private static bool IsSceneNotLoadedInDictionary<T>(
-        KeyValuePair<string, T> item,
-        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary
-    ) => dictionary[item.Key] != ResourceLoader.ThreadLoadStatus.Loaded;
+    private static bool IsSceneNotLoadedInDictionary<T>(KeyValuePair<string, T> item,
+        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary) =>
+        dictionary[item.Key] != ResourceLoader.ThreadLoadStatus.Loaded;
 
-    private static void SetSceneLoadStatus_And_ProgressInDictionaryAndArray<T>(
-        KeyValuePair<string, T> item,
-        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary,
-        Array array
-    ) => dictionary[item.Key] = ResourceLoader.LoadThreadedGetStatus(item.Key, array);
+    private static void SetSceneLoadStatus_And_ProgressInDictionaryAndArray<T>(KeyValuePair<string, T> item,
+        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary, Array array) =>
+        dictionary[item.Key] = ResourceLoader.LoadThreadedGetStatus(
+            item.Key,
+            array
+        );
 
-    private static void RemoveLoadedScenesFromDictionary<T>(
-        Array<string> loadedScenes,
-        IDictionary<string, T> dictionary
-    )
+    private static void RemoveLoadedScenesFromDictionary<T>(Array<string> loadedScenes,
+        IDictionary<string, T> dictionary)
     {
-        foreach (var loadedScene in loadedScenes)
-            dictionary.Remove(loadedScene);
+        foreach (var loadedScene in loadedScenes) dictionary.Remove(loadedScene);
     }
 
-    private static bool IsThereScenesToLoadInDictionary<T>(IDictionary<string, T> dictionary) =>
-        dictionary.Count != 0;
+    private static bool IsThereScenesToLoadInDictionary<T>(IDictionary<string, T> dictionary) => dictionary.Count != 0;
 
-    private void EmitSignalWithScenesAverageLoadProgressFromDictionary<T>(
-        double sceneLoadProgressSum,
-        IDictionary<string, T> dictionary
-    )
+    private void EmitSignalWithScenesAverageLoadProgressFromDictionary<T>(double sceneLoadProgressSum,
+        IDictionary<string, T> dictionary)
     {
-        var sceneLoadProgressAverage = sceneLoadProgressSum / dictionary.Count;
+        var sceneLoadProgressAverage =
+            sceneLoadProgressSum / dictionary.Count;
 
         EmitSignal(SignalName.SceneLoad, sceneLoadProgressAverage);
     }
@@ -272,18 +255,16 @@ internal partial class GameManager : WorldEnvironment
         {
             if (IsSceneNotLoadedInDictionary(enemyScenePathAndData, _enemyScenesPathAndLoadStatus))
             {
-                SetSceneLoadStatus_And_ProgressInDictionaryAndArray(
-                    enemyScenePathAndData,
-                    _enemyScenesPathAndLoadStatus,
-                    _enemySceneLoadProgress
-                );
+                SetSceneLoadStatus_And_ProgressInDictionaryAndArray(enemyScenePathAndData,
+                    _enemyScenesPathAndLoadStatus, _enemySceneLoadProgress);
 
                 enemySceneLoadProgressSum += (double)_enemySceneLoadProgress[0];
 
                 continue;
             }
 
-            var enemyScene = (PackedScene)ResourceLoader.LoadThreadedGet(enemyScenePathAndData.Key);
+            var enemyScene = (PackedScene)
+                ResourceLoader.LoadThreadedGet(enemyScenePathAndData.Key);
             var enemy = enemyScene.Instantiate<Enemy>();
 
             enemy.EnemyData = enemyScenePathAndData.Value;
@@ -333,7 +314,9 @@ internal partial class GameManager : WorldEnvironment
     /// Creates a game from the saved data.
     /// </summary>
     /// <param name="data"></param>
-    private void CreateGameFromSavedData(Godot.Collections.Dictionary<string, Variant> data) { }
+    private void CreateGameFromSavedData(Godot.Collections.Dictionary<string, Variant> data)
+    {
+    }
 
     /// <summary>
     /// Checks the map type and creates it.
