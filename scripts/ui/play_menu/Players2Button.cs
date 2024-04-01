@@ -17,5 +17,10 @@ internal partial class Players2Button : Button, IUiButton
     /// <summary>
     /// Event handler for the button press event.
     /// </summary>
-    public void OnPressed() => GetTree().ChangeSceneToPacked(_mapsMenuScene);
+    public void OnPressed()
+    {
+        GameManager.NumberOfPlayers = 2;
+
+        GetTree().ChangeSceneToPacked(_mapsMenuScene);
+    }
 }
