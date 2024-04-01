@@ -51,6 +51,8 @@ internal partial class GameManager : WorldEnvironment
     public static int NumberOfRounds { get; set; }
     public static Array<PlayerData> PlayersData { get; } = new();
 
+    public static Array<EnemyData> EnemiesData { get; } = new();
+
     private LoadingScene _pausedGameSceneInstance;
 
     private readonly string _mapScenePath =
@@ -97,7 +99,7 @@ internal partial class GameManager : WorldEnvironment
 
         // CheckForSavedDataAndSetUpGame();
 
-        // CreateEnemy(new Vector3I(-10, 2, -15));
+        CreateEnemy(new Vector3I(-10, 2, -15));
     }
 
     public override void _Process(double delta)
