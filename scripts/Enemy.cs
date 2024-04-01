@@ -1,6 +1,7 @@
 ﻿namespace Bombino.scripts;
 
 using System;
+using Bombino.scripts.persistence;
 using Godot;
 
 /// <summary>
@@ -33,6 +34,7 @@ internal partial class Enemy : CharacterBody3D
     };
 
     private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+    public EnemyData EnemyData { get; set; }
 
     #endregion
 
@@ -41,6 +43,8 @@ internal partial class Enemy : CharacterBody3D
     /// </summary>
     public override void _Ready()
     {
+        Position = EnemyData.Position;
+
         GD.Print($"Enemy created at: {Position}");
 
         var direction = Vector3.Zero;
@@ -197,7 +201,7 @@ internal partial class Enemy : CharacterBody3D
     /// </summary>
     /// <param name="body"></param>
     private void OnAreaEntered(Node3D body)
-    {   
+    {
         if (body.IsInGroup("players"))
         {
             body.EmitSignal(Player.SignalName.Hit);
