@@ -10,7 +10,7 @@ internal partial class RoundsMenu : CanvasLayer
     #region Exports
 
     [Export]
-    private PackedScene _mainScene;
+    private PackedScene _loadingScene;
 
     #endregion
 
@@ -26,14 +26,6 @@ internal partial class RoundsMenu : CanvasLayer
 
         _errorContainer = GetNode<PanelContainer>("ErrorContainer");
         _errorLabel = _errorContainer.GetNode<Label>("ErrorLabel");
-    }
-
-    public override void _Process(double delta)
-    {
-        var sceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mainScene.ResourcePath);
-
-        if (sceneLoadStatus == ResourceLoader.ThreadLoadStatus.Loaded)
-            GetTree().ChangeSceneToPacked(_mainScene);
     }
 
     /// <summary>
@@ -57,8 +49,7 @@ internal partial class RoundsMenu : CanvasLayer
         HideError();
 
         GameManager.NumberOfRounds = number;
-
-        ResourceLoader.LoadThreadedRequest(_mainScene.ResourcePath);
+        GetTree().ChangeSceneToPacked(_loadingScene);
     }
 
     /// <summary>
