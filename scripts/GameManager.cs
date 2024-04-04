@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Bombino.scripts;
 
 using System.Collections.Generic;
@@ -19,9 +21,6 @@ internal partial class GameManager : WorldEnvironment
 
     [Export]
     private PackedScene _startingScreenScene;
-
-    [Export]
-    private PackedScene _enemyScene;
 
     #endregion
 
@@ -55,22 +54,23 @@ internal partial class GameManager : WorldEnvironment
 
     private LoadingScene _pausedGameSceneInstance;
 
-    private readonly string _mapScenePath =
-        $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
+    private readonly string _mapScenePath = $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
     private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
     private Array _mapSceneLoadProgress = new();
 
     private Godot.Collections.Dictionary<string, PlayerData> _playerScenesPathAndData = new();
-    private Godot.Collections.Dictionary<
-        string,
-        ResourceLoader.ThreadLoadStatus
-    > _playerScenesPathAndLoadStatus = new();
+    private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus>
+        _playerScenesPathAndLoadStatus = new();
     private Array _playerSceneLoadProgress = new();
+    private double _playerScenesLoadProgressSum;
 
-    private Godot.Collections.Dictionary<string, EnemyData> _enemyScenesPathAndData = new();
-    private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus> _enemyScenesPathAndLoadStatus = new();
+    private Godot.Collections.Dictionary<ulong, EnemyData> _enemiesData = new();
+    private PackedScene _enemyScene;
+    private const string EnemyScenePath = "res://scenes/enemy.tscn";
+    private ResourceLoader.ThreadLoadStatus _enemySceneLoadStatus;
     private Array _enemySceneLoadProgress = new();
 
+    private double _loadProgress;
     private bool _isEverythingLoaded;
 
     #endregion
@@ -98,8 +98,6 @@ internal partial class GameManager : WorldEnvironment
         WorldEnvironment = this;
 
         // CheckForSavedDataAndSetUpGame();
-
-        CreateEnemy(new Vector3I(-10, 2, -15));
     }
 
     public override void _Process(double delta)
@@ -107,46 +105,44 @@ internal partial class GameManager : WorldEnvironment
         if (_isEverythingLoaded)
             return;
 
-        if (IsMapSceneNotLoaded())
+        // default initialized value is InvalidResource
+        if (_mapSceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
+            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mapScenePath, _mapSceneLoadProgress);
+
+        if (_mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded)
         {
-            SetMapLoadStatusAndEmitSignalWithProgress();
+            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mapScenePath, _mapSceneLoadProgress);
+
+            _loadProgress = (double)_mapSceneLoadProgress[0];
+            EmitSignal(SignalName.SceneLoad, _loadProgress);
 
             return;
         }
 
-        AddGameMapIfNotAdded();
+        EmitLoadedProgressAndAddGameMap_IfGameMapNotAdded();
 
-        var loadedPlayerScenes = new Array<string>();
-        var playerSceneLoadProgressSum =
-            GetLoadProgressSum_AddAndSaveLoadedPlayerScenes(
-                loadedPlayerScenes
-            );
+        if (_playerScenesLoadProgressSum == 0)
+            _playerScenesLoadProgressSum = SetPlayerScenesStatus_And_GetLoadProgressSum();
 
-        RemoveLoadedScenesFromDictionary(loadedPlayerScenes, _playerScenesPathAndData);
+        if (_enemySceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
+            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(EnemyScenePath, _enemySceneLoadProgress);
 
-        if (IsThereScenesToLoadInDictionary(_playerScenesPathAndData))
+        if (_enemySceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded || IsNotEveryPlayerLoaded())
         {
-            EmitSignalWithScenesAverageLoadProgressFromDictionary(playerSceneLoadProgressSum, _playerScenesPathAndData);
+            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(EnemyScenePath, _enemySceneLoadProgress);
+            _playerScenesLoadProgressSum = SetPlayerScenesStatus_And_GetLoadProgressSum();
+
+            var loadProgressSum = _playerScenesLoadProgressSum + (double)_enemySceneLoadProgress[0];
+            _loadProgress = loadProgressSum / (_playerScenesPathAndData.Count + 1);
+            EmitSignal(SignalName.SceneLoad, _loadProgress);
 
             return;
         }
 
-        var loadedEnemyScenes = new Array<string>();
-        var enemySceneLoadProgressSum =
-            GetLoadProgressSum_AddAndSaveLoadedEnemyScenes(
-                loadedEnemyScenes
-            );
+        CreatePlayersFromSavedData();
+        CreateEnemiesFromSavedData();
 
-        RemoveLoadedScenesFromDictionary(loadedEnemyScenes, _enemyScenesPathAndData);
-
-        if (IsThereScenesToLoadInDictionary(_enemyScenesPathAndData))
-        {
-            EmitSignalWithScenesAverageLoadProgressFromDictionary(enemySceneLoadProgressSum, _enemyScenesPathAndData);
-
-            return;
-        }
-
-        EmitSignalEverythingLoaded_SetBooleanFlag_And_EnableInputProcess();
+        EmitAndSetEverythingLoaded_And_EnableInputProcess();
     }
 
     /// <summary>
@@ -163,121 +159,75 @@ internal partial class GameManager : WorldEnvironment
 
     #endregion
 
-    private bool IsMapSceneNotLoaded() => _mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded;
-
-    private void SetMapLoadStatusAndEmitSignalWithProgress()
-    {
-        _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(
-            _mapScenePath,
-            _mapSceneLoadProgress
-        );
-
-        EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
-    }
-
-    private void AddGameMapIfNotAdded()
+    private void EmitLoadedProgressAndAddGameMap_IfGameMapNotAdded()
     {
         var gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
         if (gameMapScene == null)
             return;
 
+        // SceneLoad signal will only be emitted once here
+        EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
+
         GameMap = gameMapScene.Instantiate<GridMap>();
         AddChild(GameMap);
     }
 
-    private double GetLoadProgressSum_AddAndSaveLoadedPlayerScenes(
-        ICollection<string> loadedPlayerScenes
-    )
+    private double SetPlayerScenesStatus_And_GetLoadProgressSum()
     {
         var playerSceneLoadProgressSum = 0.0;
 
         foreach (var playerScenePathAndData in _playerScenesPathAndData)
         {
-            if (IsSceneNotLoadedInDictionary(playerScenePathAndData, _playerScenesPathAndLoadStatus))
-            {
-                SetSceneLoadStatus_And_ProgressInDictionaryAndArray(playerScenePathAndData,
-                    _playerScenesPathAndLoadStatus, _playerSceneLoadProgress);
+            SetSceneLoadStatus_And_Progress(playerScenePathAndData, _playerScenesPathAndLoadStatus,
+                _playerSceneLoadProgress);
 
-                playerSceneLoadProgressSum += (double)_playerSceneLoadProgress[0];
-
-                continue;
-            }
-
-            var playerScene = (PackedScene)
-                ResourceLoader.LoadThreadedGet(playerScenePathAndData.Key);
-            var player = playerScene.Instantiate<Player>();
-
-            player.PlayerData = playerScenePathAndData.Value;
-
-            AddChild(player);
-
-            loadedPlayerScenes.Add(playerScenePathAndData.Key);
+            playerSceneLoadProgressSum += (double)_playerSceneLoadProgress[0];
         }
 
         return playerSceneLoadProgressSum;
     }
 
-    private static bool IsSceneNotLoadedInDictionary<T>(KeyValuePair<string, T> item,
-        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary) =>
-        dictionary[item.Key] != ResourceLoader.ThreadLoadStatus.Loaded;
+    private static void SetSceneLoadStatus_And_Progress<T>(KeyValuePair<string, T> item,
+        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary, Array progress) =>
+        dictionary[item.Key] = ResourceLoader.LoadThreadedGetStatus(item.Key, progress);
 
-    private static void SetSceneLoadStatus_And_ProgressInDictionaryAndArray<T>(KeyValuePair<string, T> item,
-        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary, Array array) =>
-        dictionary[item.Key] = ResourceLoader.LoadThreadedGetStatus(
-            item.Key,
-            array
-        );
+    private bool IsNotEveryPlayerLoaded() =>
+        _playerScenesPathAndLoadStatus.Any(item => item.Value == ResourceLoader.ThreadLoadStatus.InProgress);
 
-    private static void RemoveLoadedScenesFromDictionary<T>(Array<string> loadedScenes,
-        IDictionary<string, T> dictionary)
+    private void EmitAverageLoadProgress(double sceneLoadProgressSum, int count)
     {
-        foreach (var loadedScene in loadedScenes) dictionary.Remove(loadedScene);
-    }
-
-    private static bool IsThereScenesToLoadInDictionary<T>(IDictionary<string, T> dictionary) => dictionary.Count != 0;
-
-    private void EmitSignalWithScenesAverageLoadProgressFromDictionary<T>(double sceneLoadProgressSum,
-        IDictionary<string, T> dictionary)
-    {
-        var sceneLoadProgressAverage =
-            sceneLoadProgressSum / dictionary.Count;
+        var sceneLoadProgressAverage = sceneLoadProgressSum / count;
 
         EmitSignal(SignalName.SceneLoad, sceneLoadProgressAverage);
     }
 
-    private double GetLoadProgressSum_AddAndSaveLoadedEnemyScenes(
-        ICollection<string> loadedEnemyScenes
-    )
+    private void CreatePlayersFromSavedData()
     {
-        var enemySceneLoadProgressSum = 0.0;
-
-        foreach (var enemyScenePathAndData in _enemyScenesPathAndData)
+        foreach (var playerScenePathAndData in _playerScenesPathAndData)
         {
-            if (IsSceneNotLoadedInDictionary(enemyScenePathAndData, _enemyScenesPathAndLoadStatus))
-            {
-                SetSceneLoadStatus_And_ProgressInDictionaryAndArray(enemyScenePathAndData,
-                    _enemyScenesPathAndLoadStatus, _enemySceneLoadProgress);
+            var playerScene = (PackedScene)ResourceLoader.LoadThreadedGet(playerScenePathAndData.Key);
+            var player = playerScene.Instantiate<Player>();
 
-                enemySceneLoadProgressSum += (double)_enemySceneLoadProgress[0];
+            player.PlayerData = playerScenePathAndData.Value;
 
-                continue;
-            }
-
-            var enemyScene = (PackedScene)
-                ResourceLoader.LoadThreadedGet(enemyScenePathAndData.Key);
-            var enemy = enemyScene.Instantiate<Enemy>();
-
-            enemy.EnemyData = enemyScenePathAndData.Value;
-
-            AddChild(enemy);
-
-            loadedEnemyScenes.Add(enemyScenePathAndData.Key);
+            AddChild(player);
         }
-
-        return enemySceneLoadProgressSum;
     }
 
-    private void EmitSignalEverythingLoaded_SetBooleanFlag_And_EnableInputProcess()
+    private void CreateEnemiesFromSavedData()
+    {
+        _enemyScene ??= (PackedScene)ResourceLoader.LoadThreadedGet(EnemyScenePath);
+
+        foreach (var enemyData in _enemiesData.Values)
+        {
+            var enemy = _enemyScene.Instantiate<Enemy>();
+            enemy.EnemyData = enemyData;
+
+            AddChild(enemy);
+        }
+    }
+
+    private void EmitAndSetEverythingLoaded_And_EnableInputProcess()
     {
         EmitSignal(SignalName.EverythingLoaded);
         _isEverythingLoaded = true;
@@ -308,6 +258,10 @@ internal partial class GameManager : WorldEnvironment
         CheckMapTypeAndCreateIt();
 
         CheckNumberOfPlayersAndCreateThem();
+
+        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -15));
+        SaveEnemyDataAndRequestLoad(new Vector3I(-14, 2, -11));
+        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -8));
     }
 
     /// <summary>
@@ -346,7 +300,7 @@ internal partial class GameManager : WorldEnvironment
     private void CreateThreePlayers()
     {
         CreateTwoPlayers();
-        CreatePlayer(PlayerColor.Yellow, new Vector3(11, 2, 9));
+        SavePlayerDataAndRequestLoad(PlayerColor.Yellow, new Vector3(11, 2, 9));
     }
 
     /// <summary>
@@ -354,8 +308,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CreateTwoPlayers()
     {
-        CreatePlayer(PlayerColor.Blue, new Vector3(-13, 2, -15));
-        CreatePlayer(PlayerColor.Red, new Vector3(-13, 2, 9));
+        SavePlayerDataAndRequestLoad(PlayerColor.Blue, new Vector3(-13, 2, -15));
+        SavePlayerDataAndRequestLoad(PlayerColor.Red, new Vector3(-13, 2, 9));
     }
 
     /// <summary>
@@ -363,16 +317,13 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     /// <param name="playerColor"></param>
     /// <param name="position"></param>
-    private void CreatePlayer(PlayerColor playerColor, Vector3 position)
+    private void SavePlayerDataAndRequestLoad(PlayerColor playerColor, Vector3 position)
     {
         var playerScenePath = $"res://scenes/players/{playerColor.ToString().ToLower()}.tscn";
         var playerData = new PlayerData(position, playerColor);
 
         _playerScenesPathAndData.Add(playerScenePath, playerData);
-        _playerScenesPathAndLoadStatus.Add(
-            playerScenePath,
-            ResourceLoader.ThreadLoadStatus.InProgress
-        );
+        _playerScenesPathAndLoadStatus.Add(playerScenePath, ResourceLoader.ThreadLoadStatus.InProgress);
 
         ResourceLoader.LoadThreadedRequest(playerScenePath);
     }
@@ -381,18 +332,13 @@ internal partial class GameManager : WorldEnvironment
     /// Creates an enemy.
     /// </summary>
     /// <param name="position"></param>
-    private void CreateEnemy(Vector3 position)
+    private void SaveEnemyDataAndRequestLoad(Vector3 position)
     {
-        var enemyScenePath = _enemyScene.ResourcePath;
+        if (_enemyScene == null)
+            ResourceLoader.LoadThreadedRequest(EnemyScenePath);
+
         var enemyData = new EnemyData(position);
-
-        _enemyScenesPathAndData.Add(enemyScenePath, enemyData);
-        _enemyScenesPathAndLoadStatus.Add(
-            enemyScenePath,
-            ResourceLoader.ThreadLoadStatus.InProgress
-        );
-
-        ResourceLoader.LoadThreadedRequest(enemyScenePath);
+        _enemiesData.Add(enemyData.GetInstanceId(), enemyData);
     }
 
     /// <summary>
@@ -434,9 +380,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void AddEventToResumeButton()
     {
-        var resumeButton = _pausedGameSceneInstance.GetNode<TextureButton>(
-            "ButtonsContainer/GridContainer/ResumeButton"
-        );
+        var resumeButton =
+            _pausedGameSceneInstance.GetNode<TextureButton>("ButtonsContainer/GridContainer/ResumeButton");
         resumeButton.Pressed += OnResumeGame;
     }
 
@@ -446,8 +391,7 @@ internal partial class GameManager : WorldEnvironment
     private void AddEventToSaveAndExitButton()
     {
         var saveAndExitButton = _pausedGameSceneInstance.GetNode<TextureButton>(
-            "ButtonsContainer/GridContainer/SaveAndExitButton"
-        );
+            "ButtonsContainer/GridContainer/SaveAndExitButton");
         saveAndExitButton.Pressed += OnSaveAndExit;
     }
 
@@ -491,9 +435,7 @@ internal partial class GameManager : WorldEnvironment
     {
         _pausedGameSceneInstance.GetNode<PanelContainer>("ButtonsContainer").QueueFree();
 
-        var countDownContainer = _pausedGameSceneInstance.GetNode<PanelContainer>(
-            "CountDownContainer"
-        );
+        var countDownContainer = _pausedGameSceneInstance.GetNode<PanelContainer>("CountDownContainer");
         countDownContainer.Visible = true;
     }
 
@@ -509,9 +451,7 @@ internal partial class GameManager : WorldEnvironment
     /// <returns></returns>
     private async Task StartCountDown()
     {
-        var countDownLabel = _pausedGameSceneInstance.GetNode<Label>(
-            "CountDownContainer/CountDownLabel"
-        );
+        var countDownLabel = _pausedGameSceneInstance.GetNode<Label>("CountDownContainer/CountDownLabel");
 
         const int countDownStartingNumber = 3;
         for (var number = countDownStartingNumber; number > 0; number--)
