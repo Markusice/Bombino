@@ -1,6 +1,8 @@
+using System.Linq;
+
 namespace Bombino.scripts;
 
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
@@ -20,9 +22,6 @@ internal partial class GameManager : WorldEnvironment
     [Export]
     private PackedScene _startingScreenScene;
 
-    [Export]
-    private PackedScene _enemyScene;
-
     #endregion
 
     #region Signals
@@ -32,6 +31,12 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     [Signal]
     public delegate void ResumeGameEventHandler();
+
+    [Signal]
+    public delegate void SceneLoadEventHandler(double progress);
+
+    [Signal]
+    public delegate void EverythingLoadedEventHandler();
 
     #endregion
 
@@ -43,11 +48,30 @@ internal partial class GameManager : WorldEnvironment
     public static int NumberOfPlayers { get; set; } = 3;
     public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
-
     public static Array<PlayerData> PlayersData { get; } = new();
 
-    private Node _pausedGameSceneInstance;
-    private PackedScene _playerScene;
+    public static Array<EnemyData> EnemiesData { get; } = new();
+
+    private LoadingScene _pausedGameSceneInstance;
+
+    private readonly string _mapScenePath = $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
+    private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
+    private Array _mapSceneLoadProgress = new();
+
+    private Godot.Collections.Dictionary<string, PlayerData> _playerScenesPathAndData = new();
+    private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus>
+        _playerScenesPathAndLoadStatus = new();
+    private Array _playerSceneLoadProgress = new();
+    private double _playerScenesLoadProgressSum;
+
+    private Godot.Collections.Dictionary<ulong, EnemyData> _enemiesData = new();
+    private PackedScene _enemyScene;
+    private const string EnemyScenePath = "res://scenes/enemy.tscn";
+    private ResourceLoader.ThreadLoadStatus _enemySceneLoadStatus;
+    private Array _enemySceneLoadProgress = new();
+
+    private double _loadProgress;
+    private bool _isEverythingLoaded;
 
     #endregion
 
@@ -79,12 +103,160 @@ internal partial class GameManager : WorldEnvironment
 
     #endregion
 
+    #region SceneUpdateMethods
+
+    /// <summary>
+    /// Called when the node enters the scene tree for the first time.
+    /// </summary>
+    public override void _Ready()
+    {
+        SetProcessInput(false);
+        WorldEnvironment = this;
+
+        // CheckForSavedDataAndSetUpGame();
+    }
+
+    public override void _Process(double delta)
+    {
+        if (_isEverythingLoaded)
+            return;
+
+        // default initialized value is InvalidResource
+        if (_mapSceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
+            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mapScenePath, _mapSceneLoadProgress);
+
+        if (_mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded)
+        {
+            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mapScenePath, _mapSceneLoadProgress);
+
+            _loadProgress = (double)_mapSceneLoadProgress[0];
+            EmitSignal(SignalName.SceneLoad, _loadProgress);
+
+            return;
+        }
+
+        EmitLoadedProgressAndAddGameMap_IfGameMapNotAdded();
+
+        if (_playerScenesLoadProgressSum == 0)
+            _playerScenesLoadProgressSum = SetPlayerScenesStatus_And_GetLoadProgressSum();
+
+        if (_enemySceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
+            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(EnemyScenePath, _enemySceneLoadProgress);
+
+        if (_enemySceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded || IsNotEveryPlayerLoaded())
+        {
+            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(EnemyScenePath, _enemySceneLoadProgress);
+            _playerScenesLoadProgressSum = SetPlayerScenesStatus_And_GetLoadProgressSum();
+
+            var loadProgressSum = _playerScenesLoadProgressSum + (double)_enemySceneLoadProgress[0];
+            _loadProgress = loadProgressSum / (_playerScenesPathAndData.Count + 1);
+            EmitSignal(SignalName.SceneLoad, _loadProgress);
+
+            return;
+        }
+
+        CreatePlayersFromSavedData();
+        CreateEnemiesFromSavedData();
+
+        EmitAndSetEverythingLoaded_And_EnableInputProcess();
+    }
+
+    /// <summary>
+    /// Called every frame. 'delta' is the elapsed time since the previous frame.
+    /// </summary>
+    /// <param name="event">Event when a key is pressed.</param>
+    public override void _Input(InputEvent @event)
+    {
+        if (!InputEventChecker.IsEscapeKeyPressed(@event))
+            return;
+
+        Pause();
+    }
+
+    #endregion
+
+    private void EmitLoadedProgressAndAddGameMap_IfGameMapNotAdded()
+    {
+        var gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
+        if (gameMapScene == null)
+            return;
+
+        // SceneLoad signal will only be emitted once here
+        EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
+
+        GameMap = gameMapScene.Instantiate<GridMap>();
+        AddChild(GameMap);
+    }
+
+    private double SetPlayerScenesStatus_And_GetLoadProgressSum()
+    {
+        var playerSceneLoadProgressSum = 0.0;
+
+        foreach (var playerScenePathAndData in _playerScenesPathAndData)
+        {
+            SetSceneLoadStatus_And_Progress(playerScenePathAndData, _playerScenesPathAndLoadStatus,
+                _playerSceneLoadProgress);
+
+            playerSceneLoadProgressSum += (double)_playerSceneLoadProgress[0];
+        }
+
+        return playerSceneLoadProgressSum;
+    }
+
+    private static void SetSceneLoadStatus_And_Progress<T>(KeyValuePair<string, T> item,
+        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary, Array progress) =>
+        dictionary[item.Key] = ResourceLoader.LoadThreadedGetStatus(item.Key, progress);
+
+    private bool IsNotEveryPlayerLoaded() =>
+        _playerScenesPathAndLoadStatus.Any(item => item.Value == ResourceLoader.ThreadLoadStatus.InProgress);
+
+    private void EmitAverageLoadProgress(double sceneLoadProgressSum, int count)
+    {
+        var sceneLoadProgressAverage = sceneLoadProgressSum / count;
+
+        EmitSignal(SignalName.SceneLoad, sceneLoadProgressAverage);
+    }
+
+    private void CreatePlayersFromSavedData()
+    {
+        foreach (var playerScenePathAndData in _playerScenesPathAndData)
+        {
+            var playerScene = (PackedScene)ResourceLoader.LoadThreadedGet(playerScenePathAndData.Key);
+            var player = playerScene.Instantiate<Player>();
+
+            player.PlayerData = playerScenePathAndData.Value;
+
+            AddChild(player);
+        }
+    }
+
+    private void CreateEnemiesFromSavedData()
+    {
+        _enemyScene ??= (PackedScene)ResourceLoader.LoadThreadedGet(EnemyScenePath);
+
+        foreach (var enemyData in _enemiesData.Values)
+        {
+            var enemy = _enemyScene.Instantiate<Enemy>();
+            enemy.EnemyData = enemyData;
+
+            AddChild(enemy);
+        }
+    }
+
+    private void EmitAndSetEverythingLoaded_And_EnableInputProcess()
+    {
+        EmitSignal(SignalName.EverythingLoaded);
+        _isEverythingLoaded = true;
+
+        SetProcessInput(true);
+    }
+
     /// <summary>
     /// Checks for saved data and sets up the game.
     /// </summary>
     private void CheckForSavedDataAndSetUpGame()
     {
-        if (!GameSaveHandler.IsThereSavedData(outputData: out var receivedData))
+        if (!GameSaveHandler.IsThereSavedData(out var receivedData))
         {
             CreateNewGame();
 
@@ -97,24 +269,31 @@ internal partial class GameManager : WorldEnvironment
     /// <summary>
     /// Creates a new game.
     /// </summary>
-    private void CreateNewGame() { }
+    public void CreateNewGame()
+    {
+        CheckMapTypeAndCreateIt();
+
+        CheckNumberOfPlayersAndCreateThem();
+
+        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -15));
+        SaveEnemyDataAndRequestLoad(new Vector3I(-14, 2, -11));
+        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -8));
+    }
 
     /// <summary>
     /// Creates a game from the saved data.
     /// </summary>
     /// <param name="data"></param>
-    private void CreateGameFromSavedData(Dictionary<string, Variant> data) { }
+    private void CreateGameFromSavedData(Godot.Collections.Dictionary<string, Variant> data)
+    {
+    }
 
     /// <summary>
     /// Checks the map type and creates it.
     /// </summary>
     private void CheckMapTypeAndCreateIt()
     {
-        var scenePath = $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
-        var mapScene = ResourceLoader.Load<PackedScene>(scenePath);
-        GameMap = mapScene.Instantiate<GridMap>();
-
-        AddChild(GameMap);
+        ResourceLoader.LoadThreadedRequest(_mapScenePath);
     }
 
     /// <summary>
@@ -137,7 +316,7 @@ internal partial class GameManager : WorldEnvironment
     private void CreateThreePlayers()
     {
         CreateTwoPlayers();
-        CreatePlayer(PlayerColor.Yellow, new Vector3(11, 2, 9));
+        SavePlayerDataAndRequestLoad(PlayerColor.Yellow, new Vector3(11, 2, 9));
     }
 
     /// <summary>
@@ -145,8 +324,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CreateTwoPlayers()
     {
-        CreatePlayer(PlayerColor.Blue, new Vector3(-13, 2, -15));
-        CreatePlayer(PlayerColor.Red, new Vector3(-13, 2, 9));
+        SavePlayerDataAndRequestLoad(PlayerColor.Blue, new Vector3(-13, 2, -15));
+        SavePlayerDataAndRequestLoad(PlayerColor.Red, new Vector3(-13, 2, 9));
     }
 
     /// <summary>
@@ -154,49 +333,28 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     /// <param name="playerColor"></param>
     /// <param name="position"></param>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    private void CreatePlayer(PlayerColor playerColor, Vector3 position)
+    private void SavePlayerDataAndRequestLoad(PlayerColor playerColor, Vector3 position)
     {
-        var scenePath = $"res://scenes/players/{playerColor.ToString().ToLower()}.tscn";
-        _playerScene = ResourceLoader.Load<PackedScene>(scenePath);
-        var player = _playerScene.Instantiate<Player>();
+        var playerScenePath = $"res://scenes/players/{playerColor.ToString().ToLower()}.tscn";
+        var playerData = new PlayerData(position, playerColor);
 
-        player.Position = position;
-        player.Name = playerColor.ToString();
+        _playerScenesPathAndData.Add(playerScenePath, playerData);
+        _playerScenesPathAndLoadStatus.Add(playerScenePath, ResourceLoader.ThreadLoadStatus.InProgress);
 
-        player.PlayerData = playerColor switch
-        {
-            PlayerColor.Blue => new PlayerData(playerColor, PlayersActionKeys.Player1),
-            PlayerColor.Red => new PlayerData(playerColor, PlayersActionKeys.Player2),
-            PlayerColor.Yellow => new PlayerData(playerColor, PlayersActionKeys.Player3),
-            _ => throw new ArgumentOutOfRangeException(nameof(playerColor), playerColor, null),
-        };
-
-        AddChild(player);
+        ResourceLoader.LoadThreadedRequest(playerScenePath);
     }
 
     /// <summary>
     /// Creates an enemy.
     /// </summary>
     /// <param name="position"></param>
-    private void CreateEnemy(Vector3 position)
+    private void SaveEnemyDataAndRequestLoad(Vector3 position)
     {
-        var enemy = _enemyScene.Instantiate<Enemy>();
-        enemy.Position = position;
+        if (_enemyScene == null)
+            ResourceLoader.LoadThreadedRequest(EnemyScenePath);
 
-        AddChild(enemy);
-    }
-
-    /// <summary>
-    /// Called every frame. 'delta' is the elapsed time since the previous frame.
-    /// </summary>
-    /// <param name="event">Event when a key is pressed.</param>
-    public override void _Input(InputEvent @event)
-    {
-        if (!InputEventChecker.IsEscapeKeyPressed(@event))
-            return;
-
-        Pause();
+        var enemyData = new EnemyData(position);
+        _enemiesData.Add(enemyData.GetInstanceId(), enemyData);
     }
 
     /// <summary>
@@ -220,7 +378,7 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void SetAndAddPausedGame()
     {
-        _pausedGameSceneInstance = _pausedGameScene.Instantiate();
+        _pausedGameSceneInstance = _pausedGameScene.Instantiate<LoadingScene>();
         GetParent().AddChild(_pausedGameSceneInstance);
     }
 
@@ -238,9 +396,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void AddEventToResumeButton()
     {
-        var resumeButton = _pausedGameSceneInstance.GetNode<TextureButton>(
-            "ButtonsContainer/GridContainer/ResumeButton"
-        );
+        var resumeButton =
+            _pausedGameSceneInstance.GetNode<TextureButton>("ButtonsContainer/GridContainer/ResumeButton");
         resumeButton.Pressed += OnResumeGame;
     }
 
@@ -250,8 +407,7 @@ internal partial class GameManager : WorldEnvironment
     private void AddEventToSaveAndExitButton()
     {
         var saveAndExitButton = _pausedGameSceneInstance.GetNode<TextureButton>(
-            "ButtonsContainer/GridContainer/SaveAndExitButton"
-        );
+            "ButtonsContainer/GridContainer/SaveAndExitButton");
         saveAndExitButton.Pressed += OnSaveAndExit;
     }
 
@@ -295,9 +451,7 @@ internal partial class GameManager : WorldEnvironment
     {
         _pausedGameSceneInstance.GetNode<PanelContainer>("ButtonsContainer").QueueFree();
 
-        var countDownContainer = _pausedGameSceneInstance.GetNode<PanelContainer>(
-            "CountDownContainer"
-        );
+        var countDownContainer = _pausedGameSceneInstance.GetNode<PanelContainer>("CountDownContainer");
         countDownContainer.Visible = true;
     }
 
@@ -313,12 +467,10 @@ internal partial class GameManager : WorldEnvironment
     /// <returns></returns>
     private async Task StartCountDown()
     {
-        var countDownLabel = _pausedGameSceneInstance.GetNode<Label>(
-            "CountDownContainer/CountDownLabel"
-        );
+        var countDownLabel = _pausedGameSceneInstance.GetNode<Label>("CountDownContainer/CountDownLabel");
 
-        int countDownNumber = 3;
-        for (int number = countDownNumber; number > 0; number--)
+        const int countDownStartingNumber = 3;
+        for (var number = countDownStartingNumber; number > 0; number--)
         {
             countDownLabel.Text = number.ToString();
 
