@@ -7,15 +7,11 @@ using Godot;
 /// </summary>
 internal partial class PlayButton : Button, IUiButton
 {
-    #region Exports
-
-    [Export]
-    private PackedScene _playMenuScene;
-
-    #endregion
-
     /// <summary>
     /// Called when the play button is pressed.
     /// </summary>
-    public void OnPressed() => GetTree().ChangeSceneToPacked(_playMenuScene);
+    public void OnPressed()
+    {
+        GetTree().ChangeSceneToFile("res://scenes/ui/play_menu.tscn");
+    }
 }

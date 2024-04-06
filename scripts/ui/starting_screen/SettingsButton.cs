@@ -7,15 +7,11 @@ using Godot;
 /// </summary>
 internal partial class SettingsButton : Button, IUiButton
 {
-    #region Exports
-
-    [Export]
-    private PackedScene _settingsMenuScene;
-
-    #endregion
-
     /// <summary>
     /// Called when the settings button is pressed.
     /// </summary>
-    public void OnPressed() => GetTree().ChangeSceneToPacked(_settingsMenuScene);
+    public void OnPressed()
+    {
+        GetTree().ChangeSceneToFile("res://scenes/ui/settings_menu.tscn");
+    }
 }

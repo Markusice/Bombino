@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://73bcenf68jtr"]
+[gd_scene load_steps=4 format=3 uid="uid://q10o7rmqgthe"]
 
 [ext_resource type="Script" path="res://scripts/ui/settings_menu/ActionKeysContainer.cs" id="1_b871c"]
+[ext_resource type="Script" path="res://scripts/ui/settings_menu/SettingsSaveButton.cs" id="2_q3i5o"]
+[ext_resource type="Script" path="res://scripts/ui/settings_menu/SettingsCancelButton.cs" id="3_xaunk"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -62,8 +64,13 @@ theme_override_constants/separation = 50
 layout_mode = 2
 theme_type_variation = &"PrimaryButton"
 text = "Save"
+script = ExtResource("2_q3i5o")
 
 [node name="CancelButton" type="Button" parent="ButtonsContainer"]
 layout_mode = 2
 theme_type_variation = &"SecondaryButton"
 text = "Cancel"
+script = ExtResource("3_xaunk")
+
+[connection signal="pressed" from="ButtonsContainer/SaveButton" to="ButtonsContainer/SaveButton" method="OnPressed"]
+[connection signal="pressed" from="ButtonsContainer/CancelButton" to="ButtonsContainer/CancelButton" method="OnPressed"]
