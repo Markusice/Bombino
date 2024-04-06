@@ -75,22 +75,6 @@ internal partial class GameManager : WorldEnvironment
 
     #endregion
 
-    /// <summary>
-    /// Called when the node enters the scene tree for the first time.
-    /// </summary>
-    public override void _Ready()
-    {
-        WorldEnvironment = this;
-
-        CheckMapTypeAndCreateIt();
-
-        CheckNumberOfPlayersAndCreateThem();
-
-        CheckForSavedDataAndSetUpGame();
-
-        CreateEnemy(new Vector3I(11, 2, -15));
-    }
-
     #region MethodsForSignals
 
     /// <summary>
