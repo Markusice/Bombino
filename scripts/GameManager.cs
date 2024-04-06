@@ -54,7 +54,8 @@ internal partial class GameManager : WorldEnvironment
 
     private LoadingScene _pausedGameSceneInstance;
 
-    private readonly string _mapScenePath = $"res://scenes/maps/{SelectedMap.ToString().ToLower()}.tscn";
+    private readonly string _mapTextFilePath = $"res://scenes/maps/source/{SelectedMap.ToString().ToLower()}.json";
+    private readonly string _mapScenePath = $"res://scenes/maps/created/{SelectedMap.ToString().ToLower()}.tscn";
     private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
     private Array _mapSceneLoadProgress = new();
 
@@ -104,6 +105,9 @@ internal partial class GameManager : WorldEnvironment
     {
         if (_isEverythingLoaded)
             return;
+
+        // create map scene from txt file if not yet created
+        MapLoader.CreateMapFromTextFile(_mapTextFilePath, _mapScenePath);
 
         // default initialized value is InvalidResource
         if (_mapSceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
