@@ -3,6 +3,7 @@ namespace Bombino.scripts.ui;
 using Godot;
 using Godot.Collections;
 using persistence;
+using persistence.keybinds;
 
 /// <summary>
 /// Represents a container for action keys in the user interface.
@@ -31,6 +32,11 @@ internal partial class ActionKeysContainer : GridContainer
 
     public override void _Ready()
     {
+        var settingsDataAccessLayer = new SettingsDataAccessLayer();
+        var settingsKeyBinds = new SettingsKeyBinds(settingsDataAccessLayer);
+        
+        settingsKeyBinds.LoadKeyBinds();
+        
         ActionKeysMapper.CreateActionKeys(this);
     }
 }
