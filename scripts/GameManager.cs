@@ -207,8 +207,11 @@ internal partial class GameManager : WorldEnvironment
         {
             var playerScene = (PackedScene)ResourceLoader.LoadThreadedGet(playerScenePathAndData.Key);
             var player = playerScene.Instantiate<Player>();
+            
+            var playerData = playerScenePathAndData.Value;
+            player.PlayerData = playerData;
 
-            player.PlayerData = playerScenePathAndData.Value;
+            PlayersData.Add(playerData);
 
             AddChild(player);
         }
