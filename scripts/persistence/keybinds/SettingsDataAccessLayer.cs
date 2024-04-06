@@ -13,13 +13,13 @@ internal class SettingsDataAccessLayer : IDataAccessLayer
 
         SavePlayersKeyBinds(config);
 
-        config.Save(SettingsKeybinds.KeybindsPath);
+        config.Save(SettingsKeyBinds.KeyBindsPath);
     }
 
     public bool LoadData()
     {
         var config = new ConfigFile();
-        var error = config.Load(SettingsKeybinds.KeybindsPath);
+        var error = config.Load(SettingsKeyBinds.KeyBindsPath);
 
         if (error != Error.Ok)
             return false;
@@ -31,7 +31,7 @@ internal class SettingsDataAccessLayer : IDataAccessLayer
 
     private static void SavePlayersKeyBinds(ConfigFile config)
     {
-        foreach (var playerData in SettingsKeybinds.PlayersData)
+        foreach (var playerData in SettingsKeyBinds.PlayersData)
         {
             var playerActionKeys = playerData.ActionKeys;
 
