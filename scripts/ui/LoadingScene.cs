@@ -21,7 +21,6 @@ internal partial class LoadingScene : CanvasLayer
     {
         var progressLabel = GetNode<Label>("PanelContainer/ProgressLabel");
         progressLabel.Text = $"{Mathf.Floor(progress * 100)}%";
-        GD.Print(progressLabel.Text);
     }
 
     private void OnEverythingLoaded() => QueueFree();
