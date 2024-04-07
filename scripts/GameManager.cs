@@ -172,6 +172,12 @@ internal partial class GameManager : WorldEnvironment
         GameMap = gameMapScene.Instantiate<BombinoMap>();
         GameMap.SetUpMapFromTextFile(_mapTextFilePath);
         AddChild(GameMap);
+
+        CheckNumberOfPlayersAndCreateThem();
+
+        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -15));
+        SaveEnemyDataAndRequestLoad(new Vector3I(-14, 2, -11));
+        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -8));
         
     }
 
@@ -259,12 +265,6 @@ internal partial class GameManager : WorldEnvironment
     public void CreateNewGame()
     {
         CheckMapTypeAndCreateIt();
-
-        CheckNumberOfPlayersAndCreateThem();
-
-        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -15));
-        SaveEnemyDataAndRequestLoad(new Vector3I(-14, 2, -11));
-        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -8));
     }
 
     /// <summary>

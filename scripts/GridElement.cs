@@ -5,11 +5,7 @@ namespace Bombino.scripts;
 /// </summary>
 internal enum GridElement
 {
-    BlockElement = 1,
+    BlockElement = 0,
+    WallElement = 1,
     CrateElement = 2,
-    WallElement = 3,
-    BluePlayerElement,
-    RedPlayerElement,
-    YellowPlayerElement,
-    NullElement,
 }

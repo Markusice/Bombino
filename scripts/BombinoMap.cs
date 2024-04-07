@@ -100,15 +100,15 @@ internal partial class BombinoMap : GridMap
                         break;
                     case 'B':
                         SetCellItem(new Vector3I(x, 0, z), (int)GridElement.BlockElement);
-                        SetPlayerPosition(PlayerColor.Blue, new Vector3(x, 1, z));
+                        SetPlayerPosition(PlayerColor.Blue, MapToLocal(new Vector3I(x, 1, z)));
                         break;
                     case 'R':
                         SetCellItem(new Vector3I(x, 0, z), (int)GridElement.BlockElement);
-                        SetPlayerPosition(PlayerColor.Red, new Vector3(x, 1, z));
+                        SetPlayerPosition(PlayerColor.Red, MapToLocal(new Vector3I(x, 1, z)));
                         break;
                     case 'Y':
                         SetCellItem(new Vector3I(x, 0, z), (int)GridElement.BlockElement);
-                        SetPlayerPosition(PlayerColor.Yellow, new Vector3(x, 1, z));
+                        SetPlayerPosition(PlayerColor.Yellow, MapToLocal(new Vector3I(x, 1, z)));
                         break;
                 }
             }

@@ -343,7 +343,8 @@ internal partial class Bomb : Area3D
 
                 if (IsTileTypeAtPosition(positionOnNthTile, 2))
                     DestroyCrateAtPosition(positionOnNthTile);
-                    break;
+                    
+                break;
             }
         }
     }
