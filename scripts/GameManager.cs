@@ -43,7 +43,7 @@ internal partial class GameManager : WorldEnvironment
     #region Fields
 
     public static WorldEnvironment WorldEnvironment { get; private set; }
-    public static GridMap GameMap { get; private set; }
+    public static BombinoMap GameMap { get; private set; }
 
     public static int NumberOfPlayers { get; set; } = 3;
     public static MapType SelectedMap { get; set; } = MapType.Basic;
@@ -54,8 +54,8 @@ internal partial class GameManager : WorldEnvironment
 
     private LoadingScene _pausedGameSceneInstance;
 
-    private readonly string _mapTextFilePath = $"res://scenes/maps/source/{SelectedMap.ToString().ToLower()}.json";
-    private readonly string _mapScenePath = $"res://scenes/maps/created/{SelectedMap.ToString().ToLower()}.tscn";
+    private readonly string _mapTextFilePath = $"res://scenes/map/source/{SelectedMap.ToString().ToLower()}.json";
+    private readonly string _mapScenePath = $"res://scenes/map/map.tscn";
     private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
     private Array _mapSceneLoadProgress = new();
 
@@ -105,9 +105,6 @@ internal partial class GameManager : WorldEnvironment
     {
         if (_isEverythingLoaded)
             return;
-
-        // create map scene from txt file if not yet created
-        MapLoader.CreateMapFromTextFile(_mapTextFilePath, _mapScenePath);
 
         // default initialized value is InvalidResource
         if (_mapSceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
@@ -170,10 +167,12 @@ internal partial class GameManager : WorldEnvironment
             return;
 
         // SceneLoad signal will only be emitted once here
-        EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
+        // EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
 
-        GameMap = gameMapScene.Instantiate<GridMap>();
+        GameMap = gameMapScene.Instantiate<BombinoMap>();
+        GameMap.SetUpMapFromTextFile(_mapTextFilePath);
         AddChild(GameMap);
+        
     }
 
     private double SetPlayerScenesStatus_And_GetLoadProgressSum()
@@ -304,7 +303,7 @@ internal partial class GameManager : WorldEnvironment
     private void CreateThreePlayers()
     {
         CreateTwoPlayers();
-        SavePlayerDataAndRequestLoad(PlayerColor.Yellow, new Vector3(11, 2, 9));
+        SavePlayerDataAndRequestLoad(PlayerColor.Yellow, GameMap.GetPlayerPosition(PlayerColor.Yellow));
     }
 
     /// <summary>
@@ -312,8 +311,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CreateTwoPlayers()
     {
-        SavePlayerDataAndRequestLoad(PlayerColor.Blue, new Vector3(-13, 2, -15));
-        SavePlayerDataAndRequestLoad(PlayerColor.Red, new Vector3(-13, 2, 9));
+        SavePlayerDataAndRequestLoad(PlayerColor.Blue, GameMap.GetPlayerPosition(PlayerColor.Blue));
+        SavePlayerDataAndRequestLoad(PlayerColor.Red, GameMap.GetPlayerPosition(PlayerColor.Red));
     }
 
     /// <summary>
