@@ -174,10 +174,7 @@ internal partial class GameManager : WorldEnvironment
         AddChild(GameMap);
 
         CheckNumberOfPlayersAndCreateThem();
-
-        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -15));
-        SaveEnemyDataAndRequestLoad(new Vector3I(-14, 2, -11));
-        SaveEnemyDataAndRequestLoad(new Vector3I(-10, 2, -8));
+        CreateEnemies();
         
     }
 
@@ -313,6 +310,17 @@ internal partial class GameManager : WorldEnvironment
     {
         SavePlayerDataAndRequestLoad(PlayerColor.Blue, GameMap.BluePlayerPosition);
         SavePlayerDataAndRequestLoad(PlayerColor.Red, GameMap.RedPlayerPosition);
+    }
+
+    /// <summary>
+    /// Creates enemies from the game map.
+    /// </summary>
+    private void CreateEnemies()
+    {
+        foreach (var enemyPosition in GameMap.EnemyPositions)
+        {
+            SaveEnemyDataAndRequestLoad(enemyPosition);
+        }
     }
 
     /// <summary>
