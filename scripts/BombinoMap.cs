@@ -1,85 +1,30 @@
 namespace Bombino.scripts;
 
 using Godot;
-using System;
-using System.Dynamic;
 
 /// <summary>
 /// Represents an interactive grid map in the game.
 /// </summary>
 internal partial class BombinoMap : GridMap
 {
-	private Vector3 BluePlayerPosition;
+    public Vector3 BluePlayerPosition { get; private set; }
+    public Vector3 RedPlayerPosition { get; private set; }
+    public Vector3 YellowPlayerPosition { get; private set; }
 
-	private Vector3 RedPlayerPosition;
-
-	private Vector3 YellowPlayerPosition;
-
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
-	/// <summary>
-	/// Gets the player position for the given color.
-	/// </summary>
-	/// <param name="color"></param>
-	/// <returns></returns>
-	/// <exception cref="ArgumentOutOfRangeException"></exception>
-	public Vector3 GetPlayerPosition(PlayerColor color)
-	{
-        return color switch
-        {
-            PlayerColor.Blue => ToGlobal(BluePlayerPosition),
-            PlayerColor.Red => ToGlobal(RedPlayerPosition),
-            PlayerColor.Yellow => ToGlobal(YellowPlayerPosition),
-            _ => throw new ArgumentOutOfRangeException(nameof(color), color, null),
-        };
-    }
-
-	/// <summary>
-	/// Sets the player position for the given color.
-	/// </summary>
-	/// <param name="color"></param>
-	/// <param name="position"></param>
-	/// <exception cref="ArgumentOutOfRangeException"></exception>
-	public void SetPlayerPosition(PlayerColor color, Vector3 position)
-	{
-		switch (color)
-		{
-			case PlayerColor.Blue:
-				BluePlayerPosition = position;
-				break;
-			case PlayerColor.Red:
-				RedPlayerPosition = position;
-				break;
-			case PlayerColor.Yellow:
-				YellowPlayerPosition = position;
-				break;
-			default:
-				throw new ArgumentOutOfRangeException(nameof(color), color, null);
-		}
-	}
-
-	/// <summary>
+    /// <summary>
     /// Sets up the map from a json file.
     /// </summary>
     public void SetUpMapFromTextFile(string filePath)
     {
         var file = FileAccess.Open(filePath, FileAccess.ModeFlags.Read);
         var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
-        String[] lines = (string[])data["structure"];
+        var lines = data["structure"].AsStringArray();
 
-        for (int z = 0; z < lines.Length; z++)
+        for (var z = 0; z < lines.Length; z++)
         {
-            string line = lines[z];
+            var line = lines[z];
 
-            for (int x = 0; x < line.Length; x++)
+            for (var x = 0; x < line.Length; x++)
             {
                 var character = line[x];
 
@@ -100,15 +45,15 @@ internal partial class BombinoMap : GridMap
                         break;
                     case 'B':
                         SetCellItem(new Vector3I(x, 0, z), (int)GridElement.BlockElement);
-                        SetPlayerPosition(PlayerColor.Blue, MapToLocal(new Vector3I(x, 1, z)));
+                        BluePlayerPosition = MapToLocal(new Vector3I(x, 1, z));
                         break;
                     case 'R':
                         SetCellItem(new Vector3I(x, 0, z), (int)GridElement.BlockElement);
-                        SetPlayerPosition(PlayerColor.Red, MapToLocal(new Vector3I(x, 1, z)));
+                        RedPlayerPosition = MapToLocal(new Vector3I(x, 1, z));
                         break;
                     case 'Y':
                         SetCellItem(new Vector3I(x, 0, z), (int)GridElement.BlockElement);
-                        SetPlayerPosition(PlayerColor.Yellow, MapToLocal(new Vector3I(x, 1, z)));
+                        YellowPlayerPosition = MapToLocal(new Vector3I(x, 1, z));
                         break;
                 }
             }

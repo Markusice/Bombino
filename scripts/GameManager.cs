@@ -303,7 +303,7 @@ internal partial class GameManager : WorldEnvironment
     private void CreateThreePlayers()
     {
         CreateTwoPlayers();
-        SavePlayerDataAndRequestLoad(PlayerColor.Yellow, GameMap.GetPlayerPosition(PlayerColor.Yellow));
+        SavePlayerDataAndRequestLoad(PlayerColor.Yellow, GameMap.YellowPlayerPosition);
     }
 
     /// <summary>
@@ -311,8 +311,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CreateTwoPlayers()
     {
-        SavePlayerDataAndRequestLoad(PlayerColor.Blue, GameMap.GetPlayerPosition(PlayerColor.Blue));
-        SavePlayerDataAndRequestLoad(PlayerColor.Red, GameMap.GetPlayerPosition(PlayerColor.Red));
+        SavePlayerDataAndRequestLoad(PlayerColor.Blue, GameMap.BluePlayerPosition);
+        SavePlayerDataAndRequestLoad(PlayerColor.Red, GameMap.RedPlayerPosition);
     }
 
     /// <summary>
