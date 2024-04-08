@@ -1,0 +1,76 @@
+[gd_scene load_steps=4 format=3 uid="uid://q10o7rmqgthe"]
+
+[ext_resource type="Script" path="res://ui/settings_menu/ActionKeysContainer.cs" id="1_b871c"]
+[ext_resource type="Script" path="res://ui/settings_menu/SettingsSaveButton.cs" id="2_q3i5o"]
+[ext_resource type="Script" path="res://ui/settings_menu/SettingsCancelButton.cs" id="3_xaunk"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TitleContainer" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -524.0
+offset_top = 80.0
+offset_right = -81.0
+offset_bottom = 196.0
+grow_horizontal = 2
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -275.0
+offset_right = 600.0
+offset_bottom = 375.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ActionKeysContainer" type="GridContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 100
+theme_override_constants/v_separation = 50
+columns = 2
+script = ExtResource("1_b871c")
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -256.0
+offset_top = -120.0
+offset_right = 256.0
+offset_bottom = -39.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 50
+
+[node name="SaveButton" type="Button" parent="ButtonsContainer"]
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Save"
+script = ExtResource("2_q3i5o")
+
+[node name="CancelButton" type="Button" parent="ButtonsContainer"]
+layout_mode = 2
+theme_type_variation = &"SecondaryButton"
+text = "Cancel"
+script = ExtResource("3_xaunk")
+
+[connection signal="pressed" from="ButtonsContainer/SaveButton" to="ButtonsContainer/SaveButton" method="OnPressed"]
+[connection signal="pressed" from="ButtonsContainer/CancelButton" to="ButtonsContainer/CancelButton" method="OnPressed"]

@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://c4yf6j5ql8flw"]
-
-[ext_resource type="MeshLibrary" uid="uid://bcacwmfqh1n7i" path="res://assets/meshes/TileSet.tres" id="1_cyy71"]
-[ext_resource type="Script" path="res://scripts/BombinoMap.cs" id="2_ewq3u"]
-
-[node name="GridMap" type="GridMap"]
-mesh_library = ExtResource("1_cyy71")
-script = ExtResource("2_ewq3u")

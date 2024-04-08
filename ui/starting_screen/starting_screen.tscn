@@ -1,0 +1,84 @@
+[gd_scene load_steps=4 format=3 uid="uid://wpo1q3hd2yct"]
+
+[ext_resource type="Script" path="res://ui/starting_screen/PlayButton.cs" id="1_mxb0r"]
+[ext_resource type="Script" path="res://ui/starting_screen/SettingsButton.cs" id="3_3hms2"]
+[ext_resource type="Script" path="res://ui/starting_screen/ExitToDesktopButton.cs" id="5_xliyh"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_use_anchors_ = true
+
+[node name="TitleContainer" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -524.0
+offset_top = 80.0
+offset_right = -81.0
+offset_bottom = 196.0
+grow_horizontal = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Bombino"
+horizontal_alignment = 1
+
+[node name="MainActionsContainer" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -563.0
+offset_top = -163.0
+offset_right = 563.0
+offset_bottom = 163.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainActionsContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="PlayButton" type="Button" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+text = "Play"
+script = ExtResource("1_mxb0r")
+
+[node name="TextureRect" type="TextureRect" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="SettingsButton" type="Button" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"ButtonMirrored"
+theme_override_font_sizes/font_size = 80
+text = "Settings"
+script = ExtResource("3_3hms2")
+
+[node name="ExitButtonContainer" type="PanelContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -251.5
+offset_top = -161.0
+offset_right = 251.5
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ExitToDesktopButton" type="Button" parent="ExitButtonContainer"]
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Exit To Desktop"
+script = ExtResource("5_xliyh")
+
+[connection signal="pressed" from="MainActionsContainer/HBoxContainer/PlayButton" to="MainActionsContainer/HBoxContainer/PlayButton" method="OnPressed"]
+[connection signal="pressed" from="MainActionsContainer/HBoxContainer/SettingsButton" to="MainActionsContainer/HBoxContainer/SettingsButton" method="OnPressed"]
+[connection signal="pressed" from="ExitButtonContainer/ExitToDesktopButton" to="ExitButtonContainer/ExitToDesktopButton" method="OnPressed"]

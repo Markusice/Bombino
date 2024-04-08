@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Bombino"
-run/main_scene="res://scenes/ui/starting_screen.tscn"
+run/main_scene="res://ui/starting_screen/starting_screen.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -28,7 +28,7 @@ project/assembly_name="Bombino"
 
 [gui]
 
-theme/custom="res://assets/textures/ui_theme.tres"
+theme/custom="res://ui/theme/ui_theme.tres"
 
 [input]
 

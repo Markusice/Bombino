@@ -1,0 +1,101 @@
+[gd_scene load_steps=4 format=3 uid="uid://tvlak70hpojg"]
+
+[ext_resource type="Script" path="res://ui/rounds_menu/RoundsMenu.cs" id="1_easd3"]
+[ext_resource type="PackedScene" uid="uid://cyr6rf0m5ctu7" path="res://ui/game_loading_screen/game_loading_scene.tscn" id="2_85xck"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2bk4"]
+bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_easd3")
+_loadingScene = ExtResource("2_85xck")
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_use_anchors_ = true
+
+[node name="TitleContainer" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -524.0
+offset_top = 80.0
+offset_right = -81.0
+offset_bottom = 196.0
+grow_horizontal = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Rounds"
+horizontal_alignment = 1
+
+[node name="RoundsContainer" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -330.0
+offset_top = -81.5
+offset_right = 330.0
+offset_bottom = 81.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_d2bk4")
+
+[node name="MarginContainer" type="MarginContainer" parent="RoundsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="GridContainer" type="GridContainer" parent="RoundsContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 40
+columns = 2
+
+[node name="NumberOfRoundsLabel" type="Label" parent="RoundsContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Number of rounds"
+
+[node name="NumberInput" type="LineEdit" parent="RoundsContainer/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(2.08165e-12, 80)
+layout_mode = 2
+theme_type_variation = &"InputField"
+placeholder_text = "xx"
+alignment = 1
+max_length = 2
+
+[node name="ErrorContainer" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -369.0
+offset_top = -211.0
+offset_right = 370.0
+offset_bottom = -154.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ErrorLabel" type="Label" parent="ErrorContainer"]
+custom_minimum_size = Vector2(739, 57)
+layout_mode = 2
+theme_type_variation = &"ErrorLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[connection signal="text_submitted" from="RoundsContainer/MarginContainer/GridContainer/NumberInput" to="." method="OnNumberInputSubmitted"]
