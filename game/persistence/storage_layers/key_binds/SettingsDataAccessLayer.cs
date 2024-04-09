@@ -1,9 +1,11 @@
-namespace Bombino.scripts.persistence.keybinds;
-
 using System;
-using factories;
+using Bombino.game.persistence.state_storage;
+using Bombino.game.persistence.storage_layers.key_binds.factory;
+using Bombino.player;
 using Godot;
 using Godot.Collections;
+
+namespace Bombino.game.persistence.storage_layers.key_binds;
 
 internal class SettingsDataAccessLayer : IDataAccessLayer
 {

@@ -1,9 +1,9 @@
 [gd_resource type="Theme" load_steps=32 format=3 uid="uid://djmr4s3lma1ss"]
 
 [ext_resource type="FontFile" uid="uid://bn4sm0qhcg0jm" path="res://ui/fonts/Spoon-Bold.ttf" id="1_2hswg"]
-[ext_resource type="Texture2D" uid="uid://bg2w4kkpxvm3s" path="res://ui/theme/textures/button-style.png" id="2_b00xl"]
+[ext_resource type="Texture2D" uid="uid://bwn3gasaptibk" path="res://ui/theme/textures/button-style.png" id="2_b00xl"]
 [ext_resource type="Texture2D" uid="uid://b5v86keu64uq6" path="res://ui/theme/textures/button-style--pressed.png" id="3_42k4x"]
-[ext_resource type="Texture2D" uid="uid://cdupnusw5y5s1" path="res://ui/theme/textures/button-style-mirrored.png" id="4_r83be"]
+[ext_resource type="Texture2D" uid="uid://b33evmmseu0p" path="res://ui/theme/textures/button-style-mirrored.png" id="4_r83be"]
 [ext_resource type="Texture2D" uid="uid://dbiifxvvrqmy3" path="res://ui/theme/textures/button-style-mirrored--pressed.png" id="5_ygea2"]
 [ext_resource type="Texture2D" uid="uid://yqgp7axbku10" path="res://ui/theme/textures/BqPanelBotton.png" id="6_nrrav"]
 [ext_resource type="FontFile" uid="uid://bhlncvaa1t1ud" path="res://ui/fonts/Montserrat-Medium.ttf" id="7_gpc4g"]

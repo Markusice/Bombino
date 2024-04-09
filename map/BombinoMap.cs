@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-namespace Bombino.scripts;
+namespace Bombino.map;
 
 /// <summary>
 /// Represents an interactive grid map in the game.
@@ -11,7 +11,7 @@ internal partial class BombinoMap : GridMap
     public Vector3 BluePlayerPosition { get; private set; }
     public Vector3 RedPlayerPosition { get; private set; }
     public Vector3 YellowPlayerPosition { get; private set; }
-	public Array<Vector3> EnemyPositions { get; private set; } = new();
+    public Array<Vector3> EnemyPositions { get; private set; } = new();
 
     /// <summary>
     /// Sets up the map from a json file.
@@ -21,8 +21,8 @@ internal partial class BombinoMap : GridMap
         var file = FileAccess.Open(filePath, FileAccess.ModeFlags.Read);
         var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
         var lines = data["structure"].AsStringArray();
-		var rowOffset = lines.Length / 2;
-		var columnOffset = lines[0].Length / 2;
+        var rowOffset = lines.Length / 2;
+        var columnOffset = lines[0].Length / 2;
 
         for (var z = 0; z < lines.Length; z++)
         {
@@ -30,8 +30,8 @@ internal partial class BombinoMap : GridMap
 
             for (var x = 0; x < line.Length; x++)
             {
-				var positionAt0 = new Vector3I(x - columnOffset, 0, z - rowOffset);
-				var positionAt1 = new Vector3I(x - columnOffset, 1, z - rowOffset);
+                var positionAt0 = new Vector3I(x - columnOffset, 0, z - rowOffset);
+                var positionAt1 = new Vector3I(x - columnOffset, 1, z - rowOffset);
 
                 var character = line[x];
 
@@ -62,10 +62,10 @@ internal partial class BombinoMap : GridMap
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
                         YellowPlayerPosition = MapToLocal(positionAt1);
                         break;
-					case 'E':
-						SetCellItem(positionAt0, (int)GridElement.BlockElement);
-						EnemyPositions.Add(MapToLocal(positionAt1));
-						break;
+                    case 'E':
+                        SetCellItem(positionAt0, (int)GridElement.BlockElement);
+                        EnemyPositions.Add(MapToLocal(positionAt1));
+                        break;
                 }
             }
         }

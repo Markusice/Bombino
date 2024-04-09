@@ -1,10 +1,12 @@
-namespace Bombino.scripts.ui.settings_menu;
-
+using Bombino.game.persistence.storage_layers.key_binds;
 using Godot;
-using persistence.keybinds;
+
+namespace Bombino.ui.settings_menu;
 
 internal partial class SettingsSaveButton : Button
 {
+    [Export(PropertyHint.File, "*.tscn")] private string _startingScreenPath;
+
     private void OnPressed()
     {
         var settingsDataAccessLayer = new SettingsDataAccessLayer();
@@ -12,6 +14,6 @@ internal partial class SettingsSaveButton : Button
 
         settingsKeyBinds.SaveKeyBinds();
 
-        GetTree().ChangeSceneToFile("res://scenes/ui/starting_screen.tscn");
+        GetTree().ChangeSceneToFile(_startingScreenPath);
     }
 }

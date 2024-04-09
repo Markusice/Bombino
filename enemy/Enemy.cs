@@ -1,8 +1,11 @@
-﻿namespace Bombino.scripts;
-
-using System;
-using Bombino.scripts.persistence;
+﻿using System;
+using System.Collections.Generic;
+using Bombino.game;
+using Bombino.game.persistence.state_storage;
+using Bombino.player;
 using Godot;
+
+namespace Bombino.enemy;
 
 /// <summary>
 /// Represents an enemy character in the game.
@@ -75,9 +78,7 @@ internal partial class Enemy : CharacterBody3D
     {
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
-        {
             _targetVelocity.Y -= _gravity * (float)delta;
-        }
 
         if (IsOnWall())
         {
@@ -120,7 +121,7 @@ internal partial class Enemy : CharacterBody3D
     /// <returns></returns>
     private static bool CanMoveToTile(Vector3 position)
     {
-        var canMoveToTileOnDirections = new System.Collections.Generic.Dictionary<
+        var canMoveToTileOnDirections = new Dictionary<
             Vector3,
             Vector3I
         >()
@@ -202,9 +203,6 @@ internal partial class Enemy : CharacterBody3D
     /// <param name="body"></param>
     private void OnAreaEntered(Node3D body)
     {
-        if (body.IsInGroup("players"))
-        {
-            body.EmitSignal(Player.SignalName.Hit);
-        }
+        if (body.IsInGroup("players")) body.EmitSignal(Player.SignalName.Hit);
     }
 }

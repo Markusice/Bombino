@@ -1,4 +1,4 @@
-namespace Bombino.scripts;
+namespace Bombino.player;
 
 /// <summary>
 /// Represents the color of a player.

@@ -1,13 +1,18 @@
-using System.Linq;
-
-namespace Bombino.scripts;
-
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Bombino.enemy;
+using Bombino.game.persistence.state_storage;
+using Bombino.game.persistence.storage_layers.game_state;
+using Bombino.map;
+using Bombino.player;
+using Bombino.ui.game_loading_screen;
+using Bombino.ui.scripts;
 using Godot;
 using Godot.Collections;
-using persistence;
-using ui;
+
+namespace Bombino.game;
 
 /// <summary>
 /// A class that manages the game.
@@ -16,11 +21,13 @@ internal partial class GameManager : WorldEnvironment
 {
     #region Exports
 
-    [Export]
-    private PackedScene _pausedGameScene;
+    [Export] private PackedScene _pausedGameScene;
 
-    [Export]
-    private PackedScene _startingScreenScene;
+    [Export] private PackedScene _startingScreenScene;
+
+    [Export(PropertyHint.File, "*.tscn")] private string _mapScenePath;
+
+    [Export(PropertyHint.File, "*.tscn")] private string _enemyScenePath;
 
     #endregion
 
@@ -52,22 +59,22 @@ internal partial class GameManager : WorldEnvironment
 
     public static Array<EnemyData> EnemiesData { get; } = new();
 
-    private LoadingScene _pausedGameSceneInstance;
+    private GameLoadingScene _pausedGameSceneInstance;
 
-    private readonly string _mapTextFilePath = $"res://scenes/map/source/{SelectedMap.ToString().ToLower()}.json";
-    private readonly string _mapScenePath = $"res://scenes/map/map.tscn";
+    private readonly string _mapTextFilePath = $"res://map/sources/{SelectedMap.ToString().ToLower()}.json";
     private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
     private Array _mapSceneLoadProgress = new();
 
     private Godot.Collections.Dictionary<string, PlayerData> _playerScenesPathAndData = new();
+
     private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus>
         _playerScenesPathAndLoadStatus = new();
+
     private Array _playerSceneLoadProgress = new();
     private double _playerScenesLoadProgressSum;
 
     private Godot.Collections.Dictionary<ulong, EnemyData> _enemiesData = new();
     private PackedScene _enemyScene;
-    private const string EnemyScenePath = "res://scenes/enemy.tscn";
     private ResourceLoader.ThreadLoadStatus _enemySceneLoadStatus;
     private Array _enemySceneLoadProgress = new();
 
@@ -126,11 +133,11 @@ internal partial class GameManager : WorldEnvironment
             _playerScenesLoadProgressSum = SetPlayerScenesStatus_And_GetLoadProgressSum();
 
         if (_enemySceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
-            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(EnemyScenePath, _enemySceneLoadProgress);
+            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_enemyScenePath, _enemySceneLoadProgress);
 
         if (_enemySceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded || IsNotEveryPlayerLoaded())
         {
-            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(EnemyScenePath, _enemySceneLoadProgress);
+            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_enemyScenePath, _enemySceneLoadProgress);
             _playerScenesLoadProgressSum = SetPlayerScenesStatus_And_GetLoadProgressSum();
 
             var loadProgressSum = _playerScenesLoadProgressSum + (double)_enemySceneLoadProgress[0];
@@ -175,7 +182,6 @@ internal partial class GameManager : WorldEnvironment
 
         CheckNumberOfPlayersAndCreateThem();
         CreateEnemies();
-        
     }
 
     private double SetPlayerScenesStatus_And_GetLoadProgressSum()
@@ -194,11 +200,15 @@ internal partial class GameManager : WorldEnvironment
     }
 
     private static void SetSceneLoadStatus_And_Progress<T>(KeyValuePair<string, T> item,
-        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary, Array progress) =>
+        IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary, Array progress)
+    {
         dictionary[item.Key] = ResourceLoader.LoadThreadedGetStatus(item.Key, progress);
+    }
 
-    private bool IsNotEveryPlayerLoaded() =>
-        _playerScenesPathAndLoadStatus.Any(item => item.Value == ResourceLoader.ThreadLoadStatus.InProgress);
+    private bool IsNotEveryPlayerLoaded()
+    {
+        return _playerScenesPathAndLoadStatus.Any(item => item.Value == ResourceLoader.ThreadLoadStatus.InProgress);
+    }
 
     private void EmitAverageLoadProgress(double sceneLoadProgressSum, int count)
     {
@@ -213,7 +223,7 @@ internal partial class GameManager : WorldEnvironment
         {
             var playerScene = (PackedScene)ResourceLoader.LoadThreadedGet(playerScenePathAndData.Key);
             var player = playerScene.Instantiate<Player>();
-            
+
             var playerData = playerScenePathAndData.Value;
             player.PlayerData = playerData;
 
@@ -225,7 +235,7 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreateEnemiesFromSavedData()
     {
-        _enemyScene ??= (PackedScene)ResourceLoader.LoadThreadedGet(EnemyScenePath);
+        _enemyScene ??= (PackedScene)ResourceLoader.LoadThreadedGet(_enemyScenePath);
 
         foreach (var enemyData in _enemiesData.Values)
         {
@@ -320,10 +330,7 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CreateEnemies()
     {
-        foreach (var enemyPosition in GameMap.EnemyPositions)
-        {
-            SaveEnemyDataAndRequestLoad(enemyPosition);
-        }
+        foreach (var enemyPosition in GameMap.EnemyPositions) SaveEnemyDataAndRequestLoad(enemyPosition);
     }
 
     /// <summary>
@@ -333,7 +340,7 @@ internal partial class GameManager : WorldEnvironment
     /// <param name="position"></param>
     private void SavePlayerDataAndRequestLoad(PlayerColor playerColor, Vector3 position)
     {
-        var playerScenePath = $"res://scenes/players/{playerColor.ToString().ToLower()}.tscn";
+        var playerScenePath = $"res://player/player_{playerColor.ToString().ToLower()}/player_{playerColor.ToString().ToLower()}.tscn";
         var playerData = new PlayerData(position, playerColor);
 
         _playerScenesPathAndData.Add(playerScenePath, playerData);
@@ -349,7 +356,7 @@ internal partial class GameManager : WorldEnvironment
     private void SaveEnemyDataAndRequestLoad(Vector3 position)
     {
         if (_enemyScene == null)
-            ResourceLoader.LoadThreadedRequest(EnemyScenePath);
+            ResourceLoader.LoadThreadedRequest(_enemyScenePath);
 
         var enemyData = new EnemyData(position);
         _enemiesData.Add(enemyData.GetInstanceId(), enemyData);
@@ -376,7 +383,7 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void SetAndAddPausedGame()
     {
-        _pausedGameSceneInstance = _pausedGameScene.Instantiate<LoadingScene>();
+        _pausedGameSceneInstance = _pausedGameScene.Instantiate<GameLoadingScene>();
         GetParent().AddChild(_pausedGameSceneInstance);
     }
 
@@ -439,8 +446,10 @@ internal partial class GameManager : WorldEnvironment
         SetProcessInput(true);
     }
 
-    private bool CannotResumeGame() =>
-        _pausedGameSceneInstance.GetNodeOrNull<PanelContainer>("ButtonsContainer") == null;
+    private bool CannotResumeGame()
+    {
+        return _pausedGameSceneInstance.GetNodeOrNull<PanelContainer>("ButtonsContainer") == null;
+    }
 
     /// <summary>
     /// Removes the buttons and shows the countdown container.

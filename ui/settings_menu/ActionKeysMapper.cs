@@ -1,7 +1,6 @@
-namespace Bombino.scripts.persistence;
-
 using Godot;
-using ui;
+
+namespace Bombino.ui.settings_menu;
 
 /// <summary>
 /// Provides methods to create action keys for an <see cref="ActionKeysContainer"/>.

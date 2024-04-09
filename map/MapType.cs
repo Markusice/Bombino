@@ -1,4 +1,4 @@
-namespace Bombino.scripts;
+namespace Bombino.map;
 
 /// <summary>
 /// Represents the types of possible maps.
@@ -7,5 +7,5 @@ internal enum MapType
 {
     Basic,
     Wide,
-    Cross,
+    Cross
 }

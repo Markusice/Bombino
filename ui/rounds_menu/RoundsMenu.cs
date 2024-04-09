@@ -1,18 +1,14 @@
-﻿namespace Bombino.scripts.ui;
-
+﻿using Bombino.game;
 using Godot;
+
+namespace Bombino.ui.rounds_menu;
 
 /// <summary>
 /// Represents a user interface component for selecting the number of rounds in a game.
 /// </summary>
 internal partial class RoundsMenu : CanvasLayer
 {
-    #region Exports
-
-    [Export]
-    private PackedScene _loadingScene;
-
-    #endregion
+    [Export(PropertyHint.File, "*.tscn")] private string _loadingScenePath;
 
     private LineEdit _numberInput;
     private PanelContainer _errorContainer;
@@ -49,7 +45,7 @@ internal partial class RoundsMenu : CanvasLayer
         HideError();
 
         GameManager.NumberOfRounds = number;
-        GetTree().ChangeSceneToPacked(_loadingScene);
+        GetTree().ChangeSceneToFile(_loadingScenePath);
     }
 
     /// <summary>

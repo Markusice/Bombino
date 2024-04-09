@@ -1,9 +1,8 @@
-namespace Bombino.scripts.ui;
-
+using Bombino.game.persistence.storage_layers.key_binds;
 using Godot;
 using Godot.Collections;
-using persistence;
-using persistence.keybinds;
+
+namespace Bombino.ui.settings_menu;
 
 /// <summary>
 /// Represents a container for action keys in the user interface.
@@ -27,16 +26,16 @@ internal partial class ActionKeysContainer : GridContainer
             "move_back_p3",
             "move_left_p3",
             "move_right_p3",
-            "place_bomb_p3",
+            "place_bomb_p3"
         };
 
     public override void _Ready()
     {
         var settingsDataAccessLayer = new SettingsDataAccessLayer();
         var settingsKeyBinds = new SettingsKeyBinds(settingsDataAccessLayer);
-        
+
         settingsKeyBinds.LoadKeyBinds();
-        
+
         ActionKeysMapper.CreateActionKeys(this);
     }
 }

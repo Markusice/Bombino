@@ -1,4 +1,6 @@
-namespace Bombino.scripts.persistence;
+using Bombino.game.persistence.state_storage;
+
+namespace Bombino.game.persistence.storage_layers.game_state;
 
 using Godot;
 using Godot.Collections;

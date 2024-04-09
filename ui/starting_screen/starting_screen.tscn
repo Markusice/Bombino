@@ -49,6 +49,7 @@ size_flags_horizontal = 4
 layout_mode = 2
 text = "Play"
 script = ExtResource("1_mxb0r")
+_playMenuPath = "res://ui/play_menu/play_menu.tscn"
 
 [node name="TextureRect" type="TextureRect" parent="MainActionsContainer/HBoxContainer"]
 layout_mode = 2
@@ -59,6 +60,7 @@ theme_type_variation = &"ButtonMirrored"
 theme_override_font_sizes/font_size = 80
 text = "Settings"
 script = ExtResource("3_3hms2")
+_settingsMenuPath = "res://ui/settings_menu/settings_menu.tscn"
 
 [node name="ExitButtonContainer" type="PanelContainer" parent="."]
 anchors_preset = 7

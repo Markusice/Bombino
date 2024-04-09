@@ -1,6 +1,6 @@
-﻿namespace Bombino.scripts.ui;
+﻿using Godot;
 
-using Godot;
+namespace Bombino.ui.scripts;
 
 /// <summary>
 /// Provides methods for checking input events.

@@ -1,9 +1,9 @@
-using Bombino.scripts.factories;
-
-namespace Bombino.scripts.persistence;
-
+using Bombino.game.persistence.storage_layers.key_binds.factory;
+using Bombino.player;
 using Godot;
 using Godot.Collections;
+
+namespace Bombino.game.persistence.state_storage;
 
 /// <summary>
 /// Represents the data of a player in the game.

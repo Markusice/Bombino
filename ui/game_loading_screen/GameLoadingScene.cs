@@ -1,6 +1,7 @@
-namespace Bombino.scripts.ui;
-
+using Bombino.game;
 using Godot;
+
+namespace Bombino.ui.game_loading_screen;
 
 internal partial class GameLoadingScene : CanvasLayer
 {
@@ -23,5 +24,8 @@ internal partial class GameLoadingScene : CanvasLayer
         progressLabel.Text = $"{Mathf.Floor(progress * 100)}%";
     }
 
-    private void OnEverythingLoaded() => QueueFree();
+    private void OnEverythingLoaded()
+    {
+        QueueFree();
+    }
 }

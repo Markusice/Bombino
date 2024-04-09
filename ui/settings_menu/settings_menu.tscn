@@ -65,12 +65,14 @@ layout_mode = 2
 theme_type_variation = &"PrimaryButton"
 text = "Save"
 script = ExtResource("2_q3i5o")
+_startingScreenPath = "res://ui/starting_screen/starting_screen.tscn"
 
 [node name="CancelButton" type="Button" parent="ButtonsContainer"]
 layout_mode = 2
 theme_type_variation = &"SecondaryButton"
 text = "Cancel"
 script = ExtResource("3_xaunk")
+_startingScreenPath = "res://ui/starting_screen/starting_screen.tscn"
 
 [connection signal="pressed" from="ButtonsContainer/SaveButton" to="ButtonsContainer/SaveButton" method="OnPressed"]
 [connection signal="pressed" from="ButtonsContainer/CancelButton" to="ButtonsContainer/CancelButton" method="OnPressed"]

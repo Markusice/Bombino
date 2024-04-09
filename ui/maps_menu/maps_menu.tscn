@@ -54,6 +54,7 @@ offset_right = 44.0
 offset_bottom = 40.0
 theme_type_variation = &"MapButton"
 script = ExtResource("1_3ctxo")
+_roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
 [node name="Map2" type="TextureRect" parent="MapsContainer/HBoxContainer"]
 layout_mode = 2
@@ -65,6 +66,7 @@ offset_right = 4.0
 offset_bottom = 40.0
 theme_type_variation = &"MapButton"
 script = ExtResource("1_3ctxo")
+_roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
 [node name="Map3" type="TextureRect" parent="MapsContainer/HBoxContainer"]
 layout_mode = 2
@@ -76,6 +78,7 @@ offset_right = 4.0
 offset_bottom = 40.0
 theme_type_variation = &"MapButton"
 script = ExtResource("1_3ctxo")
+_roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
 [connection signal="pressed" from="MapsContainer/HBoxContainer/Map1/Map1Button" to="MapsContainer/HBoxContainer/Map1/Map1Button" method="OnPressed"]
 [connection signal="pressed" from="MapsContainer/HBoxContainer/Map2/Map2Button" to="MapsContainer/HBoxContainer/Map2/Map2Button" method="OnPressed"]

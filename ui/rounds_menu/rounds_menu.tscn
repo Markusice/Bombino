@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://tvlak70hpojg"]
+[gd_scene load_steps=3 format=3 uid="uid://tvlak70hpojg"]
 
 [ext_resource type="Script" path="res://ui/rounds_menu/RoundsMenu.cs" id="1_easd3"]
-[ext_resource type="PackedScene" uid="uid://cyr6rf0m5ctu7" path="res://ui/game_loading_screen/game_loading_scene.tscn" id="2_85xck"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2bk4"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -12,7 +11,7 @@ corner_radius_bottom_left = 10
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_easd3")
-_loadingScene = ExtResource("2_85xck")
+_loadingScenePath = "res://ui/game_loading_screen/game_loading_scene.tscn"
 
 [node name="Background" type="TextureRect" parent="."]
 offset_right = 40.0

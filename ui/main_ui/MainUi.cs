@@ -1,8 +1,9 @@
-namespace Bombino.scripts.ui;
-
 using System;
+using Bombino.game;
+using Bombino.game.persistence.state_storage;
 using Godot;
-using persistence;
+
+namespace Bombino.ui.main_ui;
 
 /// <summary>
 /// Represents the main user interface for the game.
@@ -11,11 +12,9 @@ internal partial class MainUi : CanvasLayer
 {
     #region Exports
 
-    [Export]
-    private PackedScene _bombStatusContainerScene;
+    [Export] private PackedScene _bombStatusContainerScene;
 
-    [Export]
-    private PackedScene _playerNameContainerScene;
+    [Export] private PackedScene _playerNameContainerScene;
 
     #endregion
 
@@ -47,10 +46,7 @@ internal partial class MainUi : CanvasLayer
             "PlayerBombsContainer/MarginContainer/PlayersBombsData"
         );
 
-        foreach (var playerData in GameManager.PlayersData)
-        {
-            CreatePlayerBombsData(playerData);
-        }
+        foreach (var playerData in GameManager.PlayersData) CreatePlayerBombsData(playerData);
     }
 
     /// <summary>

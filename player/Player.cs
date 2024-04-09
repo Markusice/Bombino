@@ -1,9 +1,11 @@
-namespace Bombino.scripts;
-
 using System;
 using System.Linq;
+using Bombino.bomb;
+using Bombino.game;
+using Bombino.game.persistence.state_storage;
 using Godot;
-using persistence;
+
+namespace Bombino.player;
 
 /// <summary>
 /// Represents the player character in the game.
@@ -12,11 +14,9 @@ internal partial class Player : CharacterBody3D
 {
     #region Exports
 
-    [Export]
-    public int Speed { get; set; } = 10;
+    [Export] public int Speed { get; set; } = 10;
 
-    [Export]
-    private PackedScene _bombScene;
+    [Export] private PackedScene _bombScene;
 
     #endregion
 
@@ -86,9 +86,7 @@ internal partial class Player : CharacterBody3D
 
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
-        {
             _targetVelocity.Y -= _gravity * (float)delta;
-        }
 
         BlendMovementAnimation();
 
@@ -146,7 +144,6 @@ internal partial class Player : CharacterBody3D
     private void ModifyDirectionOnMovement(ref Vector3 direction)
     {
         foreach (var movementKey in PlayerData.ActionKeys[..4])
-        {
             if (Input.IsActionPressed(movementKey))
             {
                 var actionKeyDirection = movementKey[5];
@@ -167,7 +164,6 @@ internal partial class Player : CharacterBody3D
                         break;
                 }
             }
-        }
     }
 
     /// <summary>
@@ -183,7 +179,7 @@ internal partial class Player : CharacterBody3D
     /// Sets the state machine.
     /// </summary>
     /// <param name="stateName"></param>
-    private void SetStateMachine(String stateName)
+    private void SetStateMachine(string stateName)
     {
         _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
         _stateMachine.Travel(stateName);

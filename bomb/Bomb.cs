@@ -1,8 +1,12 @@
-namespace Bombino.scripts;
-
 using System;
+using Bombino.bomb.explosion_effect;
+using Bombino.enemy;
+using Bombino.game;
+using Bombino.player;
 using Godot;
 using Godot.Collections;
+
+namespace Bombino.bomb;
 
 /// <summary>
 /// Represents a bomb in the game.
@@ -11,11 +15,9 @@ internal partial class Bomb : Area3D
 {
     #region Exports
 
-    [Export(PropertyHint.Range, "1,4")]
-    private float _explodeTime = Mathf.Pi;
+    [Export(PropertyHint.Range, "1,4")] private float _explodeTime = Mathf.Pi;
 
-    [Export]
-    private PackedScene _effectScene;
+    [Export] private PackedScene _effectScene;
 
     #endregion
 
@@ -187,7 +189,7 @@ internal partial class Bomb : Area3D
     /// <returns></returns>
     private static Vector3[] GetRayCastDirections()
     {
-        return new[] { Vector3.Left, Vector3.Right, Vector3.Back, Vector3.Forward, };
+        return new[] { Vector3.Left, Vector3.Right, Vector3.Back, Vector3.Forward };
     }
 
     /// <summary>
@@ -251,22 +253,22 @@ internal partial class Bomb : Area3D
 
     private static bool IsBodySafeFromBombOnLeft(Vector3 colliderPosition, Node3D body)
     {
-        return (colliderPosition.X - body.Position.X) >= GameManager.GameMap.CellSize.X;
+        return colliderPosition.X - body.Position.X >= GameManager.GameMap.CellSize.X;
     }
 
     private static bool IsBodySafeFromBombOnRight(Vector3 colliderPosition, Node3D body)
     {
-        return (body.Position.X - colliderPosition.X) >= GameManager.GameMap.CellSize.X;
+        return body.Position.X - colliderPosition.X >= GameManager.GameMap.CellSize.X;
     }
 
     private static bool IsBodySafeFromBombOnBack(Vector3 colliderPosition, Node3D body)
     {
-        return (body.Position.Z - colliderPosition.Z) >= GameManager.GameMap.CellSize.Z;
+        return body.Position.Z - colliderPosition.Z >= GameManager.GameMap.CellSize.Z;
     }
 
     private static bool IsBodySafeFromBombOnForward(Vector3 colliderPosition, Node3D body)
     {
-        return (colliderPosition.Z - body.Position.Z) >= GameManager.GameMap.CellSize.Z;
+        return colliderPosition.Z - body.Position.Z >= GameManager.GameMap.CellSize.Z;
     }
 
     /// <summary>
@@ -335,15 +337,15 @@ internal partial class Bomb : Area3D
                     nthTile
                 );
 
-                if (IsTileTypeAtPosition(positionOnNthTile, 3)) 
+                if (IsTileTypeAtPosition(positionOnNthTile, 3))
                     break;
-                
+
                 if (IsTileTypeAtPosition(positionOnNthTile, -1))
                     continue;
 
                 if (IsTileTypeAtPosition(positionOnNthTile, 2))
                     DestroyCrateAtPosition(positionOnNthTile);
-                    
+
                 break;
             }
         }
@@ -403,20 +405,18 @@ internal partial class Bomb : Area3D
     private void CreateExplosionsOnTilesOnAxis(ExplosionAxis explosionAxis)
     {
         for (var axis = -1; axis < 1; axis++)
+        for (var nthTile = 1; nthTile <= Range; nthTile++)
         {
-            for (var nthTile = 1; nthTile <= Range; nthTile++)
-            {
-                var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(
-                    explosionAxis,
-                    axis,
-                    nthTile
-                );
+            var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(
+                explosionAxis,
+                axis,
+                nthTile
+            );
 
-                if (!CanCreateExplosionAtPosition(effectPositionOnNthTile))
-                    break;
+            if (!CanCreateExplosionAtPosition(effectPositionOnNthTile))
+                break;
 
-                CreateExplosionAtPosition(effectPositionOnNthTile);
-            }
+            CreateExplosionAtPosition(effectPositionOnNthTile);
         }
     }
 
@@ -438,8 +438,8 @@ internal partial class Bomb : Area3D
         if (explosionAxis == ExplosionAxis.X)
             return new Vector3(
                 isAxisDirectionNegative
-                    ? Position.X - (nthTile * GameManager.GameMap.CellSize.X)
-                    : Position.X + (nthTile * GameManager.GameMap.CellSize.X),
+                    ? Position.X - nthTile * GameManager.GameMap.CellSize.X
+                    : Position.X + nthTile * GameManager.GameMap.CellSize.X,
                 Position.Y,
                 Position.Z
             );
@@ -448,8 +448,8 @@ internal partial class Bomb : Area3D
             Position.X,
             Position.Y,
             isAxisDirectionNegative
-                ? Position.Z - (nthTile * GameManager.GameMap.CellSize.Z)
-                : Position.Z + (nthTile * GameManager.GameMap.CellSize.Z)
+                ? Position.Z - nthTile * GameManager.GameMap.CellSize.Z
+                : Position.Z + nthTile * GameManager.GameMap.CellSize.Z
         );
     }
 

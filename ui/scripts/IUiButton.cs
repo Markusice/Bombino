@@ -1,4 +1,4 @@
-namespace Bombino.scripts.ui;
+namespace Bombino.ui.scripts;
 
 /// <summary>
 /// Represents a user interface button.

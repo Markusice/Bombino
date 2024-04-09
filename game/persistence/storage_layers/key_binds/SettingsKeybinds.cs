@@ -1,6 +1,7 @@
-namespace Bombino.scripts.persistence.keybinds;
-
+using Bombino.game.persistence.state_storage;
 using Godot.Collections;
+
+namespace Bombino.game.persistence.storage_layers.key_binds;
 
 internal class SettingsKeyBinds
 {

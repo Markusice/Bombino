@@ -1,11 +1,13 @@
-namespace Bombino.scripts.ui.settings_menu;
-
 using Godot;
+
+namespace Bombino.ui.settings_menu;
 
 internal partial class SettingsCancelButton : Button
 {
+    [Export(PropertyHint.File, "*.tscn")] private string _startingScreenPath;
+
     private void OnPressed()
     {
-        GetTree().ChangeSceneToFile("res://scenes/ui/starting_screen.tscn");
+        GetTree().ChangeSceneToFile(_startingScreenPath);
     }
 }

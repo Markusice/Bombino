@@ -1,13 +1,14 @@
-namespace Bombino.scripts.ui;
-
+using Bombino.ui.scripts;
 using Godot;
+
+namespace Bombino.ui.maps_menu;
 
 /// <summary>
 /// Represents a button used for selecting a map in the UI.
 /// </summary>
 internal partial class MapButton : Button, IUiButton
 {
-    private string _roundsMenuScenePath = "res://scenes/ui/rounds_menu.tscn";
+    [Export(PropertyHint.File, "*.tscn")] private string _roundsMenuScenePath;
 
     /// <summary>
     /// Called when the map button is pressed.
@@ -23,5 +24,7 @@ internal partial class MapButton : Button, IUiButton
     /// <summary>
     /// Sets the selected map and changes the scene.
     /// </summary>
-    private void SetSelectedMapAndChangeScene() { }
+    private void SetSelectedMapAndChangeScene()
+    {
+    }
 }

@@ -1,6 +1,6 @@
-namespace Bombino.scripts.ui;
-
 using Godot;
+
+namespace Bombino.ui.settings_menu;
 
 /// <summary>
 /// Represents a custom button used for remapping actions.

@@ -1,6 +1,8 @@
-namespace Bombino.scripts.ui;
-
+using Bombino.game;
+using Bombino.ui.scripts;
 using Godot;
+
+namespace Bombino.ui.paused_game_ui;
 
 /// <summary>
 /// Represents the UI layer for the paused game screen.

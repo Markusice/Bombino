@@ -1,8 +1,9 @@
-namespace Bombino.scripts.factories;
-
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Bombino.player;
+
+namespace Bombino.game.persistence.storage_layers.key_binds.factory;
 
 internal static class PlayerActionKeysFactory
 {
@@ -13,10 +14,15 @@ internal static class PlayerActionKeysFactory
 
     private static readonly Dictionary<PlayerColor, IActionKeys> Instances = new();
 
-    public static void RegisterInstance(PlayerColor color, IActionKeys instance) =>
+    public static void RegisterInstance(PlayerColor color, IActionKeys instance)
+    {
         Instances.Add(color, instance);
+    }
 
-    public static IActionKeys GetInstance(PlayerColor color) => Instances[color];
+    public static IActionKeys GetInstance(PlayerColor color)
+    {
+        return Instances[color];
+    }
 
     private static void LoadIActionKeysClasses()
     {
@@ -31,7 +37,7 @@ internal static class PlayerActionKeysFactory
             if (type.Namespace is null)
                 continue;
 
-            if (!type.Namespace.Equals("Bombino.scripts.factories"))
+            if (!type.Namespace.Equals("Bombino.game.persistence.storage_layers.key_binds.factory"))
                 continue;
 
             if (!typeof(IActionKeys).IsAssignableFrom(type))
