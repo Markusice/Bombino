@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bo0cym1j8op57"]
+
+[ext_resource type="Shader" uid="uid://bplbl3633akfb" path="res://power_up/resources/Hologram.tres" id="1_uuu4o"]
+[ext_resource type="Texture2D" uid="uid://ciuj185c15eow" path="res://power_up/textures/HologramLines.png" id="2_rnxvy"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_uuu4o")
+shader_parameter/Scanline_Color = Color(0.0862745, 1.18431, 6.5098, 0.00784314)
+shader_parameter/Scanline_Scroll_Speed = 0.5
+shader_parameter/Scanline_Scale = 40.0
+shader_parameter/Fresnel_Power = 1.0
+shader_parameter/Fresnel_Color = Color(0, 0, 6.765, 0.431)
+shader_parameter/Scanline_Texture = ExtResource("2_rnxvy")
