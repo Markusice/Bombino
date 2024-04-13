@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://ck8dv72n1i3he"]
+[gd_scene load_steps=6 format=3 uid="uid://ck8dv72n1i3he"]
 
 [ext_resource type="Script" path="res://power_up/PowerUp.cs" id="1_xui6t"]
+[ext_resource type="Material" uid="uid://bo0cym1j8op57" path="res://power_up/resources/hologram_blue.tres" id="2_2huab"]
+[ext_resource type="Material" uid="uid://dyf10t0br2h38" path="res://power_up/resources/hologram_pink.tres" id="2_mrjik"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_3qosn"]
 
@@ -10,12 +12,15 @@
 collision_layer = 64
 collision_mask = 2
 script = ExtResource("1_xui6t")
+_hologramPink = ExtResource("2_mrjik")
+_hologramBlue = ExtResource("2_2huab")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.276017, 0)
 shape = SubResource("SphereShape3D_3qosn")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+unique_name_in_owner = true
 mesh = SubResource("SphereMesh_pj42c")
 
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]
