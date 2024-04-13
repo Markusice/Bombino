@@ -5,7 +5,7 @@ namespace Bombino.map;
 /// </summary>
 internal enum GridElement
 {
-    BlockElement = 0,
-    WallElement = 1,
-    CrateElement = 2
+    BlockElement,
+    WallElement,
+    CrateElement
 }
