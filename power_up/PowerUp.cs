@@ -34,9 +34,6 @@ internal partial class PowerUp : Area3D
         else
             player.PlayerData.BombRange++;
 
-        GD.Print("MaxBombs: " + player.PlayerData.MaxNumberOfAvailableBombs);
-        GD.Print("BombRange: " + player.PlayerData.BombRange);
-        
         QueueFree();
     }
 }
