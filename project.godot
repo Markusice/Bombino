@@ -115,3 +115,5 @@ place_bomb_p3={
 3d_physics/layer_3="enemies"
 3d_physics/layer_4="bombs"
 3d_physics/layer_5="bomb_object"
+3d_physics/layer_6="bomb_mask"
+3d_physics/layer_7="power_up"
