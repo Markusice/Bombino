@@ -84,7 +84,7 @@ internal partial class MainUi : CanvasLayer
             "BombPicture/BombNumberCircle/BombNumberLabel"
         );
 
-        bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
+        bombNumberLabel.Text = playerData.NumberOfPlacedBombs.ToString();
 
         return bombStatusContainer;
     }

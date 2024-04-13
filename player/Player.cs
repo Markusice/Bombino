@@ -186,10 +186,15 @@ internal partial class Player : CharacterBody3D
     }
 
     /// <summary>
-    /// Called when the player enters the area.
+    /// Called when a player places a bomb.
     /// </summary>
     private void OnPlaceBomb()
-    {
+    {   
+        if (PlayerData.NumberOfPlacedBombs >= PlayerData.MaxNumberOfAvailableBombs)
+            return;
+        
+        PlayerData.NumberOfPlacedBombs++;
+
         var collisionObject = this as CollisionObject3D;
         collisionObject.SetCollisionMaskValue(5, false);
 
@@ -205,6 +210,7 @@ internal partial class Player : CharacterBody3D
         SetStateMachine("Place");
 
         var bombToPlace = CreateBomb(bombToPlacePosition);
+
         GameManager.WorldEnvironment.AddChild(bombToPlace);
     }
 
@@ -233,6 +239,7 @@ internal partial class Player : CharacterBody3D
 
         bombToPlace.Position = bombToPlacePosition;
         bombToPlace.Range = PlayerData.BombRange;
+        bombToPlace.Player = this;
 
         return bombToPlace;
     }

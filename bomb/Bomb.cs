@@ -47,6 +47,8 @@ internal partial class Bomb : Area3D
 
     private Area3D _bombMaskArea;
 
+    public Player Player { get; set; }
+
     public int Range { get; set; }
 
     #endregion
@@ -142,7 +144,9 @@ internal partial class Bomb : Area3D
     /// Called when the timer times out.
     /// </summary>
     private void OnTimerTimeout()
-    {
+    {   
+        DecreaseNumberOfPlacedBombs();
+
         DestroyCratesOnXAndZAxis();
 
         PlayExplodeAnimation();
@@ -157,6 +161,15 @@ internal partial class Bomb : Area3D
     }
 
     #endregion
+
+    /// <summary>
+    /// Called when the bomb explodes.
+    /// </summary>
+    private void DecreaseNumberOfPlacedBombs()
+    {
+        Player.PlayerData.NumberOfPlacedBombs--;
+    } 
+
 
     private static Area3D GetBombFromBombObject(Node3D body)
     {
@@ -375,7 +388,7 @@ internal partial class Bomb : Area3D
         var mapCoordinates = GameManager.GameMap.LocalToMap(position);
         GameManager.GameMap.SetCellItem(mapCoordinates, -1);
 
-        if (GetRandomPowerUpSpawnChance() <= 10)
+        if (GetRandomPowerUpSpawnChance() <= 2)
         {
             GD.Print($"Spawned power up at position {position}");
             SpawnPowerUp(position);
@@ -392,7 +405,7 @@ internal partial class Bomb : Area3D
         var powerUpInstance = ResourceLoader.Load<PackedScene>(_powerUpScenePath);
         var powerUp = powerUpInstance.Instantiate<PowerUp>();
         powerUp.Position = position;
-        
+
         GameManager.WorldEnvironment.AddChild(powerUp);
     }
 

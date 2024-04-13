@@ -1,3 +1,4 @@
+using Bombino.bomb;
 using Bombino.game.persistence.storage_layers.key_binds.factory;
 using Bombino.player;
 using Godot;
@@ -29,10 +30,10 @@ internal partial class PlayerData : Resource
     public int BombRange { get; set; } = 2;
 
     /// <summary>
-    /// Gets or sets the number of available bombs for the player.
+    /// Gets or sets the number of placed bombs for the player.
     /// </summary>
     [Export]
-    public int NumberOfAvailableBombs { get; set; } = 1;
+    public int NumberOfPlacedBombs { get; set; } = 0;
 
     /// <summary>
     /// Gets or sets the maximum number of available bombs for the player.
