@@ -3,6 +3,7 @@ using Bombino.bomb.explosion_effect;
 using Bombino.enemy;
 using Bombino.game;
 using Bombino.player;
+using Bombino.power_up;
 using Godot;
 using Godot.Collections;
 
@@ -15,9 +16,14 @@ internal partial class Bomb : Area3D
 {
     #region Exports
 
-    [Export(PropertyHint.Range, "1,4")] private float _explodeTime = Mathf.Pi;
+    [Export(PropertyHint.Range, "1,4")]
+    private float _explodeTime = Mathf.Pi;
 
-    [Export] private PackedScene _effectScene;
+    [Export]
+    private PackedScene _effectScene;
+
+    [Export(PropertyHint.File, "*.tscn")]
+    private string _powerUpScenePath;
 
     #endregion
 
@@ -351,7 +357,6 @@ internal partial class Bomb : Area3D
         }
     }
 
-
     /// <summary>
     /// Checks if the tile type is at the specified position.
     /// </summary>
@@ -365,10 +370,30 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Destroys the crate at the specified position.
     /// </summary>
-    private static void DestroyCrateAtPosition(Vector3 position)
+    private void DestroyCrateAtPosition(Vector3 position)
     {
         var mapCoordinates = GameManager.GameMap.LocalToMap(position);
         GameManager.GameMap.SetCellItem(mapCoordinates, -1);
+
+        if (GetRandomPowerUpSpawnChance() <= 10)
+        {
+            GD.Print($"Spawned power up at position {position}");
+            SpawnPowerUp(position);
+        }
+    }
+
+    private static int GetRandomPowerUpSpawnChance()
+    {
+        return new Random().Next(0, 10);
+    }
+
+    private void SpawnPowerUp(Vector3 position)
+    {
+        var powerUpInstance = ResourceLoader.Load<PackedScene>(_powerUpScenePath);
+        var powerUp = powerUpInstance.Instantiate<PowerUp>();
+        powerUp.Position = position;
+        
+        GameManager.WorldEnvironment.AddChild(powerUp);
     }
 
     /// <summary>

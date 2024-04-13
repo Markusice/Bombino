@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using Bombino.game.persistence.state_storage;
+using Bombino.player;
 using Godot;
 
 namespace Bombino.power_up;
@@ -17,7 +18,7 @@ internal partial class PowerUp : Area3D
     private PowerUpType GetRandomPowerUpType()
     {
         var values = Enum.GetValues(typeof(PowerUpType)).Cast<PowerUpType>().ToArray();
-        
+
         return values[new Random().Next(values.Length)];
     }
 
@@ -25,5 +26,17 @@ internal partial class PowerUp : Area3D
     {
         if (!body.IsInGroup("players"))
             return;
+
+        var player = body as Player;
+
+        if (_type == PowerUpType.IncreaseMaxBombs)
+            player.PlayerData.MaxNumberOfAvailableBombs++;
+        else
+            player.PlayerData.BombRange++;
+
+        GD.Print("MaxBombs: " + player.PlayerData.MaxNumberOfAvailableBombs);
+        GD.Print("BombRange: " + player.PlayerData.BombRange);
+        
+        QueueFree();
     }
 }
