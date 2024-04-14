@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dwn8vy6or60pe"]
+[gd_scene load_steps=6 format=3 uid="uid://dwn8vy6or60pe"]
 
 [ext_resource type="Script" path="res://ui/main_ui/MainUi.cs" id="1_c6rma"]
 [ext_resource type="PackedScene" uid="uid://b8yslovrmkcuj" path="res://ui/main_ui/templates/bomb_status_container.tscn" id="2_m352f"]
 [ext_resource type="PackedScene" uid="uid://ctiw2gldrdey1" path="res://ui/main_ui/templates/player_name_container.tscn" id="3_mjp7h"]
+[ext_resource type="Script" path="res://ui/main_ui/PlayerKillAnimation.cs" id="4_7f1x4"]
+[ext_resource type="Script" path="res://ui/main_ui/PlayerBombNumberChangeAnimation.cs" id="5_0o0my"]
 
 [node name="MainUI" type="CanvasLayer"]
 script = ExtResource("1_c6rma")
@@ -18,7 +20,8 @@ layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 20
 
-[node name="PlayersBombsData" type="GridContainer" parent="PlayerBombsContainer/MarginContainer"]
+[node name="PlayersBombData" type="GridContainer" parent="PlayerBombsContainer/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 16
@@ -54,5 +57,11 @@ vertical_alignment = 1
 
 [node name="TimerLabelChanger" type="Timer" parent="TimerPanelContainer/TimerPanel"]
 autostart = true
+
+[node name="PlayerKillAnimation" type="Node" parent="."]
+script = ExtResource("4_7f1x4")
+
+[node name="PlayerBombNumberChangeAnimation" type="Node" parent="."]
+script = ExtResource("5_0o0my")
 
 [connection signal="timeout" from="TimerPanelContainer/TimerPanel/TimerLabelChanger" to="." method="OnTimerLabelChangerTimeout"]
