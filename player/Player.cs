@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Bombino.bomb;
 using Bombino.game;
 using Bombino.game.persistence.state_storage;
@@ -38,6 +40,8 @@ internal partial class Player : CharacterBody3D
     private AnimationNodeStateMachinePlayback _stateMachine;
     private Vector3I _mapPosition;
 
+    private bool _isDead = false;
+
     public PlayerData PlayerData { get; set; }
 
     #endregion
@@ -60,6 +64,8 @@ internal partial class Player : CharacterBody3D
     /// <param name="delta"></param>
     public override void _PhysicsProcess(double delta)
     {
+        if (_isDead) return;
+
         // We create a local variable to store the input direction.
         var direction = Vector3.Zero;
 
@@ -103,8 +109,9 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void OnHit()
     {
+        _isDead = true;
         SetStateMachine("Die");
-        Die();
+        Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => Die());
     }
 
     #endregion
@@ -206,7 +213,6 @@ internal partial class Player : CharacterBody3D
             return;
 
         PlayerData.NumberOfPlacedBombs++;
-        SetStateMachine("Place");
 
         var bombToPlace = CreateBomb(bombToPlacePosition);
 

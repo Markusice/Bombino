@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Bombino.game;
+using System.Threading.Tasks;
 using Bombino.game.persistence.state_storage;
 using Bombino.player;
 using Godot;
@@ -26,7 +27,12 @@ internal partial class Enemy : CharacterBody3D
 
     private const int Speed = 6;
 
+    private bool _isDead = false;
+
     private Vector3 _targetVelocity = Vector3.Zero;
+
+    private AnimationTree _animTree;
+    private AnimationNodeStateMachinePlayback _stateMachine; 
 
     private readonly Vector3[] _directions =
     {
@@ -76,6 +82,8 @@ internal partial class Enemy : CharacterBody3D
     /// <param name="delta">The time elapsed since the previous frame.</param>
     public override void _PhysicsProcess(double delta)
     {
+        if (_isDead) return;
+
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
             _targetVelocity.Y -= _gravity * (float)delta;
@@ -97,9 +105,30 @@ internal partial class Enemy : CharacterBody3D
             LookAt(targetPosition, Vector3.Up);
         }
 
+        BlendMovementAnimation();
+
         Velocity = _targetVelocity;
 
         MoveAndSlide();
+    }
+
+    /// <summary>
+    /// Called when the enemy enters the area.
+    /// </summary>
+    private void BlendMovementAnimation()
+    {
+        var animTree = GetNode<AnimationTree>("AnimationTree");
+        animTree.Set("parameters/IR/blend_position", new Vector2(Velocity.X, Velocity.Z).Length());
+    }
+
+    /// <summary>
+    /// Sets the state machine.
+    /// </summary>
+    /// <param name="stateName"></param>
+    private void SetStateMachine(string stateName)
+    {
+        _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
+        _stateMachine.Travel(stateName);
     }
 
     #region MethodsForSignals
@@ -109,7 +138,9 @@ internal partial class Enemy : CharacterBody3D
     /// </summary>
     private void OnHit()
     {
-        QueueFree();
+        _isDead = true;
+        SetStateMachine("Die");
+        Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => QueueFree());
     }
 
     #endregion
@@ -203,6 +234,8 @@ internal partial class Enemy : CharacterBody3D
     /// <param name="body"></param>
     private void OnAreaEntered(Node3D body)
     {
+        if (_isDead) return;
+
         if (body.IsInGroup("players")) body.EmitSignal(Player.SignalName.Hit);
     }
 }
