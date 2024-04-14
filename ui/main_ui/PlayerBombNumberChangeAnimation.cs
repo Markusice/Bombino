@@ -21,69 +21,107 @@ internal partial class PlayerBombNumberChangeAnimation : Node
     {
         const float tweenScale = 1.1f;
 
+        var bombStatusContainer = GetNecessaryNodes(playerColor,
+            out var bombPicture, out var bombNumberCircle);
+
+        ChangeNumberLabelText(numberOfAvailableBombs, bombStatusContainer);
+
+        PlayAnimationsForNumberIncrement(bombPicture, bombNumberCircle, tweenScale);
+    }
+
+    private PanelContainer GetNecessaryNodes(string playerColor, out TextureRect bombPicture,
+        out Panel bombNumberCircle)
+    {
         var bombStatusContainerName = $"BombStatusContainer_{playerColor}";
         var bombStatusContainer = _playersBombData.GetNode<PanelContainer>(bombStatusContainerName);
 
-        var bombPicture = bombStatusContainer.GetNode<TextureRect>("BombPicture");
-        var bombNumberCircle = bombStatusContainer.GetNode<Panel>("%BombNumberCircle");
+        bombPicture = bombStatusContainer.GetNode<TextureRect>("BombPicture");
+        bombNumberCircle = bombStatusContainer.GetNode<Panel>("%BombNumberCircle");
+
+        return bombStatusContainer;
+    }
+
+    private static void ChangeNumberLabelText(int numberOfAvailableBombs, PanelContainer bombStatusContainer)
+    {
         var bombNumberLabel = bombStatusContainer.GetNode<Label>("%BombNumberLabel");
-
-        var tween = GetTree().CreateTween().SetTrans(Tween.TransitionType.Elastic).SetEase(Tween.EaseType.Out);
-
         bombNumberLabel.Text = numberOfAvailableBombs.ToString();
+    }
+
+    private void PlayAnimationsForNumberIncrement(TextureRect bombPicture, Panel bombNumberCircle, float tweenScale)
+    {
+        var tween = CreateTween()
+            .SetTrans(Tween.TransitionType.Elastic)
+            .SetEase(Tween.EaseType.Out);
 
         if (Mathf.IsEqualApprox(bombPicture.SelfModulate.A, 0.6f))
         {
-            tween.TweenProperty(bombPicture, new NodePath(CanvasItem.PropertyName.SelfModulate),
+            tween.TweenProperty(bombPicture, "self_modulate",
                 new Color(1, 1, 1, 1),
                 TweenDuration);
-            tween.Parallel().TweenProperty(bombNumberCircle, new NodePath(Control.PropertyName.Scale),
-                new Vector2(tweenScale, tweenScale), TweenDuration);
+
+            tween.Parallel().TweenProperty(bombNumberCircle, "scale",
+                new Vector2(tweenScale, tweenScale),
+                TweenDuration);
         }
         else
-            tween.TweenProperty(bombNumberCircle, new NodePath(Control.PropertyName.Scale),
-                new Vector2(tweenScale, tweenScale), TweenDuration);
+            tween.TweenProperty(bombNumberCircle, "scale",
+                new Vector2(tweenScale, tweenScale),
+                TweenDuration);
 
-        tween.TweenProperty(bombNumberCircle, new NodePath(Control.PropertyName.Scale),
-            Vector2.One, TweenDuration);
+        tween.TweenProperty(bombNumberCircle, "scale",
+            Vector2.One,
+            TweenDuration);
     }
 
     private void PlayerBombNumberDecreased(string playerColor, int numberOfAvailableBombs)
     {
         const float tweenScale = 0.85f;
 
-        var bombStatusContainerName = $"BombStatusContainer_{playerColor}";
-        var bombStatusContainer = _playersBombData.GetNode<PanelContainer>(bombStatusContainerName);
+        var bombStatusContainer = GetNecessaryNodes(playerColor,
+            out var bombPicture, out var bombNumberCircle);
 
-        var bombPicture = bombStatusContainer.GetNode<TextureRect>("BombPicture");
-        var bombNumberCircle = bombStatusContainer.GetNode<Panel>("%BombNumberCircle");
-        var bombNumberLabel = bombStatusContainer.GetNode<Label>("%BombNumberLabel");
+        ChangeNumberLabelText(numberOfAvailableBombs, bombStatusContainer);
 
-        var tween = GetTree().CreateTween().SetTrans(Tween.TransitionType.Elastic).SetEase(Tween.EaseType.Out);
+        PlayAnimationForNumberDecrement(numberOfAvailableBombs, bombNumberCircle, tweenScale, bombPicture);
+    }
 
-        tween.TweenProperty(bombNumberCircle, new NodePath(Control.PropertyName.Scale),
-            new Vector2(tweenScale, tweenScale), TweenDuration);
+    private void PlayAnimationForNumberDecrement(int numberOfAvailableBombs, Panel bombNumberCircle, float tweenScale,
+        TextureRect bombPicture)
+    {
+        var tween = CreateTween()
+            .SetTrans(Tween.TransitionType.Elastic)
+            .SetEase(Tween.EaseType.Out);
+
+        tween.TweenProperty(bombNumberCircle, "scale",
+            new Vector2(tweenScale, tweenScale),
+            TweenDuration);
 
         if (numberOfAvailableBombs == 0)
         {
             bombPicture.PivotOffset = bombPicture.Size / 8;
 
             tween.Parallel()
-                .TweenProperty(bombPicture, new NodePath(Control.PropertyName.Scale),
-                    new Vector2(tweenScale, tweenScale), 0.15f)
+                .TweenProperty(bombPicture, "scale",
+                    new Vector2(tweenScale, tweenScale),
+                    0.15f)
                 .SetTrans(Tween.TransitionType.Bounce);
 
-            tween.TweenProperty(bombPicture, new NodePath(Control.PropertyName.Scale),
-                    Vector2.One, 0.1)
+            tween.TweenProperty(bombPicture, "scale",
+                    Vector2.One,
+                    0.1)
                 .SetTrans(Tween.TransitionType.Spring);
-            tween.Parallel().TweenProperty(bombNumberCircle, new NodePath(Control.PropertyName.Scale),
+
+            tween.Parallel().TweenProperty(bombNumberCircle, "scale",
                 Vector2.One,
                 TweenDuration);
-            tween.Parallel().TweenProperty(bombPicture, new NodePath(CanvasItem.PropertyName.SelfModulate),
-                new Color(1, 1, 1, 0.6f), TweenDuration);
+
+            tween.Parallel().TweenProperty(bombPicture, "self_modulate",
+                new Color(1, 1, 1, 0.6f),
+                TweenDuration);
         }
         else
-            tween.TweenProperty(bombNumberCircle, new NodePath(Control.PropertyName.Scale),
-                Vector2.One, TweenDuration);
+            tween.TweenProperty(bombNumberCircle, "scale",
+                Vector2.One,
+                TweenDuration);
     }
 }

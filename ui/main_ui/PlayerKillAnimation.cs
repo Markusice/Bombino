@@ -29,20 +29,28 @@ internal partial class PlayerKillAnimation : Node
         var bombPicture = bombStatusContainer.GetNode<TextureRect>("BombPicture");
         var bombNumberLabel = bombStatusContainer.GetNode<Label>("%BombNumberLabel");
 
-        var tween = GetTree().CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
-
-        tween.TweenMethod(Callable.From((Color value) => SetFontColor(value, playerNameLabel)), Colors.White,
-            Colors.DarkRed,
-            TweenDuration);
-        tween.Parallel()
-            .TweenMethod(Callable.From((int value) =>
-                SetFontOutlineSize(value, playerNameLabel)), 0, 2, TweenDuration);
-        tween.Parallel()
-            .TweenProperty(bombPicture, new NodePath(CanvasItem.PropertyName.Modulate),
-                new Color(1, 1, 1, 0.4f),
-                TweenDuration);
+        PlayAnimationForPlayerKill(playerNameLabel, bombPicture);
 
         bombNumberLabel.Text = 0.ToString();
+    }
+
+    private void PlayAnimationForPlayerKill(Label playerNameLabel, TextureRect bombPicture)
+    {
+        var tween = CreateTween()
+            .SetTrans(Tween.TransitionType.Quad)
+            .SetEase(Tween.EaseType.In);
+
+        tween.TweenMethod(Callable.From<Color>(value => SetFontColor(value, playerNameLabel)),
+            Colors.White, Colors.DarkRed,
+            TweenDuration);
+
+        tween.Parallel().TweenMethod(Callable.From<int>(value => SetFontOutlineSize(value, playerNameLabel)),
+            0, 2,
+            TweenDuration);
+
+        tween.Parallel().TweenProperty(bombPicture, "modulate",
+            new Color(1, 1, 1, 0.4f),
+            TweenDuration);
     }
 
     private static void SetFontColor(Color value, Label label) =>
