@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Bombino.bomb;
 using Bombino.game;
@@ -189,11 +188,9 @@ internal partial class Player : CharacterBody3D
     /// Called when a player places a bomb.
     /// </summary>
     private void OnPlaceBomb()
-    {   
+    {
         if (PlayerData.NumberOfPlacedBombs >= PlayerData.MaxNumberOfAvailableBombs)
             return;
-        
-        PlayerData.NumberOfPlacedBombs++;
 
         var collisionObject = this as CollisionObject3D;
         collisionObject.SetCollisionMaskValue(5, false);
@@ -207,6 +204,8 @@ internal partial class Player : CharacterBody3D
 
         if (IsUnableToPlaceBomb(bombToPlacePosition))
             return;
+
+        PlayerData.NumberOfPlacedBombs++;
         SetStateMachine("Place");
 
         var bombToPlace = CreateBomb(bombToPlacePosition);
