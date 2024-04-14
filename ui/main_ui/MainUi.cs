@@ -26,7 +26,7 @@ internal partial class MainUi : CanvasLayer
     #endregion
 
     private Label TimerLabel { get; set; }
-    private GridContainer PlayersBombsData { get; set; }
+    private GridContainer PlayersBombData { get; set; }
 
     public override void _Ready()
     {
@@ -42,11 +42,10 @@ internal partial class MainUi : CanvasLayer
     {
         TimerLabel = GetNode<Label>("TimerPanelContainer/TimerPanel/TimerLabel");
 
-        PlayersBombsData = GetNode<GridContainer>(
-            "PlayerBombsContainer/MarginContainer/PlayersBombsData"
-        );
+        PlayersBombData = GetNode<GridContainer>("%PlayersBombData");
 
-        foreach (var playerData in GameManager.PlayersData) CreatePlayerBombsData(playerData);
+        foreach (var playerData in GameManager.PlayersData)
+            CreatePlayerBombData(playerData);
     }
 
     /// <summary>
@@ -60,16 +59,16 @@ internal partial class MainUi : CanvasLayer
 
     /// <summary>
     /// Creates the bomb status container and player name container for the given player data,
-    /// and adds them to the PlayersBombsData grid container.
+    /// and adds them to the PlayersBombData grid container.
     /// </summary>
     /// <param name="playerData">The player data.</param>
-    private void CreatePlayerBombsData(PlayerData playerData)
+    private void CreatePlayerBombData(PlayerData playerData)
     {
         var bombStatusContainer = SetUpBombStatusContainer(playerData);
         var playerNameContainer = SetUpPlayerNameContainer(playerData);
 
-        PlayersBombsData.AddChild(bombStatusContainer);
-        PlayersBombsData.AddChild(playerNameContainer);
+        PlayersBombData.AddChild(bombStatusContainer);
+        PlayersBombData.AddChild(playerNameContainer);
     }
 
     /// <summary>
@@ -80,6 +79,8 @@ internal partial class MainUi : CanvasLayer
     private PanelContainer SetUpBombStatusContainer(PlayerData playerData)
     {
         var bombStatusContainer = _bombStatusContainerScene.Instantiate<PanelContainer>();
+        bombStatusContainer.Name = $"BombStatusContainer_{playerData.Color.ToString()}";
+
         var bombNumberLabel = bombStatusContainer.GetNode<Label>(
             "BombPicture/BombNumberCircle/BombNumberLabel"
         );
@@ -97,6 +98,7 @@ internal partial class MainUi : CanvasLayer
     private MarginContainer SetUpPlayerNameContainer(PlayerData playerData)
     {
         var playerNameContainer = _playerNameContainerScene.Instantiate<MarginContainer>();
+        playerNameContainer.Name = $"PlayerNameContainer_{playerData.Color.ToString()}";
 
         var playerNameLabel = playerNameContainer.GetNode<Label>("PlayerNameLabel");
         playerNameLabel.Text = playerData.Color.ToString();
