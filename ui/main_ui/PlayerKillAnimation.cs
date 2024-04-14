@@ -6,6 +6,7 @@ namespace Bombino.ui.main_ui;
 internal partial class PlayerKillAnimation : Node
 {
     private const float TweenDuration = 0.2f;
+
     private GridContainer _playersBombData;
 
     public override void _Ready()
@@ -19,11 +20,14 @@ internal partial class PlayerKillAnimation : Node
     {
         var playerNameContainerName = $"PlayerNameContainer_{playerColor}";
         var playerNameContainer = _playersBombData.GetNode<MarginContainer>(playerNameContainerName);
+
         var playerNameLabel = playerNameContainer.GetNode<Label>("PlayerNameLabel");
 
         var bombStatusContainerName = $"BombStatusContainer_{playerColor}";
         var bombStatusContainer = _playersBombData.GetNode<PanelContainer>(bombStatusContainerName);
+
         var bombPicture = bombStatusContainer.GetNode<TextureRect>("BombPicture");
+        var bombNumberLabel = bombStatusContainer.GetNode<Label>("%BombNumberLabel");
 
         var tween = GetTree().CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
 
@@ -37,6 +41,8 @@ internal partial class PlayerKillAnimation : Node
             .TweenProperty(bombPicture, new NodePath(CanvasItem.PropertyName.Modulate),
                 new Color(1, 1, 1, 0.4f),
                 TweenDuration);
+
+        bombNumberLabel.Text = 0.ToString();
     }
 
     private static void SetFontColor(Color value, Label label) =>
