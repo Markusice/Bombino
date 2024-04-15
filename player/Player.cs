@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Bombino.bomb;
 using Bombino.game;
 using Bombino.game.persistence.state_storage;
+using Bombino.player.input_actions;
 using Godot;
 
 namespace Bombino.player;
@@ -17,7 +18,7 @@ internal partial class Player : CharacterBody3D
 
     [Export] public int Speed { get; set; } = 10;
 
-    [Export] private PackedScene _bombScene;
+    [Export] public PackedScene BombScene { get; set; }
 
     #endregion
 
@@ -38,9 +39,11 @@ internal partial class Player : CharacterBody3D
     private Vector3 _targetVelocity = Vector3.Zero;
     private AnimationTree _animTree;
     private AnimationNodeStateMachinePlayback _stateMachine;
-    private Vector3I _mapPosition;
+    public Vector3I MapPosition;
 
     private bool _isDead = false;
+
+    public PlayerInputActions PlayerInputActions { get; } = new();
 
     public PlayerData PlayerData { get; set; }
 
@@ -69,6 +72,7 @@ internal partial class Player : CharacterBody3D
         // We create a local variable to store the input direction.
         var direction = Vector3.Zero;
 
+        // We check for each move input and update the direction accordingly.
         CheckActionKeysForInput(ref direction);
 
         if (direction != Vector3.Zero)
@@ -149,27 +153,9 @@ internal partial class Player : CharacterBody3D
     /// <param name="direction"></param>
     private void ModifyDirectionOnMovement(ref Vector3 direction)
     {
-        foreach (var movementKey in PlayerData.ActionKeys[..4])
-            if (Input.IsActionPressed(movementKey))
-            {
-                var actionKeyDirection = movementKey[5];
-
-                switch (actionKeyDirection)
-                {
-                    case 'r':
-                        direction.X += 1.0f;
-                        break;
-                    case 'l':
-                        direction.X -= 1.0f;
-                        break;
-                    case 'b':
-                        direction.Z += 1.0f;
-                        break;
-                    case 'f':
-                        direction.Z -= 1.0f;
-                        break;
-                }
-            }
+        direction = PlayerInputActions.Movements.Where(movement =>
+                Input.IsActionPressed($"{movement.Name}_{PlayerData.Color.ToString().ToLower()}"))
+            .Aggregate(direction, (current, movement) => movement.Action.Invoke(current));
     }
 
     /// <summary>
@@ -177,8 +163,11 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void PlaceBombOnInput()
     {
-        if (Input.IsActionJustPressed(PlayerData.ActionKeys[4]))
-            OnPlaceBomb();
+        if (!Input.IsActionJustPressed
+                ($"{PlayerInputActions.BombPlace.Name}_{PlayerData.Color.ToString().ToLower()}"))
+            return;
+
+        PlayerInputActions.BombPlace.Action.Invoke(this);
     }
 
     /// <summary>
@@ -192,68 +181,10 @@ internal partial class Player : CharacterBody3D
     }
 
     /// <summary>
-    /// Called when a player places a bomb.
-    /// </summary>
-    private void OnPlaceBomb()
-    {
-        if (PlayerData.NumberOfPlacedBombs >= PlayerData.MaxNumberOfAvailableBombs)
-            return;
-
-        var collisionObject = this as CollisionObject3D;
-        collisionObject.SetCollisionMaskValue(5, false);
-
-        var bombTilePosition = GameManager.GameMap.MapToLocal(_mapPosition);
-        var bombToPlacePosition = new Vector3(
-            bombTilePosition.X,
-            GameManager.GameMap.CellSize.Y + 1,
-            bombTilePosition.Z
-        );
-
-        if (IsUnableToPlaceBomb(bombToPlacePosition))
-            return;
-
-        PlayerData.NumberOfPlacedBombs++;
-
-        var bombToPlace = CreateBomb(bombToPlacePosition);
-
-        GameManager.WorldEnvironment.AddChild(bombToPlace);
-    }
-
-    /// <summary>
-    /// Checks if the player is unable to place a bomb.
-    /// </summary>
-    /// <param name="bombToPlacePosition"></param>
-    /// <returns></returns>
-    private bool IsUnableToPlaceBomb(Vector3 bombToPlacePosition)
-    {
-        var placedBombs = GetTree().GetNodesInGroup("bombs");
-
-        return placedBombs
-            .Cast<Area3D>()
-            .Any(bombArea3D => bombArea3D.Position == bombToPlacePosition);
-    }
-
-    /// <summary>
-    /// Creates a bomb.
-    /// </summary>
-    /// <param name="bombToPlacePosition"></param>
-    /// <returns></returns>
-    private Bomb CreateBomb(Vector3 bombToPlacePosition)
-    {
-        var bombToPlace = _bombScene.Instantiate<Bomb>();
-
-        bombToPlace.Position = bombToPlacePosition;
-        bombToPlace.Range = PlayerData.BombRange;
-        bombToPlace.Player = this;
-
-        return bombToPlace;
-    }
-
-    /// <summary>
     /// Sets the map position.
     /// </summary>
     private void SetMapPosition()
     {
-        _mapPosition = GameManager.GameMap.LocalToMap(Position);
+        MapPosition = GameManager.GameMap.LocalToMap(Position);
     }
 }
