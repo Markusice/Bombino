@@ -87,7 +87,6 @@ internal static class GameSaveHandler
         return new Dictionary<string, Variant>
         {
             { "BombRange", playerData.BombRange },
-            { "ActionKeys", playerData.ActionKeys }
         };
     }
 }

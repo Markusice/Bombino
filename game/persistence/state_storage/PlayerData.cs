@@ -1,5 +1,3 @@
-using Bombino.bomb;
-using Bombino.game.persistence.storage_layers.key_binds.factory;
 using Bombino.player;
 using Godot;
 using Godot.Collections;
@@ -42,12 +40,6 @@ internal partial class PlayerData : Resource
     public int MaxNumberOfAvailableBombs { get; set; } = 1;
 
     /// <summary>
-    /// Gets or sets the action keys for the player.
-    /// </summary>
-    [Export]
-    public Array<string> ActionKeys { get; set; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="PlayerData"/> class with default values.
     /// </summary>
     public PlayerData()
@@ -64,6 +56,5 @@ internal partial class PlayerData : Resource
     {
         Position = position;
         Color = color;
-        ActionKeys = PlayerActionKeysFactory.GetInstance(color).CreateActionKeys();
     }
 }

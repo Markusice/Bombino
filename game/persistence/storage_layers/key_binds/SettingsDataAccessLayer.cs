@@ -1,74 +1,61 @@
 using System;
-using Bombino.game.persistence.state_storage;
-using Bombino.game.persistence.storage_layers.key_binds.factory;
 using Bombino.player;
 using Godot;
-using Godot.Collections;
 
 namespace Bombino.game.persistence.storage_layers.key_binds;
 
 internal class SettingsDataAccessLayer : IDataAccessLayer
 {
-    public void SaveData()
+    private ConfigFile Config { get; } = new();
+
+    public bool SaveData(SettingsKeyBinds dataHolder)
     {
-        var config = new ConfigFile();
+        SavePlayersKeyBinds(dataHolder);
 
-        SavePlayersKeyBinds(config);
+        var error = Config.Save(SettingsKeyBinds.KeyBindsPath);
 
-        config.Save(SettingsKeyBinds.KeyBindsPath);
+        return error == Error.Ok;
     }
 
-    public bool LoadData()
+    public bool LoadData(SettingsKeyBinds dataHolder)
     {
-        var config = new ConfigFile();
-        var error = config.Load(SettingsKeyBinds.KeyBindsPath);
+        var error = Config.Load(SettingsKeyBinds.KeyBindsPath);
+
+        if (error == Error.FileNotFound)
+            return SaveData(dataHolder);
 
         if (error != Error.Ok)
             return false;
 
-        LoadPlayersActionKeysAndSetKeyBinds(config);
+        LoadPlayersActionKeysAndSetKeyBinds(dataHolder);
 
         return true;
     }
 
-    private static void SavePlayersKeyBinds(ConfigFile config)
+    private void SavePlayersKeyBinds(SettingsKeyBinds dataHolder)
     {
-        foreach (var playerData in SettingsKeyBinds.PlayersData)
-        {
-            var playerActionKeys = playerData.ActionKeys;
+        SavePlayerKeyBinds(dataHolder);
+    }
 
-            SavePlayerKeyBinds(config, playerActionKeys, playerData);
+    private void SavePlayerKeyBinds(SettingsKeyBinds dataHolder)
+    {
+        foreach (var inputActionForPlayerColor in dataHolder.InputActionsForPlayerColors)
+        {
+            Config.SetValue(inputActionForPlayerColor.Value.ToString(), inputActionForPlayerColor.Key,
+                InputMap.ActionGetEvents(inputActionForPlayerColor.Key)[0].AsText());
         }
     }
 
-    private static void SavePlayerKeyBinds(ConfigFile config, Array<string> playerActionKeys, PlayerData playerData)
+    private void LoadPlayersActionKeysAndSetKeyBinds(SettingsKeyBinds dataHolder)
     {
-        foreach (var actionKey in playerActionKeys)
-            config.SetValue(playerData.Color.ToString(), actionKey,
-                InputMap.ActionGetEvents(actionKey)[0].AsText());
-    }
-
-    private static void LoadPlayersActionKeysAndSetKeyBinds(ConfigFile config)
-    {
-        foreach (var playerColor in config.GetSections())
+        foreach (var inputActionForPlayerColor in dataHolder.InputActionsForPlayerColors)
         {
-            var playerColorEnum = Enum.Parse<PlayerColor>(playerColor);
-            var playerActionKeys = PlayerActionKeysFactory.GetInstance(playerColorEnum).CreateActionKeys();
+            var playerKeyBind = Config
+                .GetValue(inputActionForPlayerColor.Value.ToString(), inputActionForPlayerColor.Key).AsString();
 
-            LoadPlayerActionKeys(config, playerColor, playerActionKeys);
-        }
-    }
+            InputMap.ActionEraseEvents(inputActionForPlayerColor.Key);
 
-    private static void LoadPlayerActionKeys(ConfigFile config, string playerColor,
-        Array<string> playerActionKeys)
-    {
-        foreach (var playerActionKey in playerActionKeys)
-        {
-            var playerKeyBind = config.GetValue(playerColor, playerActionKey).AsString();
-
-            InputMap.ActionEraseEvents(playerActionKey);
-
-            InputMap.ActionAddEvent(playerActionKey,
+            InputMap.ActionAddEvent(inputActionForPlayerColor.Key,
                 new InputEventKey { Keycode = OS.FindKeycodeFromString(playerKeyBind) });
         }
     }

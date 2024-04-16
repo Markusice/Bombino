@@ -5,7 +5,7 @@ namespace Bombino.player;
 /// </summary>
 internal enum PlayerColor
 {
-    Red,
     Blue,
+    Red,
     Yellow
 }

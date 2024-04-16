@@ -1,8 +1,10 @@
+using Bombino.game.persistence.storage_layers.key_binds;
+
 namespace Bombino.game.persistence.storage_layers;
 
 internal interface IDataAccessLayer
 {
-    void SaveData();
+    bool SaveData(SettingsKeyBinds dataHolder);
 
-    bool LoadData();
+    bool LoadData(SettingsKeyBinds dataHolder);
 }

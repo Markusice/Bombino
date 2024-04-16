@@ -1,3 +1,6 @@
+using System;
+using Bombino.game.persistence.storage_layers.key_binds;
+using Bombino.player;
 using Godot;
 
 namespace Bombino.ui.settings_menu;
@@ -11,12 +14,12 @@ internal static class ActionKeysMapper
     /// Creates action keys for the specified <paramref name="actionKeysContainer"/>.
     /// </summary>
     /// <param name="actionKeysContainer">The action keys container to create action keys for.</param>
-    public static void CreateActionKeys(ActionKeysContainer actionKeysContainer)
+    public static void CreateActionKeys(ActionKeysContainer actionKeysContainer, SettingsKeyBinds dataHolder)
     {
-        foreach (var actionItem in ActionKeysContainer.ActionItems)
+        foreach (var inputAction in dataHolder.InputActionsForPlayerColors)
         {
-            var remapButton = CreateRemapButton(actionItem);
-            var settingKeyLabel = CreateSettingKey(actionItem);
+            var remapButton = CreateRemapButton(inputAction.Key);
+            var settingKeyLabel = CreateSettingKey(inputAction.Key);
 
             actionKeysContainer.AddChild(settingKeyLabel);
             actionKeysContainer.AddChild(remapButton);
