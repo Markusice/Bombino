@@ -56,6 +56,7 @@ internal partial class Player : CharacterBody3D
     public override void _Ready()
     {
         Position = PlayerData.Position;
+        Name = $"Player{PlayerData.Color.ToString()}";
 
         _animTree = GetNode<AnimationTree>("AnimationTree");
         _animTree.Active = true;
