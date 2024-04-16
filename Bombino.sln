@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bombino", "Bombino.csproj", "{D900D269-BC23-464C-9D0D-D7DD90254694}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bombino", "Bombino.csproj", "{A0C6B65D-564E-4B0F-ACE1-E157DA5BC0D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,11 +9,11 @@ Global
 	ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D900D269-BC23-464C-9D0D-D7DD90254694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D900D269-BC23-464C-9D0D-D7DD90254694}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D900D269-BC23-464C-9D0D-D7DD90254694}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{D900D269-BC23-464C-9D0D-D7DD90254694}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{D900D269-BC23-464C-9D0D-D7DD90254694}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{D900D269-BC23-464C-9D0D-D7DD90254694}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{A0C6B65D-564E-4B0F-ACE1-E157DA5BC0D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0C6B65D-564E-4B0F-ACE1-E157DA5BC0D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0C6B65D-564E-4B0F-ACE1-E157DA5BC0D4}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{A0C6B65D-564E-4B0F-ACE1-E157DA5BC0D4}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{A0C6B65D-564E-4B0F-ACE1-E157DA5BC0D4}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{A0C6B65D-564E-4B0F-ACE1-E157DA5BC0D4}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 	EndGlobalSection
 EndGlobal
