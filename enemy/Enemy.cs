@@ -54,6 +54,10 @@ internal partial class Enemy : CharacterBody3D
     {
         Position = EnemyData.Position;
 
+        _animTree = GetNode<AnimationTree>("AnimationTree");
+        _animTree.Active = true;
+        _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
+
         GD.Print($"Enemy created at: {Position}");
 
         var direction = Vector3.Zero;
