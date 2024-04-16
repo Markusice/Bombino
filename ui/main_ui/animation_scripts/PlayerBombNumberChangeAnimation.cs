@@ -1,7 +1,7 @@
 using Bombino.events;
 using Godot;
 
-namespace Bombino.ui.main_ui;
+namespace Bombino.ui.main_ui.animation_scripts;
 
 internal partial class PlayerBombNumberChangeAnimation : Node
 {

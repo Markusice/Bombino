@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://ui/main_ui/MainUi.cs" id="1_c6rma"]
 [ext_resource type="PackedScene" uid="uid://b8yslovrmkcuj" path="res://ui/main_ui/templates/bomb_status_container.tscn" id="2_m352f"]
 [ext_resource type="PackedScene" uid="uid://ctiw2gldrdey1" path="res://ui/main_ui/templates/player_name_container.tscn" id="3_mjp7h"]
-[ext_resource type="Script" path="res://ui/main_ui/PlayerKillAnimation.cs" id="4_7f1x4"]
-[ext_resource type="Script" path="res://ui/main_ui/PlayerBombNumberChangeAnimation.cs" id="5_0o0my"]
+[ext_resource type="Script" path="res://ui/main_ui/animation_scripts/PlayerKillAnimation.cs" id="4_7f1x4"]
+[ext_resource type="Script" path="res://ui/main_ui/animation_scripts/PlayerBombNumberChangeAnimation.cs" id="5_0o0my"]
 
 [node name="MainUI" type="CanvasLayer"]
 script = ExtResource("1_c6rma")
