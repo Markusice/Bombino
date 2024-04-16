@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Bombino.bomb;
+using Bombino.events;
 using Bombino.game;
 using Bombino.game.persistence.state_storage;
 using Bombino.player.input_actions;
@@ -125,6 +126,8 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void Die()
     {
+        Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
+
         QueueFree();
     }
 
