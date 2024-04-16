@@ -12,9 +12,9 @@ internal partial class MainUi : CanvasLayer
 {
     #region Exports
 
-    [Export] private PackedScene _bombStatusContainerScene;
+    [Export(PropertyHint.File, "*.tscn")] private PackedScene _bombStatusContainerScene;
 
-    [Export] private PackedScene _playerNameContainerScene;
+    [Export(PropertyHint.File, "*.tscn")] private PackedScene _playerNameContainerScene;
 
     #endregion
 
