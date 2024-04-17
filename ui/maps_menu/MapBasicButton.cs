@@ -1,3 +1,5 @@
+using Bombino.game;
+using Bombino.map;
 using Bombino.ui.scripts;
 using Godot;
 
@@ -6,7 +8,7 @@ namespace Bombino.ui.maps_menu;
 /// <summary>
 /// Represents a button used for selecting a map in the UI.
 /// </summary>
-internal partial class MapButton : Button, IUiButton
+internal partial class MapBasicButton : Button, IUiButton
 {
     [Export(PropertyHint.File, "*.tscn")] private string _roundsMenuScenePath;
 
@@ -26,5 +28,6 @@ internal partial class MapButton : Button, IUiButton
     /// </summary>
     private void SetSelectedMapAndChangeScene()
     {
+        GameManager.SelectedMap = MapType.Basic;
     }
 }

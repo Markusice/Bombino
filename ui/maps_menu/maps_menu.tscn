@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cgka8qcma8qkj"]
+[gd_scene load_steps=4 format=3 uid="uid://cgka8qcma8qkj"]
 
-[ext_resource type="Script" path="res://ui/maps_menu/MapButton.cs" id="1_3ctxo"]
+[ext_resource type="Script" path="res://ui/maps_menu/MapBasicButton.cs" id="1_3pqn3"]
+[ext_resource type="Script" path="res://ui/maps_menu/MapWideButton.cs" id="2_pj8gt"]
+[ext_resource type="Script" path="res://ui/maps_menu/MapCrossButton.cs" id="3_pl3lb"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -49,11 +51,11 @@ stretch_mode = 4
 
 [node name="Map1Button" type="Button" parent="MapsContainer/HBoxContainer/Map1"]
 layout_mode = 2
-offset_left = 1.0
-offset_right = 44.0
+offset_left = 3.0
+offset_right = 43.0
 offset_bottom = 40.0
 theme_type_variation = &"MapButton"
-script = ExtResource("1_3ctxo")
+script = ExtResource("1_3pqn3")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
 [node name="Map2" type="TextureRect" parent="MapsContainer/HBoxContainer"]
@@ -61,11 +63,11 @@ layout_mode = 2
 
 [node name="Map2Button" type="Button" parent="MapsContainer/HBoxContainer/Map2"]
 layout_mode = 2
-offset_left = 4.0
-offset_right = 4.0
+offset_left = 47.0
+offset_right = 85.0
 offset_bottom = 40.0
 theme_type_variation = &"MapButton"
-script = ExtResource("1_3ctxo")
+script = ExtResource("2_pj8gt")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
 [node name="Map3" type="TextureRect" parent="MapsContainer/HBoxContainer"]
@@ -73,11 +75,11 @@ layout_mode = 2
 
 [node name="Map3Button" type="Button" parent="MapsContainer/HBoxContainer/Map3"]
 layout_mode = 2
-offset_left = 4.0
-offset_right = 4.0
+offset_left = 89.0
+offset_right = 129.0
 offset_bottom = 40.0
 theme_type_variation = &"MapButton"
-script = ExtResource("1_3ctxo")
+script = ExtResource("3_pl3lb")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
 [connection signal="pressed" from="MapsContainer/HBoxContainer/Map1/Map1Button" to="MapsContainer/HBoxContainer/Map1/Map1Button" method="OnPressed"]
