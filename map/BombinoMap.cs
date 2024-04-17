@@ -21,8 +21,8 @@ internal partial class BombinoMap : GridMap
         var file = FileAccess.Open(filePath, FileAccess.ModeFlags.Read);
         var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
         var lines = data["structure"].AsStringArray();
-        var rowOffset = lines.Length / 2;
-        var columnOffset = lines[0].Length / 2;
+        var rowOffset = (lines.Length / 2) + 1;
+        var columnOffset = (lines[0].Length / 2) + 1;
 
         for (var z = 0; z < lines.Length; z++)
         {
