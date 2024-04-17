@@ -45,7 +45,7 @@ internal partial class Bomb : Area3D
 
     private const float ExplosionDistanceDivider = Mathf.E;
 
-    private Area3D _bombMaskArea;
+    private Area3D _bombCollisionArea;
 
     public Player Player { get; set; }
 
@@ -59,7 +59,7 @@ internal partial class Bomb : Area3D
     public override void _Ready()
     {
         GD.Print($"bomb pos: {Position}");
-        _bombMaskArea = GetNode<Area3D>("Bomb/MaskArea");
+        _bombCollisionArea = GetNode<Area3D>("%CollisionArea");
 
         var timer = GetNode<Timer>("BombTimer");
         timer.WaitTime = _explodeTime;
@@ -109,10 +109,10 @@ internal partial class Bomb : Area3D
 
     private void OnAreaEntered(Area3D area)
     {
-        if (!area.IsInGroup("bombobjects"))
+        if (!area.IsInGroup("collisionareas"))
             return;
 
-        if (_bombMaskArea.GetRid() == area.GetRid())
+        if (_bombCollisionArea.GetRid() == area.GetRid())
             return;
 
         _bombsInRange.Add(GetBombFromBombObject(area));
@@ -120,10 +120,10 @@ internal partial class Bomb : Area3D
 
     private void OnAreaExited(Area3D area)
     {
-        if (!area.IsInGroup("bombobjects"))
+        if (!area.IsInGroup("collisionareas"))
             return;
 
-        if (_bombMaskArea.GetRid() == area.GetRid())
+        if (_bombCollisionArea.GetRid() == area.GetRid())
             return;
 
         _bombsInRange.Remove(GetBombFromBombObject(area));
@@ -134,10 +134,12 @@ internal partial class Bomb : Area3D
         if (!body.IsInGroup("players"))
             return;
 
+        GD.Print("Hello");
         var bombCollisionObject = this as CollisionObject3D;
 
-        if (!bombCollisionObject.GetCollisionMaskValue(2))
-            bombCollisionObject.SetCollisionMaskValue(2, true);
+        var PlayerCollision = Player as CollisionObject3D;
+        if (!PlayerCollision.GetCollisionMaskValue(5))
+            PlayerCollision.SetCollisionMaskValue(5, true);
     }
 
     /// <summary>

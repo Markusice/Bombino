@@ -1,8 +1,11 @@
 using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Bombino.bomb;
 using Bombino.game;
 using Godot;
+using Godot.NativeInterop;
 
 namespace Bombino.player.input_actions;
 
@@ -19,7 +22,7 @@ internal class BombPlace
     /// <summary>
     /// Action that places a bomb for the player.
     /// </summary>
-    public Action<Player> Action { get; } = (player) =>
+    public Action<Player> Action { get; } = async (player) =>
     {
         if (player.PlayerData.NumberOfPlacedBombs >= player.PlayerData.MaxNumberOfAvailableBombs)
             return;
@@ -34,7 +37,7 @@ internal class BombPlace
             bombTilePosition.Z
         );
 
-        if (IsUnableToPlaceBomb(player, bombToPlacePosition))
+        if (await IsUnableToPlaceBombAsync(player, bombToPlacePosition))
             return;
 
         player.PlayerData.NumberOfPlacedBombs++;
@@ -46,12 +49,44 @@ internal class BombPlace
     /// <summary>
     /// Checks if the player is unable to place a bomb.
     /// </summary>
-    /// <param name="node">The player node.</param>
+    /// <param name="player">The player node.</param>
     /// <param name="bombToPlacePosition">The position where the bomb is to be placed.</param>
     /// <returns>True if the player is unable to place a bomb, false otherwise.</returns>
-    private static bool IsUnableToPlaceBomb(Node node, Vector3 bombToPlacePosition)
+    private static async Task<bool> IsUnableToPlaceBombAsync(Node player, Vector3 bombToPlacePosition)
     {
-        var placedBombs = node.GetTree().GetNodesInGroup("bombs");
+        var bombArea3D = new Area3D
+        {
+            Position = bombToPlacePosition
+        };
+        
+        var bombBox = new BoxShape3D { Size = new Vector3(0.4f, 0.4f, 0.4f) };
+        bombArea3D.AddChild(new CollisionShape3D { Shape = bombBox });
+
+        bombArea3D.SetCollisionLayerValue(6, true);
+        bombArea3D.SetCollisionLayerValue(1, false);
+
+        bombArea3D.SetCollisionMaskValue(2, true);
+        bombArea3D.SetCollisionMaskValue(1, false);
+
+        GameManager.WorldEnvironment.AddChild(bombArea3D);
+
+        GD.Print(bombArea3D.Position);
+
+        var isl4131x91391i491i = false;
+
+        bombArea3D.BodyEntered += (Node3D body) => {
+            GD.Print(body != player);
+
+            isl4131x91391i491i = true;
+        };
+
+        await bombArea3D.GetTree().ToSignal(bombArea3D, "body_entered");
+        
+        bombArea3D.QueueFree();
+
+        if (isl4131x91391i491i) return true;
+
+        var placedBombs = player.GetTree().GetNodesInGroup("bombs");
 
         return placedBombs
             .Cast<Area3D>()
