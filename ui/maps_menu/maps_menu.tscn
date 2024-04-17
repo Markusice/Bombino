@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://cgka8qcma8qkj"]
+[gd_scene load_steps=7 format=3 uid="uid://cgka8qcma8qkj"]
 
 [ext_resource type="Script" path="res://ui/maps_menu/MapBasicButton.cs" id="1_3pqn3"]
+[ext_resource type="Texture2D" uid="uid://wi1n5nle7p6y" path="res://ui/maps_menu/basic.png" id="1_vyrrf"]
 [ext_resource type="Script" path="res://ui/maps_menu/MapWideButton.cs" id="2_pj8gt"]
 [ext_resource type="Script" path="res://ui/maps_menu/MapCrossButton.cs" id="3_pl3lb"]
+[ext_resource type="Texture2D" uid="uid://jtv11u6r5dfj" path="res://ui/maps_menu/wide.png" id="3_w53ta"]
+[ext_resource type="Texture2D" uid="uid://dc01t36iximbf" path="res://ui/maps_menu/cross.png" id="5_hcxo2"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -51,10 +54,16 @@ stretch_mode = 4
 
 [node name="Map1Button" type="Button" parent="MapsContainer/HBoxContainer/Map1"]
 layout_mode = 2
-offset_left = 3.0
-offset_right = 43.0
-offset_bottom = 40.0
+anchor_top = -0.7
+anchor_bottom = -0.7
+offset_left = -412.0
+offset_top = -74.0
+offset_right = -112.0
+offset_bottom = 226.0
 theme_type_variation = &"MapButton"
+icon = ExtResource("1_vyrrf")
+icon_alignment = 1
+expand_icon = true
 script = ExtResource("1_3pqn3")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
@@ -63,10 +72,14 @@ layout_mode = 2
 
 [node name="Map2Button" type="Button" parent="MapsContainer/HBoxContainer/Map2"]
 layout_mode = 2
-offset_left = 47.0
-offset_right = 85.0
-offset_bottom = 40.0
+offset_left = -55.0
+offset_top = -100.0
+offset_right = 245.0
+offset_bottom = 200.0
 theme_type_variation = &"MapButton"
+icon = ExtResource("3_w53ta")
+icon_alignment = 1
+expand_icon = true
 script = ExtResource("2_pj8gt")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
@@ -75,10 +88,14 @@ layout_mode = 2
 
 [node name="Map3Button" type="Button" parent="MapsContainer/HBoxContainer/Map3"]
 layout_mode = 2
-offset_left = 89.0
-offset_right = 129.0
-offset_bottom = 40.0
+offset_left = 299.0
+offset_top = -100.0
+offset_right = 599.0
+offset_bottom = 200.0
 theme_type_variation = &"MapButton"
+icon = ExtResource("5_hcxo2")
+icon_alignment = 1
+expand_icon = true
 script = ExtResource("3_pl3lb")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
