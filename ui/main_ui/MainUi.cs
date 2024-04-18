@@ -12,9 +12,11 @@ internal partial class MainUi : CanvasLayer
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private PackedScene _bombStatusContainerScene;
+    [Export(PropertyHint.File, "*.tscn")]
+    private PackedScene _bombStatusContainerScene;
 
-    [Export(PropertyHint.File, "*.tscn")] private PackedScene _playerNameContainerScene;
+    [Export(PropertyHint.File, "*.tscn")]
+    private PackedScene _playerNameContainerScene;
 
     #endregion
 
@@ -85,7 +87,7 @@ internal partial class MainUi : CanvasLayer
             "BombPicture/BombNumberCircle/BombNumberLabel"
         );
 
-        bombNumberLabel.Text = playerData.NumberOfPlacedBombs.ToString();
+        bombNumberLabel.Text = playerData.MaxNumberOfAvailableBombs.ToString();
 
         return bombStatusContainer;
     }
