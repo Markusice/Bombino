@@ -225,6 +225,7 @@ internal partial class GameManager : WorldEnvironment
             var player = playerScene.Instantiate<Player>();
 
             var playerData = playerScenePathAndData.Value;
+
             player.PlayerData = playerData;
 
             PlayersData.Add(playerData);
@@ -250,6 +251,11 @@ internal partial class GameManager : WorldEnvironment
     {
         EmitSignal(SignalName.EverythingLoaded);
         _isEverythingLoaded = true;
+
+        var mainUiScene = ResourceLoader.Load("res://ui/main_ui/main_ui.tscn") as PackedScene;
+        var mainUiSceneInstance = mainUiScene.Instantiate();
+
+        AddChild(mainUiSceneInstance);
 
         SetProcessInput(true);
     }
