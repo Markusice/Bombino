@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://bf454a3io0ei3"]
+[gd_scene load_steps=5 format=3 uid="uid://bf454a3io0ei3"]
 
 [ext_resource type="Script" path="res://game/GameManager.cs" id="1_4g4o6"]
-[ext_resource type="PackedScene" uid="uid://dwn8vy6or60pe" path="res://ui/main_ui/main_ui.tscn" id="1_uhnt5"]
 [ext_resource type="PackedScene" uid="uid://pvmueb3x3hwg" path="res://ui/paused_game_ui/paused_game_ui.tscn" id="2_f6low"]
 [ext_resource type="PackedScene" uid="uid://wpo1q3hd2yct" path="res://ui/starting_screen/starting_screen.tscn" id="3_bjmvg"]
 
@@ -29,7 +28,5 @@ metadata/_edit_group_ = true
 [node name="Camera3D" type="Camera3D" parent="WorldEnvironment/Marker3D"]
 transform = Transform3D(1, 0, 0, 0, 0.319688, 0.947523, 0, -0.947523, 0.319688, -0.742738, 14.1994, -2.94342)
 fov = 60.0
-
-[node name="MainUI" parent="." instance=ExtResource("1_uhnt5")]
 
 [connection signal="ResumeGame" from="WorldEnvironment" to="WorldEnvironment" method="OnResumeGame"]
