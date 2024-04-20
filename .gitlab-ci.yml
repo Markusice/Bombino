@@ -1,4 +1,4 @@
-image: barichello/godot-ci:4.2.1
+image: barichello/godot-ci:mono-4.2.1
 
 # Cache imported assets between runs
 cache:
