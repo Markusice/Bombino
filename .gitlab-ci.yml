@@ -18,6 +18,7 @@ variables:
 import-assets:
   stage: import-assets
   before_script:
+    - rm /etc/apt/sources.list.d/microsoft-prod.list
     - apt-get update && apt-get install dotnet-sdk-6.0
   script:
     - godot --headless --verbose --editor --quit
