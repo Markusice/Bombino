@@ -1,4 +1,3 @@
-using System;
 using Bombino.bomb.explosion_effect;
 using Bombino.enemy;
 using Bombino.game;
@@ -6,6 +5,7 @@ using Bombino.player;
 using Bombino.power_up;
 using Godot;
 using Godot.Collections;
+using Timer = Godot.Timer;
 
 namespace Bombino.bomb;
 
@@ -16,14 +16,11 @@ internal partial class Bomb : Area3D
 {
     #region Exports
 
-    [Export(PropertyHint.Range, "1,4")]
-    private float _explodeTime = Mathf.Pi;
+    [Export(PropertyHint.Range, "1,4")] private float _explodeTime = Mathf.Pi;
 
-    [Export]
-    private PackedScene _effectScene;
+    [Export] private PackedScene _effectScene;
 
-    [Export(PropertyHint.File, "*.tscn")]
-    private string _powerUpScenePath;
+    [Export(PropertyHint.File, "*.tscn")] private string _powerUpScenePath;
 
     #endregion
 
@@ -144,7 +141,7 @@ internal partial class Bomb : Area3D
     /// Called when the timer times out.
     /// </summary>
     private void OnTimerTimeout()
-    {   
+    {
         DecreaseNumberOfPlacedBombs();
 
         DestroyCratesOnXAndZAxis();
@@ -168,8 +165,7 @@ internal partial class Bomb : Area3D
     private void DecreaseNumberOfPlacedBombs()
     {
         Player.PlayerData.NumberOfPlacedBombs--;
-    } 
-
+    }
 
     private static Area3D GetBombFromBombObject(Node3D body)
     {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Bombino.game;
-using System.Threading.Tasks;
+﻿using Bombino.game;
 using Bombino.game.persistence.state_storage;
 using Bombino.player;
 using Godot;
@@ -32,7 +29,7 @@ internal partial class Enemy : CharacterBody3D
     private Vector3 _targetVelocity = Vector3.Zero;
 
     private AnimationTree _animTree;
-    private AnimationNodeStateMachinePlayback _stateMachine; 
+    private AnimationNodeStateMachinePlayback _stateMachine;
 
     private readonly Vector3[] _directions =
     {
@@ -244,6 +241,6 @@ internal partial class Enemy : CharacterBody3D
         {
             body.EmitSignal(Player.SignalName.Hit);
             GD.Print($"Player hit by enemy at position: {Position} by {body.Name}");
-        } 
+        }
     }
 }
