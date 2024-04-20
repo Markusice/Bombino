@@ -53,6 +53,7 @@ expand_mode = 2
 stretch_mode = 4
 
 [node name="Map1Button" type="Button" parent="MapsContainer/HBoxContainer/Map1"]
+texture_filter = 1
 layout_mode = 2
 anchor_top = -0.7
 anchor_bottom = -0.7
@@ -71,6 +72,7 @@ _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 layout_mode = 2
 
 [node name="Map2Button" type="Button" parent="MapsContainer/HBoxContainer/Map2"]
+texture_filter = 1
 layout_mode = 2
 offset_left = -55.0
 offset_top = -100.0
@@ -87,6 +89,7 @@ _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 layout_mode = 2
 
 [node name="Map3Button" type="Button" parent="MapsContainer/HBoxContainer/Map3"]
+texture_filter = 1
 layout_mode = 2
 offset_left = 299.0
 offset_top = -100.0
