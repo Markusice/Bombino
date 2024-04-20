@@ -18,7 +18,7 @@ variables:
 import-assets:
   stage: import-assets
   script:
-    - sudo apt install dotnet-sdk-6.0
+    - apt install dotnet-sdk-6.0
     - godot --headless --verbose --editor --quit
 
 linux:
