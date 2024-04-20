@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=32 format=3 uid="uid://djmr4s3lma1ss"]
+[gd_resource type="Theme" load_steps=31 format=3 uid="uid://djmr4s3lma1ss"]
 
 [ext_resource type="FontFile" uid="uid://bn4sm0qhcg0jm" path="res://ui/fonts/Spoon-Bold.ttf" id="1_2hswg"]
 [ext_resource type="Texture2D" uid="uid://bwn3gasaptibk" path="res://ui/theme/textures/button-style.png" id="2_b00xl"]
@@ -76,11 +76,20 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wgy7o"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_biwya"]
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color(0, 0, 0, 0.721569)
+shadow_size = 6
+shadow_offset = Vector2(2.08165e-12, -2.91)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6o8bb"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bgugt"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x7p4r"]
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lpi11"]
 bg_color = Color(0, 0, 0, 0)
@@ -189,7 +198,6 @@ corner_radius_bottom_right = 42
 corner_radius_bottom_left = 42
 
 [resource]
-BombNumber/base_type = &"Panel"
 BombNumber/styles/panel = SubResource("StyleBoxFlat_yohbn")
 Button/constants/outline_size = 2
 Button/font_sizes/font_size = 105
@@ -207,7 +215,6 @@ ErrorLabel/base_type = &"Label"
 ErrorLabel/colors/font_color = Color(1, 0.580392, 0.580392, 1)
 ErrorLabel/constants/outline_size = 1
 ErrorLabel/font_sizes/font_size = 56
-GameTimerContainer/base_type = &"Panel"
 GameTimerContainer/styles/panel = SubResource("StyleBoxFlat_2om1i")
 InputField/base_type = &"LineEdit"
 InputField/colors/caret_color = Color(0, 0, 0, 1)
@@ -220,9 +227,8 @@ InputField/styles/focus = SubResource("StyleBoxFlat_wvy3m")
 InputField/styles/normal = SubResource("StyleBoxFlat_ogdd8")
 Label/fonts/font = ExtResource("1_2hswg")
 MapButton/base_type = &"Button"
-MapButton/styles/hover = SubResource("StyleBoxFlat_wgy7o")
-MapButton/styles/normal = SubResource("StyleBoxFlat_6o8bb")
-MapButton/styles/pressed = SubResource("StyleBoxFlat_bgugt")
+MapButton/styles/hover = SubResource("StyleBoxFlat_biwya")
+MapButton/styles/normal = SubResource("StyleBoxFlat_x7p4r")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_lpi11")
 PrimaryButton/base_type = &"Button"
 PrimaryButton/font_sizes/font_size = 60
