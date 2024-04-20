@@ -1,12 +1,14 @@
 <Project Sdk="Godot.NET.Sdk/4.2.1">
     <ItemGroup>
-        <ProjectReference Include="BombinoTest\BombinoTest.csproj"/>
+        <ProjectReference Include="BombinoTest\BombinoTest.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
         <TargetFrameworks>net7.0</TargetFrameworks>
         <EnableDynamicLoading>true</EnableDynamicLoading>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 </Project>
   

@@ -210,6 +210,7 @@ corner_radius_bottom_right = 42
 corner_radius_bottom_left = 42
 
 [resource]
+BombNumber/base_type = &"Panel"
 BombNumber/styles/panel = SubResource("StyleBoxFlat_yohbn")
 Button/constants/outline_size = 2
 Button/font_sizes/font_size = 105
@@ -227,6 +228,7 @@ ErrorLabel/base_type = &"Label"
 ErrorLabel/colors/font_color = Color(1, 0.580392, 0.580392, 1)
 ErrorLabel/constants/outline_size = 1
 ErrorLabel/font_sizes/font_size = 56
+GameTimerContainer/base_type = &"Panel"
 GameTimerContainer/styles/panel = SubResource("StyleBoxFlat_2om1i")
 InputField/base_type = &"LineEdit"
 InputField/colors/caret_color = Color(0, 0, 0, 1)
