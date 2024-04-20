@@ -1,4 +1,4 @@
-image: barichello/godot-ci:mono-4.2.1
+image: barichello/godot-ci:mono-4.2.1, mcr.microsoft.com/dotnet/sdk:6.0
 
 # Cache imported assets between runs
 cache:
@@ -17,8 +17,9 @@ variables:
 # Open the editor to import assets in case the cache was empty or outdated
 import-assets:
   stage: import-assets
+  before_script:
+    - apt-get update && apt-get install dotnet6
   script:
-    - apt install dotnet6
     - godot --headless --verbose --editor --quit
 
 linux:
