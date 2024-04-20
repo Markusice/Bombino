@@ -1,9 +1,8 @@
-using System;
-using System.Linq;
 using Bombino.bomb;
 using Bombino.events;
 using Bombino.game;
 using Godot;
+using Timer = Godot.Timer;
 
 namespace Bombino.player.input_actions;
 
@@ -57,7 +56,7 @@ internal class BombPlace
                     Events.SignalName.PlayerBombNumberIncremented,
                     player.PlayerData.Color.ToString(),
                     player.PlayerData.MaxNumberOfAvailableBombs
-                        - player.PlayerData.NumberOfPlacedBombs
+                    - player.PlayerData.NumberOfPlacedBombs
                 );
 
             GameManager.WorldEnvironment.AddChild(bombToPlace);

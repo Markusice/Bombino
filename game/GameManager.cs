@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Bombino.enemy;
 using Bombino.game.persistence.state_storage;
 using Bombino.game.persistence.storage_layers.game_state;
@@ -11,6 +7,7 @@ using Bombino.ui.game_loading_screen;
 using Bombino.ui.scripts;
 using Godot;
 using Godot.Collections;
+using Array = Godot.Collections.Array;
 
 namespace Bombino.game;
 
@@ -55,9 +52,9 @@ internal partial class GameManager : WorldEnvironment
     public static int NumberOfPlayers { get; set; } = 3;
     public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
-    public static Array<PlayerData> PlayersData { get; } = new();
+    public static Array<PlayerData> PlayersData { get; } = [];
 
-    public static Array<EnemyData> EnemiesData { get; } = new();
+    public static Array<EnemyData> EnemiesData { get; } = [];
 
     private GameLoadingScene _pausedGameSceneInstance;
 
@@ -346,7 +343,8 @@ internal partial class GameManager : WorldEnvironment
     /// <param name="position"></param>
     private void SavePlayerDataAndRequestLoad(PlayerColor playerColor, Vector3 position)
     {
-        var playerScenePath = $"res://player/player_{playerColor.ToString().ToLower()}/player_{playerColor.ToString().ToLower()}.tscn";
+        var playerScenePath =
+            $"res://player/player_{playerColor.ToString().ToLower()}/player_{playerColor.ToString().ToLower()}.tscn";
         var playerData = new PlayerData(position, playerColor);
 
         _playerScenesPathAndData.Add(playerScenePath, playerData);
