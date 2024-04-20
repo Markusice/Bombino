@@ -115,6 +115,8 @@ internal partial class Player : CharacterBody3D
     {
         _isDead = true;
         SetStateMachine("Die");
+        Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
+
         Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => Die());
     }
 
@@ -125,8 +127,6 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void Die()
     {
-        Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
-
         QueueFree();
     }
 
