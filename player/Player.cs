@@ -77,6 +77,8 @@ internal partial class Player : CharacterBody3D
         // We check for each move input and update the direction accordingly.
         CheckActionKeysForInput(ref direction);
 
+        GD.Print($"Player position: {Position}");
+
         if (direction != Vector3.Zero)
         {
             var targetPosition = Position - direction;

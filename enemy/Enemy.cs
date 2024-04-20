@@ -54,6 +54,10 @@ internal partial class Enemy : CharacterBody3D
     {
         Position = EnemyData.Position;
 
+        _animTree = GetNode<AnimationTree>("AnimationTree");
+        _animTree.Active = true;
+        _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
+
         GD.Print($"Enemy created at: {Position}");
 
         var direction = Vector3.Zero;
@@ -236,6 +240,10 @@ internal partial class Enemy : CharacterBody3D
     {
         if (_isDead) return;
 
-        if (body.IsInGroup("players")) body.EmitSignal(Player.SignalName.Hit);
+        if (body.IsInGroup("players"))
+        {
+            body.EmitSignal(Player.SignalName.Hit);
+            GD.Print($"Player hit by enemy at position: {Position} by {body.Name}");
+        } 
     }
 }
