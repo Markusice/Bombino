@@ -5,7 +5,7 @@ image: adrasteondev/godot-ci:mono-4.2.1
 stages:
   - import-assets
   - export
-  # - tests
+  - tests
 
 variables:
   EXPORT_NAME: Bombino
@@ -23,6 +23,11 @@ import-assets:
 #    - apt-get install -y dotnet-sdk-6.0
   script:
     - godot --headless --verbose --editor --quit
+    
+tests:
+  stage: tests
+  script:
+    - dotnet test
 
 linux:
   stage: export
