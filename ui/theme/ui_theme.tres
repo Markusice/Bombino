@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=31 format=3 uid="uid://djmr4s3lma1ss"]
+[gd_resource type="Theme" load_steps=33 format=3 uid="uid://djmr4s3lma1ss"]
 
 [ext_resource type="FontFile" uid="uid://bn4sm0qhcg0jm" path="res://ui/fonts/Spoon-Bold.ttf" id="1_2hswg"]
 [ext_resource type="Texture2D" uid="uid://bwn3gasaptibk" path="res://ui/theme/textures/button-style.png" id="2_b00xl"]
@@ -76,6 +76,12 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rd77t"]
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_biwya"]
 corner_radius_top_left = 40
 corner_radius_top_right = 40
@@ -90,6 +96,12 @@ corner_radius_top_left = 40
 corner_radius_top_right = 40
 corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kfmo5"]
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lpi11"]
 bg_color = Color(0, 0, 0, 0)
@@ -227,8 +239,10 @@ InputField/styles/focus = SubResource("StyleBoxFlat_wvy3m")
 InputField/styles/normal = SubResource("StyleBoxFlat_ogdd8")
 Label/fonts/font = ExtResource("1_2hswg")
 MapButton/base_type = &"Button"
+MapButton/styles/focus = SubResource("StyleBoxFlat_rd77t")
 MapButton/styles/hover = SubResource("StyleBoxFlat_biwya")
 MapButton/styles/normal = SubResource("StyleBoxFlat_x7p4r")
+MapButton/styles/pressed = SubResource("StyleBoxFlat_kfmo5")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_lpi11")
 PrimaryButton/base_type = &"Button"
 PrimaryButton/font_sizes/font_size = 60
