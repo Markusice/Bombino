@@ -11,8 +11,8 @@ variables:
   EXPORT_NAME: Bombino
 
 # Open the editor to import assets in case the cache was empty or outdated
-#import-assets:
-#  stage: import-assets
+import-assets:
+  stage: import-assets
 #  before_script:
 #    - wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 #    - dpkg -i packages-microsoft-prod.deb
@@ -21,8 +21,8 @@ variables:
 #    - apt-get install -y apt-transport-https
 #    - apt-get update -qq
 #    - apt-get install -y dotnet-sdk-6.0
-#  script:
-#    - godot --headless --verbose --editor --quit
+  script:
+    - godot --headless --verbose --editor --quit
 
 linux:
   stage: export
