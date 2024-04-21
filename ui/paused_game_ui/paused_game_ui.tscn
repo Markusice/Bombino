@@ -50,6 +50,7 @@ _data = {
 [node name="PausedGameUI" type="CanvasLayer"]
 process_mode = 2
 script = ExtResource("1_y8mo4")
+_startingScreenScenePath = "res://ui/starting_screen/starting_screen.tscn"
 
 [node name="Blur" type="ColorRect" parent="."]
 material = ExtResource("1_fu6uk")
@@ -141,4 +142,5 @@ theme_override_font_sizes/font_size = 100
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="pressed" from="ButtonsContainer/GridContainer/ResumeButton" to="ButtonsContainer/GridContainer/ResumeButton" method="OnPressed"]
+[connection signal="pressed" from="ButtonsContainer/GridContainer/ResumeButton" to="." method="OnResumeButtonPressed"]
+[connection signal="pressed" from="ButtonsContainer/GridContainer/SaveAndExitButton" to="." method="OnSaveAndExitButtonPressed"]

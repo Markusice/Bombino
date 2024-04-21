@@ -9,6 +9,12 @@ namespace Bombino.ui.paused_game_ui;
 /// </summary>
 internal partial class PausedGameUi : CanvasLayer
 {
+    #region Exports
+
+    [Export(PropertyHint.File, "*.tscn")] private string _startingScreenScenePath;
+
+    #endregion
+
     private AnimationPlayer _animationPlayer;
 
     private bool _isResumed;
@@ -18,23 +24,22 @@ internal partial class PausedGameUi : CanvasLayer
         _animationPlayer = GetNode<AnimationPlayer>("BlurAnimation");
 
         PlayBlurAnimation();
-
-        SetResumeButtonAction();
-
-        // TODO
-        // SetSaveAndExitButtonAction();
     }
 
-    private void SetResumeButtonAction()
+    #region MethodsForSignals
+
+    private void OnResumeButtonPressed()
     {
-        var resumeButton = GetNode<TextureButton>("%ResumeButton");
-        resumeButton.Pressed += async () =>
-        {
-            if (_isResumed) return;
-
-            await StartCountDownAndResume();
-        };
+        _ = StartCountDownAndResume();
     }
+
+    private void OnSaveAndExitButtonPressed()
+    {
+        // TODO
+        // SaveGameAndGoToStartingScreen();
+    }
+
+    #endregion
 
     /// <summary>
     /// Starts the countdown and after that emits ResumeGame signal to GameManager.
