@@ -81,6 +81,7 @@ theme_override_constants/h_separation = 60
 columns = 2
 
 [node name="ResumeButton" type="TextureButton" parent="ButtonsContainer/GridContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -91,6 +92,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="SaveAndExitButton" type="TextureButton" parent="ButtonsContainer/GridContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -133,6 +135,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CountDownLabel" type="Label" parent="CountDownContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
 horizontal_alignment = 1

@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bf454a3io0ei3"]
+[gd_scene load_steps=4 format=3 uid="uid://bf454a3io0ei3"]
 
 [ext_resource type="Script" path="res://game/GameManager.cs" id="1_4g4o6"]
 [ext_resource type="PackedScene" uid="uid://pvmueb3x3hwg" path="res://ui/paused_game_ui/paused_game_ui.tscn" id="2_f6low"]
-[ext_resource type="PackedScene" uid="uid://wpo1q3hd2yct" path="res://ui/starting_screen/starting_screen.tscn" id="3_bjmvg"]
 
 [sub_resource type="Environment" id="Environment_it7wf"]
 tonemap_white = 4.2
@@ -13,7 +12,6 @@ tonemap_white = 4.2
 environment = SubResource("Environment_it7wf")
 script = ExtResource("1_4g4o6")
 _pausedGameScene = ExtResource("2_f6low")
-_startingScreenScene = ExtResource("3_bjmvg")
 _mapScenePath = "res://map/map.tscn"
 _enemyScenePath = "res://enemy/enemy.tscn"
 

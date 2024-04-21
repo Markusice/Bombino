@@ -9,7 +9,86 @@ namespace Bombino.ui.paused_game_ui;
 /// </summary>
 internal partial class PausedGameUi : CanvasLayer
 {
-    private bool _isResumeStarted;
+    private AnimationPlayer _animationPlayer;
+
+    private bool _isResumed;
+
+    public override void _Ready()
+    {
+        _animationPlayer = GetNode<AnimationPlayer>("BlurAnimation");
+
+        PlayBlurAnimation();
+
+        SetResumeButtonAction();
+
+        // TODO
+        // SetSaveAndExitButtonAction();
+    }
+
+    private void SetResumeButtonAction()
+    {
+        var resumeButton = GetNode<TextureButton>("%ResumeButton");
+        resumeButton.Pressed += async () =>
+        {
+            if (_isResumed) return;
+
+            await StartCountDownAndResume();
+        };
+    }
+
+    /// <summary>
+    /// Starts the countdown and after that emits ResumeGame signal to GameManager.
+    /// </summary>
+    private async Task StartCountDownAndResume()
+    {
+        _isResumed = true;
+
+        await StartCountDown();
+        Visible = false;
+
+        GameManager.WorldEnvironment.EmitSignal(GameManager.SignalName.ResumeGame);
+
+        QueueFree();
+    }
+
+    /// <summary>
+    /// Starts the countdown from 3 to 1.
+    /// </summary>
+    private async Task StartCountDown()
+    {
+        GetNode<PanelContainer>("ButtonsContainer").QueueFree();
+
+        var countDownContainer = GetNode<PanelContainer>("CountDownContainer");
+        countDownContainer.Visible = true;
+
+        PlayRemoveBlurAnimation();
+
+        var countDownLabel = GetNode<Label>("%CountDownLabel");
+        const int countDownStartingNumber = 3;
+
+        for (var number = countDownStartingNumber; number > 0; number--)
+        {
+            countDownLabel.Text = number.ToString();
+
+            await ToSignal(GetTree().CreateTimer(1), SceneTreeTimer.SignalName.Timeout);
+        }
+    }
+
+    /// <summary>
+    /// Uses the AnimationPlayer to play the start_resume animation.
+    /// </summary>
+    private void PlayRemoveBlurAnimation()
+    {
+        _animationPlayer.Play("start_resume");
+    }
+
+    /// <summary>
+    /// Uses the AnimationPlayer to play the start_pause animation.
+    /// </summary>
+    private void PlayBlurAnimation()
+    {
+        _animationPlayer.Play("start_pause");
+    }
 
     /// <summary>
     /// Handles input events for the PausedGame class.
@@ -17,11 +96,9 @@ internal partial class PausedGameUi : CanvasLayer
     /// <param name="event">The input event to handle.</param>
     public override void _Input(InputEvent @event)
     {
-        if (!InputEventChecker.IsEscapeKeyPressed(@event) || _isResumeStarted)
+        if (!InputEventChecker.IsEscapeKeyPressed(@event) || _isResumed)
             return;
 
-        GameManager.WorldEnvironment.EmitSignal(GameManager.SignalName.ResumeGame);
-
-        _isResumeStarted = true;
+        _ = StartCountDownAndResume();
     }
 }

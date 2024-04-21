@@ -3,7 +3,7 @@ using Bombino.game.persistence.state_storage;
 using Bombino.game.persistence.storage_layers.game_state;
 using Bombino.map;
 using Bombino.player;
-using Bombino.ui.game_loading_screen;
+using Bombino.ui.paused_game_ui;
 using Bombino.ui.scripts;
 using Godot;
 using Godot.Collections;
@@ -19,8 +19,6 @@ internal partial class GameManager : WorldEnvironment
     #region Exports
 
     [Export] private PackedScene _pausedGameScene;
-
-    [Export] private PackedScene _startingScreenScene;
 
     [Export(PropertyHint.File, "*.tscn")] private string _mapScenePath;
 
@@ -56,8 +54,6 @@ internal partial class GameManager : WorldEnvironment
 
     public static Array<EnemyData> EnemiesData { get; } = new();
 
-    private GameLoadingScene _pausedGameSceneInstance;
-
     private readonly string _mapTextFilePath = $"res://map/sources/{SelectedMap.ToString().ToLower()}.json";
     private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
     private Array _mapSceneLoadProgress = new();
@@ -87,7 +83,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void OnResumeGame()
     {
-        Resume();
+        GetTree().Paused = false;
+        SetProcessInput(true);
     }
 
     #endregion
@@ -374,118 +371,15 @@ internal partial class GameManager : WorldEnvironment
         GetTree().Paused = true;
         SetProcessInput(false);
 
-        SetAndAddPausedGame();
-
-        PlayBlurAnimation();
-
-        AddEventToResumeButton();
-        AddEventToSaveAndExitButton();
+        AddPausedScreen();
     }
 
     /// <summary>
     /// Sets and adds the paused game.
     /// </summary>
-    private void SetAndAddPausedGame()
+    private void AddPausedScreen()
     {
-        _pausedGameSceneInstance = _pausedGameScene.Instantiate<GameLoadingScene>();
-        GetParent().AddChild(_pausedGameSceneInstance);
-    }
-
-    /// <summary>
-    /// Plays the blur animation.
-    /// </summary>
-    private void PlayBlurAnimation()
-    {
-        var blurAnimation = _pausedGameSceneInstance.GetNode<AnimationPlayer>("BlurAnimation");
-        blurAnimation.Play("start_pause");
-    }
-
-    /// <summary>
-    /// Adds an event to the resume button.
-    /// </summary>
-    private void AddEventToResumeButton()
-    {
-        var resumeButton =
-            _pausedGameSceneInstance.GetNode<TextureButton>("ButtonsContainer/GridContainer/ResumeButton");
-        resumeButton.Pressed += OnResumeGame;
-    }
-
-    /// <summary>
-    /// Adds an event to the save and exit button.
-    /// </summary>
-    private void AddEventToSaveAndExitButton()
-    {
-        var saveAndExitButton = _pausedGameSceneInstance.GetNode<TextureButton>(
-            "ButtonsContainer/GridContainer/SaveAndExitButton");
-        saveAndExitButton.Pressed += OnSaveAndExit;
-    }
-
-    /// <summary>
-    /// Event handler for the save and exit event.
-    /// </summary>
-    private void OnSaveAndExit()
-    {
-        GameSaveHandler.SaveGame();
-
-        GetTree().ChangeSceneToPacked(_startingScreenScene);
-    }
-
-    /// <summary>
-    /// Resumes the game.
-    /// </summary>
-    private async void Resume()
-    {
-        if (CannotResumeGame())
-            return;
-
-        RemoveButtonsAndShowCountDownContainer();
-
-        PlayUnBlurAnimation();
-
-        await StartCountDown();
-
-        _pausedGameSceneInstance.QueueFree();
-
-        GetTree().Paused = false;
-        SetProcessInput(true);
-    }
-
-    private bool CannotResumeGame()
-    {
-        return _pausedGameSceneInstance.GetNodeOrNull<PanelContainer>("ButtonsContainer") == null;
-    }
-
-    /// <summary>
-    /// Removes the buttons and shows the countdown container.
-    /// </summary>
-    private void RemoveButtonsAndShowCountDownContainer()
-    {
-        _pausedGameSceneInstance.GetNode<PanelContainer>("ButtonsContainer").QueueFree();
-
-        var countDownContainer = _pausedGameSceneInstance.GetNode<PanelContainer>("CountDownContainer");
-        countDownContainer.Visible = true;
-    }
-
-    private void PlayUnBlurAnimation()
-    {
-        var blurAnimation = _pausedGameSceneInstance.GetNode<AnimationPlayer>("BlurAnimation");
-        blurAnimation.Play("start_resume");
-    }
-
-    /// <summary>
-    /// Starts the countdown.
-    /// </summary>
-    /// <returns></returns>
-    private async Task StartCountDown()
-    {
-        var countDownLabel = _pausedGameSceneInstance.GetNode<Label>("CountDownContainer/CountDownLabel");
-
-        const int countDownStartingNumber = 3;
-        for (var number = countDownStartingNumber; number > 0; number--)
-        {
-            countDownLabel.Text = number.ToString();
-
-            await ToSignal(GetTree().CreateTimer(1), SceneTreeTimer.SignalName.Timeout);
-        }
+        var pausedGameSceneInstance = _pausedGameScene.Instantiate<PausedGameUi>();
+        GetParent().AddChild(pausedGameSceneInstance);
     }
 }
