@@ -1,4 +1,3 @@
-using System;
 using Godot;
 
 namespace Bombino.player.input_actions;
@@ -67,5 +66,23 @@ internal class Movement
     {
         Name = name;
         Action = action;
+    }
+
+    protected bool Equals(Movement other)
+    {
+        return Name == other.Name && Equals(Action, other.Action);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((Movement)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, Action);
     }
 }

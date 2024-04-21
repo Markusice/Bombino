@@ -1,4 +1,3 @@
-using System;
 using Bombino.game;
 using Bombino.game.persistence.state_storage;
 using Godot;
@@ -85,7 +84,7 @@ internal partial class MainUi : CanvasLayer
             "BombPicture/BombNumberCircle/BombNumberLabel"
         );
 
-        bombNumberLabel.Text = playerData.NumberOfPlacedBombs.ToString();
+        bombNumberLabel.Text = playerData.MaxNumberOfAvailableBombs.ToString();
 
         return bombStatusContainer;
     }
@@ -104,34 +103,6 @@ internal partial class MainUi : CanvasLayer
         playerNameLabel.Text = playerData.Color.ToString();
 
         return playerNameContainer;
-    }
-
-    /// <summary>
-    /// Changes the player's bomb number and opacity based on the player data.
-    /// </summary>
-    /// <param name="playerData">The player data.</param>
-    private void ChangePlayerBombNumberAndOpacity(PlayerData playerData)
-    {
-        // TODO: Rewrite this method
-        // if (playerData.NumberOfAvailableBombs == 0)
-        // {
-        //     _bombNumberLabel.Text = 0.ToString();
-        //     _bombNumberLabel.SelfModulate = new Color(1, 1, 1, 0.6f);
-
-        //     return;
-        // }
-
-        // _bombNumberLabel.SelfModulate = new Color(1, 1, 1, 1);
-        // _bombNumberLabel.Text = playerData.NumberOfAvailableBombs.ToString();
-    }
-
-    /// <summary>
-    /// Event handler for the PlayerBombNumberChanged signal.
-    /// </summary>
-    /// <param name="playerData">The player data.</param>
-    private void OnPlayerBombNumberChanged(PlayerData playerData)
-    {
-        ChangePlayerBombNumberAndOpacity(playerData);
     }
 
     /// <summary>

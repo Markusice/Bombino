@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using Bombino.events;
 using Bombino.player;
 using Godot;
 
@@ -8,6 +7,7 @@ namespace Bombino.power_up;
 internal partial class PowerUp : Area3D
 {
     [Export(PropertyHint.File, ".tres")] private Material _hologramPink;
+
     [Export(PropertyHint.File, ".tres")] private Material _hologramBlue;
 
     private PowerUpType _type;
@@ -43,7 +43,15 @@ internal partial class PowerUp : Area3D
         var player = (Player)body;
 
         if (_type == PowerUpType.IncreaseMaxBombs)
+        {
             player.PlayerData.MaxNumberOfAvailableBombs++;
+
+            Events.Instance.EmitSignal(
+                Events.SignalName.PlayerBombNumberIncremented,
+                player.PlayerData.Color.ToString(),
+                player.PlayerData.MaxNumberOfAvailableBombs - player.PlayerData.NumberOfPlacedBombs
+            );
+        }
         else
             player.PlayerData.BombRange++;
 

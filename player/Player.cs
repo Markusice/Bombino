@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Bombino.bomb;
 using Bombino.events;
 using Bombino.game;
 using Bombino.game.persistence.state_storage;
@@ -56,6 +52,7 @@ internal partial class Player : CharacterBody3D
     public override void _Ready()
     {
         Position = PlayerData.Position;
+        Name = $"Player{PlayerData.Color.ToString()}";
 
         _animTree = GetNode<AnimationTree>("AnimationTree");
         _animTree.Active = true;
@@ -75,6 +72,8 @@ internal partial class Player : CharacterBody3D
 
         // We check for each move input and update the direction accordingly.
         CheckActionKeysForInput(ref direction);
+
+        GD.Print($"Player position: {Position}");
 
         if (direction != Vector3.Zero)
         {
@@ -116,6 +115,8 @@ internal partial class Player : CharacterBody3D
     {
         _isDead = true;
         SetStateMachine("Die");
+        Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
+
         Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => Die());
     }
 
@@ -126,8 +127,6 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void Die()
     {
-        Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
-
         QueueFree();
     }
 

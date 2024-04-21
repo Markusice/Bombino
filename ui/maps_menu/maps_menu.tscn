@@ -1,13 +1,35 @@
-[gd_scene load_steps=2 format=3 uid="uid://cgka8qcma8qkj"]
+[gd_scene load_steps=11 format=3 uid="uid://cgka8qcma8qkj"]
 
-[ext_resource type="Script" path="res://ui/maps_menu/MapButton.cs" id="1_3ctxo"]
+[ext_resource type="Script" path="res://ui/maps_menu/MapBasicButton.cs" id="1_3pqn3"]
+[ext_resource type="Texture2D" uid="uid://wi1n5nle7p6y" path="res://ui/maps_menu/textures/basic.png" id="1_vyrrf"]
+[ext_resource type="Script" path="res://ui/maps_menu/MapWideButton.cs" id="2_pj8gt"]
+[ext_resource type="Script" path="res://ui/maps_menu/MapCrossButton.cs" id="3_pl3lb"]
+[ext_resource type="Texture2D" uid="uid://jtv11u6r5dfj" path="res://ui/maps_menu/textures/wide.png" id="3_w53ta"]
+[ext_resource type="Texture2D" uid="uid://dc01t36iximbf" path="res://ui/maps_menu/textures/cross.png" id="5_hcxo2"]
+[ext_resource type="Shader" path="res://ui/maps_menu/shaders/icon.gdshader" id="7_j045f"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_didoa"]
+shader = ExtResource("7_j045f")
+shader_parameter/tex = ExtResource("1_vyrrf")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t1m6m"]
+shader = ExtResource("7_j045f")
+shader_parameter/tex = ExtResource("3_w53ta")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2x2xd"]
+shader = ExtResource("7_j045f")
+shader_parameter/tex = ExtResource("5_hcxo2")
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
 [node name="Background" type="TextureRect" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
-metadata/_edit_use_anchors_ = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+stretch_mode = 6
 
 [node name="TitleContainer" type="PanelContainer" parent="."]
 anchors_preset = 5
@@ -41,45 +63,32 @@ grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MapsContainer"]
 layout_mode = 2
+theme_override_constants/separation = 80
 
-[node name="Map1" type="TextureRect" parent="MapsContainer/HBoxContainer"]
+[node name="MapBasicButton" type="Button" parent="MapsContainer/HBoxContainer"]
+material = SubResource("ShaderMaterial_didoa")
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
-expand_mode = 2
-stretch_mode = 4
-
-[node name="Map1Button" type="Button" parent="MapsContainer/HBoxContainer/Map1"]
-layout_mode = 2
-offset_left = 1.0
-offset_right = 44.0
-offset_bottom = 40.0
 theme_type_variation = &"MapButton"
-script = ExtResource("1_3ctxo")
+script = ExtResource("1_3pqn3")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
-[node name="Map2" type="TextureRect" parent="MapsContainer/HBoxContainer"]
+[node name="MapWideButton" type="Button" parent="MapsContainer/HBoxContainer"]
+material = SubResource("ShaderMaterial_t1m6m")
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
-
-[node name="Map2Button" type="Button" parent="MapsContainer/HBoxContainer/Map2"]
-layout_mode = 2
-offset_left = 4.0
-offset_right = 4.0
-offset_bottom = 40.0
 theme_type_variation = &"MapButton"
-script = ExtResource("1_3ctxo")
+script = ExtResource("2_pj8gt")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
-[node name="Map3" type="TextureRect" parent="MapsContainer/HBoxContainer"]
+[node name="MapCrossButton" type="Button" parent="MapsContainer/HBoxContainer"]
+material = SubResource("ShaderMaterial_2x2xd")
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
-
-[node name="Map3Button" type="Button" parent="MapsContainer/HBoxContainer/Map3"]
-layout_mode = 2
-offset_left = 4.0
-offset_right = 4.0
-offset_bottom = 40.0
 theme_type_variation = &"MapButton"
-script = ExtResource("1_3ctxo")
+script = ExtResource("3_pl3lb")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
 
-[connection signal="pressed" from="MapsContainer/HBoxContainer/Map1/Map1Button" to="MapsContainer/HBoxContainer/Map1/Map1Button" method="OnPressed"]
-[connection signal="pressed" from="MapsContainer/HBoxContainer/Map2/Map2Button" to="MapsContainer/HBoxContainer/Map2/Map2Button" method="OnPressed"]
-[connection signal="pressed" from="MapsContainer/HBoxContainer/Map3/Map3Button" to="MapsContainer/HBoxContainer/Map3/Map3Button" method="OnPressed"]
+[connection signal="pressed" from="MapsContainer/HBoxContainer/MapBasicButton" to="MapsContainer/HBoxContainer/MapBasicButton" method="OnPressed"]
+[connection signal="pressed" from="MapsContainer/HBoxContainer/MapWideButton" to="MapsContainer/HBoxContainer/MapWideButton" method="OnPressed"]
+[connection signal="pressed" from="MapsContainer/HBoxContainer/MapCrossButton" to="MapsContainer/HBoxContainer/MapCrossButton" method="OnPressed"]

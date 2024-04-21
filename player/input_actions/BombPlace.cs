@@ -1,11 +1,8 @@
-using System;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using Bombino.bomb;
+using Bombino.events;
 using Bombino.game;
 using Godot;
-using Godot.NativeInterop;
+using Timer = Godot.Timer;
 
 namespace Bombino.player.input_actions;
 
@@ -22,29 +19,48 @@ internal class BombPlace
     /// <summary>
     /// Action that places a bomb for the player.
     /// </summary>
-    public Action<Player> Action { get; } = async (player) =>
-    {
-        if (player.PlayerData.NumberOfPlacedBombs >= player.PlayerData.MaxNumberOfAvailableBombs)
-            return;
+    public Action<Player> Action { get; } =
+        (player) =>
+        {
+            if (
+                player.PlayerData.NumberOfPlacedBombs >= player.PlayerData.MaxNumberOfAvailableBombs
+            )
+                return;
 
-        var collisionObject = player as CollisionObject3D;
-        collisionObject.SetCollisionMaskValue(5, false);
+            var collisionObject = player as CollisionObject3D;
+            collisionObject.SetCollisionMaskValue(5, false);
 
-        var bombTilePosition = GameManager.GameMap.MapToLocal(player.MapPosition);
-        var bombToPlacePosition = new Vector3(
-            bombTilePosition.X,
-            GameManager.GameMap.CellSize.Y + 1,
-            bombTilePosition.Z
-        );
+            var bombTilePosition = GameManager.GameMap.MapToLocal(player.MapPosition);
+            var bombToPlacePosition = new Vector3(
+                bombTilePosition.X,
+                GameManager.GameMap.CellSize.Y + 1,
+                bombTilePosition.Z
+            );
 
-        if (await IsUnableToPlaceBombAsync(player, bombToPlacePosition))
-            return;
+            if (IsUnableToPlaceBomb(player, bombToPlacePosition))
+                return;
 
-        player.PlayerData.NumberOfPlacedBombs++;
+            player.PlayerData.NumberOfPlacedBombs++;
 
-        var bombToPlace = CreateBomb(player, bombToPlacePosition);
-        GameManager.WorldEnvironment.AddChild(bombToPlace);
-    };
+            Events.Instance.EmitSignal(
+                Events.SignalName.PlayerBombNumberDecreased,
+                player.PlayerData.Color.ToString(),
+                player.PlayerData.MaxNumberOfAvailableBombs - player.PlayerData.NumberOfPlacedBombs
+            );
+
+            var bombToPlace = CreateBomb(player, bombToPlacePosition);
+
+            var timer = bombToPlace.GetNode<Timer>("BombTimer");
+            timer.Timeout += () =>
+                Events.Instance.EmitSignal(
+                    Events.SignalName.PlayerBombNumberIncremented,
+                    player.PlayerData.Color.ToString(),
+                    player.PlayerData.MaxNumberOfAvailableBombs
+                    - player.PlayerData.NumberOfPlacedBombs
+                );
+
+            GameManager.WorldEnvironment.AddChild(bombToPlace);
+        };
 
     /// <summary>
     /// Checks if the player is unable to place a bomb.
