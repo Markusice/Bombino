@@ -10,14 +10,17 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_didoa"]
 shader = ExtResource("7_j045f")
+shader_parameter/is_hovered = false
 shader_parameter/tex = ExtResource("1_vyrrf")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t1m6m"]
 shader = ExtResource("7_j045f")
+shader_parameter/is_hovered = null
 shader_parameter/tex = ExtResource("3_w53ta")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2x2xd"]
 shader = ExtResource("7_j045f")
+shader_parameter/is_hovered = null
 shader_parameter/tex = ExtResource("5_hcxo2")
 
 [node name="CanvasLayer" type="CanvasLayer"]
@@ -88,7 +91,3 @@ layout_mode = 2
 theme_type_variation = &"MapButton"
 script = ExtResource("3_pl3lb")
 _roundsMenuScenePath = "res://ui/rounds_menu/rounds_menu.tscn"
-
-[connection signal="pressed" from="MapsContainer/HBoxContainer/MapBasicButton" to="MapsContainer/HBoxContainer/MapBasicButton" method="OnPressed"]
-[connection signal="pressed" from="MapsContainer/HBoxContainer/MapWideButton" to="MapsContainer/HBoxContainer/MapWideButton" method="OnPressed"]
-[connection signal="pressed" from="MapsContainer/HBoxContainer/MapCrossButton" to="MapsContainer/HBoxContainer/MapCrossButton" method="OnPressed"]
