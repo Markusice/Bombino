@@ -68,5 +68,17 @@ namespace Bombino.ui.rounds_menu
             _playerXWon3.Text = playerData[2].Wins.ToString();
         }
 
+        private void OnContinuePressed()
+        {
+            GetTree().ChangeSceneToFile("res://ui/game_loading_screen/game_loading_scene.tscn");
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (Input.IsAnythingPressed())
+            {
+                OnContinuePressed();
+            }
+        }
     }
 }

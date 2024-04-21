@@ -8,7 +8,6 @@
         <TargetFrameworks>net7.0</TargetFrameworks>
         <EnableDynamicLoading>true</EnableDynamicLoading>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 </Project>
   

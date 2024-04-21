@@ -1,4 +1,5 @@
 using Bombino.enemy;
+using Bombino.events;
 using Bombino.game.persistence.state_storage;
 using Bombino.game.persistence.storage_layers.game_state;
 using Bombino.map;
@@ -50,12 +51,13 @@ internal partial class GameManager : WorldEnvironment
     public static BombinoMap GameMap { get; private set; }
 
     public static int NumberOfPlayers { get; set; } = 3;
+    private int _alivePlayers = NumberOfPlayers;
+    
     public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
-
     public static int CurrentRound { get; set; } = 1;
-    public static Array<PlayerData> PlayersData { get; } = new();
 
+    public static Array<PlayerData> PlayersData { get; } = new();
     public static Array<EnemyData> EnemiesData { get; } = new();
 
     private GameLoadingScene _pausedGameSceneInstance;
@@ -65,15 +67,13 @@ internal partial class GameManager : WorldEnvironment
     private Array _mapSceneLoadProgress = new();
 
     private Godot.Collections.Dictionary<string, PlayerData> _playerScenesPathAndData = new();
-
-    private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus>
-        _playerScenesPathAndLoadStatus = new();
-
+    private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus> _playerScenesPathAndLoadStatus = new();
     private Array _playerSceneLoadProgress = new();
     private double _playerScenesLoadProgressSum;
 
     private Godot.Collections.Dictionary<ulong, EnemyData> _enemiesData = new();
     private PackedScene _enemyScene;
+    private PackedScene _gameMapScene;
     private ResourceLoader.ThreadLoadStatus _enemySceneLoadStatus;
     private Array _enemySceneLoadProgress = new();
 
@@ -103,29 +103,23 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     public override void _Ready()
     {
+        GD.Print("---------------\tnew GameManager created\t---------------");
         SetProcessInput(false);
         WorldEnvironment = this;
+
+        _alivePlayers = NumberOfPlayers;
+        Events.Instance.PlayerDied += CheckPlayersAndOpenRoundStats;
 
         // CheckForSavedDataAndSetUpGame();
     }
 
     public override void _Process(double delta)
-
     {
-
         if (_isEverythingLoaded)
         {
-            if (_isRoundOver)
-            {
-                return;
-            }
-            if (!_isRoundOver)
-            {
-                CheckPlayersAndOpenRoundStats();
-            }
-
             return;
         }
+
         // default initialized value is InvalidResource
         if (_mapSceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
             _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mapScenePath, _mapSceneLoadProgress);
@@ -166,22 +160,15 @@ internal partial class GameManager : WorldEnvironment
         EmitAndSetEverythingLoaded_And_EnableInputProcess();
     }
 
-
-    private void CheckPlayersAndOpenRoundStats()
+    /// <summary>
+    /// Checks the players and opens the round stats.
+    /// </summary>
+    private async void CheckPlayersAndOpenRoundStats(string color)
     {
+        _alivePlayers--;
 
-        int alivePlayers = 0;
-        foreach (var playerData in PlayersData)
+        if (_alivePlayers == 1)
         {
-            if (!playerData.IsDead)
-            {
-                alivePlayers++;
-            }
-        }
-
-        if (alivePlayers == 1)
-        {
-            _isRoundOver = true;
             foreach (var playerData in PlayersData)
             {
                 if (!playerData.IsDead)
@@ -190,16 +177,24 @@ internal partial class GameManager : WorldEnvironment
                     break;
                 }
             }
-            Task.Delay(TimeSpan.FromSeconds(2)).ContinueWith(_ => CallDeferred("OpenRoundStatsScreen"));
+            await ToSignal(GetTree().CreateTimer(1), SceneTreeTimer.SignalName.Timeout);
+            EndRound();
         }
     }
 
+    private void EndRound()
+    {
+        _isRoundOver = true;
+        OpenRoundStatsScreen();
+    }
+
+    /// <summary>
+    /// Opens the round stats screen.
+    /// </summary>
     private void OpenRoundStatsScreen()
     {
         var roundStatsScene = ResourceLoader.Load("res://ui/rounds_stats_screen/round_stats.tscn") as PackedScene;
-        var roundStatsSceneInstance = roundStatsScene.Instantiate();
-
-        AddChild(roundStatsSceneInstance);
+        GetTree().ChangeSceneToPacked(roundStatsScene);
     }
 
     /// <summary>
@@ -218,14 +213,12 @@ internal partial class GameManager : WorldEnvironment
 
     private void EmitLoadedProgressAndAddGameMap_IfGameMapNotAdded()
     {
-        var gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
-        if (gameMapScene == null)
+        _gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
+        
+        if (_gameMapScene == null)
             return;
 
-        // SceneLoad signal will only be emitted once here
-        // EmitSignal(SignalName.SceneLoad, (double)_mapSceneLoadProgress[0]);
-
-        GameMap = gameMapScene.Instantiate<BombinoMap>();
+        GameMap = _gameMapScene.Instantiate<BombinoMap>();
         GameMap.SetUpMapFromTextFile(_mapTextFilePath);
         AddChild(GameMap);
 
@@ -268,6 +261,8 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreatePlayersFromSavedData()
     {
+        PlayersData.Clear();
+
         foreach (var playerScenePathAndData in _playerScenesPathAndData)
         {
             var playerScene = (PackedScene)ResourceLoader.LoadThreadedGet(playerScenePathAndData.Key);
@@ -329,7 +324,7 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     public void CreateNewGame()
     {
-        CheckMapTypeAndCreateIt();
+        RequestMapLoad();
     }
 
     /// <summary>
@@ -343,7 +338,7 @@ internal partial class GameManager : WorldEnvironment
     /// <summary>
     /// Checks the map type and creates it.
     /// </summary>
-    private void CheckMapTypeAndCreateIt()
+    private void RequestMapLoad()
     {
         ResourceLoader.LoadThreadedRequest(_mapScenePath);
     }
@@ -397,9 +392,21 @@ internal partial class GameManager : WorldEnvironment
     {
         var playerScenePath =
             $"res://player/player_{playerColor.ToString().ToLower()}/player_{playerColor.ToString().ToLower()}.tscn";
-        var playerData = new PlayerData(position, playerColor);
+        
+        var _playerData = new PlayerData(position, playerColor);
 
-        _playerScenesPathAndData.Add(playerScenePath, playerData);
+        foreach (var playerData in PlayersData)
+        {
+            if (playerData.Color == playerColor)
+            {
+                GD.Print("Player already exists");
+                _playerData = playerData;
+                _playerData.Position = position;
+                break;
+            }
+        }
+
+        _playerScenesPathAndData.Add(playerScenePath, _playerData);
         _playerScenesPathAndLoadStatus.Add(playerScenePath, ResourceLoader.ThreadLoadStatus.InProgress);
 
         ResourceLoader.LoadThreadedRequest(playerScenePath);

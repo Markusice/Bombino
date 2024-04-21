@@ -38,8 +38,10 @@ internal partial class PlayerData : Resource
     [Export]
     public int MaxNumberOfAvailableBombs { get; set; } = 1;
 
+    [Export]
     public bool IsDead { get; set; } = false;
 
+    [Export]
     public int Wins { get; set; } = 0;
 
     /// <summary>
