@@ -1,7 +1,4 @@
-using Bombino.game;
 using Bombino.map;
-using Bombino.ui.scripts;
-using Godot;
 
 namespace Bombino.ui.maps_menu;
 
