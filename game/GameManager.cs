@@ -52,6 +52,8 @@ internal partial class GameManager : WorldEnvironment
     public static int NumberOfPlayers { get; set; } = 3;
     public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
+
+    public static int CurrentRound { get; set; } = 1;
     public static Array<PlayerData> PlayersData { get; } = new();
 
     public static Array<EnemyData> EnemiesData { get; } = new();
@@ -77,6 +79,8 @@ internal partial class GameManager : WorldEnvironment
 
     private double _loadProgress;
     private bool _isEverythingLoaded;
+
+    private bool _isRoundOver = false;
 
     #endregion
 
@@ -106,10 +110,22 @@ internal partial class GameManager : WorldEnvironment
     }
 
     public override void _Process(double delta)
-    {
-        if (_isEverythingLoaded)
-            return;
 
+    {
+
+        if (_isEverythingLoaded)
+        {
+            if (_isRoundOver)
+            {
+                return;
+            }
+            if (!_isRoundOver)
+            {
+                CheckPlayersAndOpenRoundStats();
+            }
+
+            return;
+        }
         // default initialized value is InvalidResource
         if (_mapSceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
             _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mapScenePath, _mapSceneLoadProgress);
@@ -148,6 +164,42 @@ internal partial class GameManager : WorldEnvironment
         CreateEnemiesFromSavedData();
 
         EmitAndSetEverythingLoaded_And_EnableInputProcess();
+    }
+
+
+    private void CheckPlayersAndOpenRoundStats()
+    {
+
+        int alivePlayers = 0;
+        foreach (var playerData in PlayersData)
+        {
+            if (!playerData.IsDead)
+            {
+                alivePlayers++;
+            }
+        }
+
+        if (alivePlayers == 1)
+        {
+            _isRoundOver = true;
+            foreach (var playerData in PlayersData)
+            {
+                if (!playerData.IsDead)
+                {
+                    playerData.Wins++;
+                    break;
+                }
+            }
+            Task.Delay(TimeSpan.FromSeconds(2)).ContinueWith(_ => CallDeferred("OpenRoundStatsScreen"));
+        }
+    }
+
+    private void OpenRoundStatsScreen()
+    {
+        var roundStatsScene = ResourceLoader.Load("res://ui/rounds_stats_screen/round_stats.tscn") as PackedScene;
+        var roundStatsSceneInstance = roundStatsScene.Instantiate();
+
+        AddChild(roundStatsSceneInstance);
     }
 
     /// <summary>
