@@ -131,12 +131,8 @@ internal partial class Bomb : Area3D
         if (!body.IsInGroup("players"))
             return;
 
-        GD.Print("Hello");
-        var bombCollisionObject = this as CollisionObject3D;
-
-        var PlayerCollision = Player as CollisionObject3D;
-        if (!PlayerCollision.GetCollisionMaskValue(5))
-            PlayerCollision.SetCollisionMaskValue(5, true);
+        if (!GetNode<StaticBody3D>("%BombObject").GetCollisionLayerValue(6))
+            GetNode<StaticBody3D>("%BombObject").SetCollisionLayerValue(6, true);
     }
 
     /// <summary>

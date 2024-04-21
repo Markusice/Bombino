@@ -150,7 +150,7 @@ shadow_mesh = SubResource("ArrayMesh_28o88")
 size = Vector3(0.4, 0.4, 0.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fsnjq"]
-size = Vector3(0.4, 0.4, 0.4)
+size = Vector3(0.6, 0.6, 0.6)
 
 [node name="Bomb" type="Area3D" groups=["bombs"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.75, 2.08165e-12)
@@ -184,6 +184,7 @@ mesh = SubResource("ArrayMesh_yqah3")
 skeleton = NodePath("")
 
 [node name="BombObject" type="StaticBody3D" parent="Bomb"]
+unique_name_in_owner = true
 collision_layer = 16
 collision_mask = 6
 

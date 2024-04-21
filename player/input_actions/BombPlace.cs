@@ -27,8 +27,8 @@ internal class BombPlace
             )
                 return;
 
-            var collisionObject = player as CollisionObject3D;
-            collisionObject.SetCollisionMaskValue(5, false);
+             var playerCollisionObject = player as CollisionObject3D;
+            playerCollisionObject.SetCollisionMaskValue(5, false);
 
             var bombTilePosition = GameManager.GameMap.MapToLocal(player.MapPosition);
             var bombToPlacePosition = new Vector3(
@@ -50,6 +50,9 @@ internal class BombPlace
 
             var bombToPlace = CreateBomb(player, bombToPlacePosition);
 
+            var bombCollisionObject = bombToPlace.GetNode<StaticBody3D>("%BombObject");
+            bombCollisionObject.SetCollisionLayerValue(6, false);
+
             var timer = bombToPlace.GetNode<Timer>("BombTimer");
             timer.Timeout += () =>
                 Events.Instance.EmitSignal(
@@ -58,56 +61,60 @@ internal class BombPlace
                     player.PlayerData.MaxNumberOfAvailableBombs
                     - player.PlayerData.NumberOfPlacedBombs
                 );
-
+                
             GameManager.WorldEnvironment.AddChild(bombToPlace);
         };
 
     /// <summary>
     /// Checks if the player is unable to place a bomb.
     /// </summary>
-    /// <param name="player">The player node.</param>
+    /// <param name="node">The player node.</param>
     /// <param name="bombToPlacePosition">The position where the bomb is to be placed.</param>
     /// <returns>True if the player is unable to place a bomb, false otherwise.</returns>
-    private static async Task<bool> IsUnableToPlaceBombAsync(Node player, Vector3 bombToPlacePosition)
+    private static bool IsUnableToPlaceBomb(Player player, Vector3 bombToPlacePosition)
     {
-        var bombArea3D = new Area3D
-        {
-            Position = bombToPlacePosition
-        };
-        
-        var bombBox = new BoxShape3D { Size = new Vector3(0.4f, 0.4f, 0.4f) };
-        bombArea3D.AddChild(new CollisionShape3D { Shape = bombBox });
-
-        bombArea3D.SetCollisionLayerValue(6, true);
-        bombArea3D.SetCollisionLayerValue(1, false);
-
-        bombArea3D.SetCollisionMaskValue(2, true);
-        bombArea3D.SetCollisionMaskValue(1, false);
-
-        GameManager.WorldEnvironment.AddChild(bombArea3D);
-
-        GD.Print(bombArea3D.Position);
-
-        var isl4131x91391i491i = false;
-
-        bombArea3D.BodyEntered += (Node3D body) => {
-            GD.Print(body != player);
-
-            isl4131x91391i491i = true;
-        };
-
-        await bombArea3D.GetTree().ToSignal(bombArea3D, "body_entered");
-        
-        bombArea3D.QueueFree();
-
-        if (isl4131x91391i491i) return true;
-
         var placedBombs = player.GetTree().GetNodesInGroup("bombs");
 
-        return placedBombs
+        var isBodyNearBombPlacement = IsBodyNearBombPosition(player, bombToPlacePosition);
+
+        return isBodyNearBombPlacement || 
+            placedBombs
             .Cast<Area3D>()
             .Any(bombArea3D => bombArea3D.Position == bombToPlacePosition);
+
     }
+
+    /// <summary>
+    /// Checks if a body is near the bomb placement.
+    /// <param name="player">The player who is placing the bomb.</param>
+    /// <param name="bombToPlacePosition">The position where the bomb is to be placed.</param>
+    /// <returns>True if a body other than the placer is near the bomb placement, false otherwise.</returns>
+    /// </summary>
+    private static bool IsBodyNearBombPosition(Player player, Vector3 bombToPlacePosition)
+    {
+        var collisionGroups = new string[] { "players", "enemies" };
+        const float safeDistance = 2.0f;
+
+        foreach (var group in collisionGroups)
+        {
+            var bodiesInCollisionGroup = player.GetTree().GetNodesInGroup(group)
+                .Cast<CharacterBody3D>()
+                .Where(body => body != player);
+
+            foreach (CharacterBody3D body in bodiesInCollisionGroup)
+            {   
+                //GD.Print($"{body.Name} is near bomb placement {body.Position.DistanceTo(bombToPlacePosition)}: {body.Position.DistanceTo(bombToPlacePosition) < safeDistance}");
+                
+                if (body.Position.DistanceTo(bombToPlacePosition) < safeDistance)
+                {   
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     /// <summary>
     /// Creates a bomb for the player.
