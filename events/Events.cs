@@ -19,7 +19,7 @@ internal sealed partial class Events : Node
     public delegate void PlayerDiedEventHandler(string playerColor);
 
     /// <summary>
-    /// Event that is triggered when the number of available bombs for a player is incremented.
+    /// Emitted when the number of available bombs for a player is incremented.
     /// <param name="playerColor">to identify player's player_name and bomb_status container</param>
     /// <paramref name="numberOfAvailableBombs"/>
     /// </summary>
@@ -27,7 +27,7 @@ internal sealed partial class Events : Node
     public delegate void PlayerBombNumberIncrementedEventHandler(string playerColor, int numberOfAvailableBombs);
 
     /// <summary>
-    /// Event that is triggered when the number of available bombs for a player is decreased.
+    /// Emitted when the number of available bombs for a player is decreased.
     /// <param name="playerColor">to identify player's player_name and bomb_status container</param>
     /// </summary>
     [Signal]
