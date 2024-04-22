@@ -17,13 +17,6 @@ internal partial class MainUi : CanvasLayer
 
     #endregion
 
-    #region Signals
-
-    [Signal]
-    public delegate void PlayerBombNumberChangedEventHandler(PlayerData playerData);
-
-    #endregion
-
     private Label TimerLabel { get; set; }
     private GridContainer PlayersBombData { get; set; }
 
