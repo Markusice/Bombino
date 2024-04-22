@@ -1,4 +1,5 @@
-﻿using Bombino.game;
+﻿using System.Runtime.CompilerServices;
+using Bombino.game;
 using Bombino.game.persistence.state_storage;
 using Bombino.player;
 using Godot;
@@ -23,22 +24,18 @@ internal partial class Enemy : CharacterBody3D
     #region Fields
 
     private const int Speed = 6;
-
     private bool _isDead = false;
-
     private Vector3 _targetVelocity = Vector3.Zero;
-
     private AnimationTree _animTree;
     private AnimationNodeStateMachinePlayback _stateMachine;
-
-    private readonly Vector3[] _directions =
+    private static readonly Vector3[] _directions =
     {
         Vector3.Right,
         Vector3.Left,
         Vector3.Back,
         Vector3.Forward
     };
-
+    private static Vector3 _lastDirection = Vector3.Zero;
     private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     public EnemyData EnemyData { get; set; }
 
@@ -58,12 +55,8 @@ internal partial class Enemy : CharacterBody3D
         GD.Print($"Enemy created at: {Position}");
 
         var direction = Vector3.Zero;
+        ChangeDirection(ref direction);
 
-        var randomDirection = GetRandomDirection(_directions);
-
-        ChangeDirectionOnSelectedDirection(Vector3.Right, ref direction);
-
-        GD.Print($"Enemy random direction: {randomDirection}");
         GD.Print($"Enemy direction: {direction}");
 
         _targetVelocity.X = direction.X * Speed;
@@ -92,12 +85,7 @@ internal partial class Enemy : CharacterBody3D
         if (IsOnWall())
         {
             var direction = Vector3.Zero;
-
-            var randomDirection = GetRandomDirection(_directions);
-
-            ChangeDirectionOnSelectedDirection(randomDirection, ref direction);
-
-            //GD.Print($"Enemy random direction: {randomDirection}");
+            ChangeDirection(ref direction);
 
             _targetVelocity.X = direction.X * Speed;
             _targetVelocity.Z = direction.Z * Speed;
@@ -207,11 +195,24 @@ internal partial class Enemy : CharacterBody3D
     /// </summary>
     /// <param name="selectedDirection">The selected direction.</param>
     /// <param name="direction">The current direction.</param>
-    private static void ChangeDirectionOnSelectedDirection(
-        Vector3 selectedDirection,
-        ref Vector3 direction
-    )
-    {
+    private static void ChangeDirection(ref Vector3 direction)
+    {   
+        Vector3 selectedDirection = GetRandomDirection(_directions);
+
+        if (_lastDirection == Vector3.Zero)
+        {
+            _lastDirection = selectedDirection;
+        }
+        else
+        {
+            while (selectedDirection == _lastDirection)
+            {
+                selectedDirection = GetRandomDirection(_directions);
+            }
+
+            _lastDirection = selectedDirection;
+        }
+
         switch (selectedDirection)
         {
             case var _ when selectedDirection == Vector3.Right:
