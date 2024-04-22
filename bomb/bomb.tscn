@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bb6uotovywqqa"]
+[gd_scene load_steps=13 format=3 uid="uid://bb6uotovywqqa"]
 
 [ext_resource type="Script" path="res://bomb/Bomb.cs" id="1_1hr57"]
 [ext_resource type="PackedScene" uid="uid://d3ldxy0l5gvp" path="res://bomb/explosion_effect/vfx_explosion.tscn" id="2_hirdy"]
@@ -6,13 +6,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_1d2bc"]
 size = Vector3(10, 1, 1.5)
 
-[sub_resource type="BoxMesh" id="BoxMesh_0gdek"]
-size = Vector3(10, 1, 1.5)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_x1fd5"]
-size = Vector3(1.5, 1, 10)
-
-[sub_resource type="BoxMesh" id="BoxMesh_o1avs"]
 size = Vector3(1.5, 1, 10)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gdl4y"]
@@ -164,16 +158,8 @@ metadata/_edit_group_ = true
 [node name="CollisionShapeX" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_1d2bc")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShapeX"]
-visible = false
-mesh = SubResource("BoxMesh_0gdek")
-
 [node name="CollisionShapeZ" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_x1fd5")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShapeZ"]
-visible = false
-mesh = SubResource("BoxMesh_o1avs")
 
 [node name="BombTimer" type="Timer" parent="."]
 one_shot = true
