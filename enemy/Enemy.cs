@@ -113,7 +113,7 @@ internal partial class Enemy : CharacterBody3D
     /// <summary>
     /// Sets the state machine.
     /// </summary>
-    /// <param name="stateName"></param>
+    /// <param name="stateName">The name of the state to set.</param>
     private void SetStateMachine(string stateName)
     {
         _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
@@ -137,8 +137,8 @@ internal partial class Enemy : CharacterBody3D
     /// <summary>
     /// Checks if the enemy can move to the specified tile.
     /// </summary>
-    /// <param name="position"></param>
-    /// <returns></returns>
+    /// <param name="position">The position to check.</param>
+    /// <returns>True if the enemy can move to the tile; otherwise, false.</returns>
     private static bool CanMoveToTile(Vector3 position)
     {
         var canMoveToTileOnDirections = new Dictionary<
@@ -233,7 +233,7 @@ internal partial class Enemy : CharacterBody3D
     /// <summary>
     /// Called when the area enters the enemy's area.
     /// </summary>
-    /// <param name="body"></param>
+    /// <param name="body">The body that entered the area.</param>
     private void OnAreaEntered(Node3D body)
     {
         if (_isDead) return;
