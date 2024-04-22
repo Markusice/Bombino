@@ -11,26 +11,46 @@ internal partial class PausedGameUi : CanvasLayer
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private string _startingScreenScenePath;
+    [Export(PropertyHint.File, "*.tscn")] private string StartingScreenScenePath { get; set; }
 
     #endregion
 
-    private AnimationPlayer _animationPlayer;
+    #region Fields
 
-    private bool _isResumed;
+    private AnimationPlayer AnimationPlayer { get; set; }
+
+    private bool IsResumed { get; set; }
+
+    #endregion
+
+    #region Overrides
 
     public override void _Ready()
     {
-        _animationPlayer = GetNode<AnimationPlayer>("BlurAnimation");
+        AnimationPlayer = GetNode<AnimationPlayer>("BlurAnimation");
 
         PlayBlurAnimation();
     }
 
+    /// <summary>
+    /// Handles input events for the PausedGame class.
+    /// </summary>
+    /// <param name="event">The input event to handle.</param>
+    public override async void _Input(InputEvent @event)
+    {
+        if (!InputEventChecker.IsEscapeKeyPressed(@event))
+            return;
+
+        await StartCountDownAndResume();
+    }
+
+    #endregion
+
     #region MethodsForSignals
 
-    private void OnResumeButtonPressed()
+    private async void OnResumeButtonPressed()
     {
-        _ = StartCountDownAndResume();
+        await StartCountDownAndResume();
     }
 
     private void OnSaveAndExitButtonPressed()
@@ -46,7 +66,9 @@ internal partial class PausedGameUi : CanvasLayer
     /// </summary>
     private async Task StartCountDownAndResume()
     {
-        _isResumed = true;
+        if (IsResumed) return;
+
+        IsResumed = true;
 
         await StartCountDown();
         Visible = false;
@@ -84,7 +106,7 @@ internal partial class PausedGameUi : CanvasLayer
     /// </summary>
     private void PlayRemoveBlurAnimation()
     {
-        _animationPlayer.Play("start_resume");
+        AnimationPlayer.Play("start_resume");
     }
 
     /// <summary>
@@ -92,18 +114,6 @@ internal partial class PausedGameUi : CanvasLayer
     /// </summary>
     private void PlayBlurAnimation()
     {
-        _animationPlayer.Play("start_pause");
-    }
-
-    /// <summary>
-    /// Handles input events for the PausedGame class.
-    /// </summary>
-    /// <param name="event">The input event to handle.</param>
-    public override void _Input(InputEvent @event)
-    {
-        if (!InputEventChecker.IsEscapeKeyPressed(@event) || _isResumed)
-            return;
-
-        _ = StartCountDownAndResume();
+        AnimationPlayer.Play("start_pause");
     }
 }

@@ -7,17 +7,31 @@ namespace Bombino.ui.maps_menu;
 
 internal abstract partial class MapButton : Button, IUiButton
 {
+    #region Exports
+
     [Export(PropertyHint.File, "*.tscn")] private string _roundsMenuScenePath;
 
-    protected MapType MapType;
+    #endregion
+
+    #region Fields
+
+    protected MapType MapType { get; set; }
+
+    #endregion
+
+    #region Overrides
 
     public override void _Ready()
     {
         Pressed += OnPressed;
-        
+
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
     }
+
+    #endregion
+
+    #region MethodsForSignals
 
     /// <summary>
     /// Called when the map button is pressed.
@@ -28,14 +42,6 @@ internal abstract partial class MapButton : Button, IUiButton
         SetSelectedMapAndChangeScene();
 
         GetTree().ChangeSceneToFile(_roundsMenuScenePath);
-    }
-
-    /// <summary>
-    /// Sets the selected map and changes the scene.
-    /// </summary>
-    private void SetSelectedMapAndChangeScene()
-    {
-        GameManager.SelectedMap = MapType;
     }
 
     private void OnMouseEntered()
@@ -52,5 +58,15 @@ internal abstract partial class MapButton : Button, IUiButton
         {
             shaderMaterial.SetShaderParameter("is_hovered", false);
         }
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Sets the selected map and changes the scene.
+    /// </summary>
+    private void SetSelectedMapAndChangeScene()
+    {
+        GameManager.SelectedMap = MapType;
     }
 }

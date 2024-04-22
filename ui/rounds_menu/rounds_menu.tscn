@@ -11,7 +11,7 @@ corner_radius_bottom_left = 10
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_easd3")
-_loadingScenePath = "res://ui/game_loading_screen/game_loading_scene.tscn"
+LoadingScenePath = "res://ui/game_loading_screen/game_loading_scene.tscn"
 
 [node name="Background" type="TextureRect" parent="."]
 offset_right = 40.0

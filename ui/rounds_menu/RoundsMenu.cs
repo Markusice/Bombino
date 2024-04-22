@@ -8,11 +8,21 @@ namespace Bombino.ui.rounds_menu;
 /// </summary>
 internal partial class RoundsMenu : CanvasLayer
 {
-    [Export(PropertyHint.File, "*.tscn")] private string _loadingScenePath;
+    #region Exports
+
+    [Export(PropertyHint.File, "*.tscn")] private string LoadingScenePath { get; set; }
+
+    #endregion
+
+    #region Fields
 
     private LineEdit _numberInput;
     private PanelContainer _errorContainer;
     private Label _errorLabel;
+
+    #endregion
+
+    #region Overrides
 
     public override void _Ready()
     {
@@ -24,10 +34,14 @@ internal partial class RoundsMenu : CanvasLayer
         _errorLabel = _errorContainer.GetNode<Label>("ErrorLabel");
     }
 
+    #endregion
+
+    #region MethodsForSignals
+
     /// <summary>
     /// Event handler for when the number input is submitted.
     /// </summary>
-    /// <param name="newText">The new text entered in the number input.</param>
+    /// <param name="newText">The new text typed in the number input.</param>
     private void OnNumberInputSubmitted(string newText)
     {
         if (!IsTextValidInteger(newText, out var number))
@@ -45,8 +59,10 @@ internal partial class RoundsMenu : CanvasLayer
         HideError();
 
         GameManager.NumberOfRounds = number;
-        GetTree().ChangeSceneToFile(_loadingScenePath);
+        GetTree().ChangeSceneToFile(LoadingScenePath);
     }
+
+    #endregion
 
     /// <summary>
     /// Checks if the given text is a valid integer.
@@ -54,7 +70,7 @@ internal partial class RoundsMenu : CanvasLayer
     /// <param name="text">The text to check.</param>
     /// <param name="number">The parsed integer if the text is valid.</param>
     /// <returns>True if the text is a valid integer, false otherwise.</returns>
-    private bool IsTextValidInteger(string text, out int number)
+    private static bool IsTextValidInteger(string text, out int number)
     {
         return int.TryParse(text, out number);
     }
