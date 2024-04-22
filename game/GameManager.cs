@@ -4,7 +4,6 @@ using Bombino.game.persistence.state_storage;
 using Bombino.game.persistence.storage_layers.game_state;
 using Bombino.map;
 using Bombino.player;
-using Bombino.ui.game_loading_screen;
 using Bombino.ui.main_ui;
 using Bombino.ui.paused_game_ui;
 using Bombino.ui.scripts;
@@ -68,8 +67,6 @@ internal partial class GameManager : WorldEnvironment
 
     public static Array<PlayerData> PlayersData { get; set; } = new();
     public static Array<EnemyData> EnemiesData { get; set; } = new();
-
-    private GameLoadingScene _pausedGameSceneInstance;
 
     private readonly string _mapTextFilePath = $"res://map/sources/{SelectedMap.ToString().ToLower()}.json";
     private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
@@ -547,7 +544,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void AddPausedScreen()
     {
-        var pausedGameSceneInstance = _pausedGameScene.Instantiate<PausedGameUi>();
-        GetParent().AddChild(pausedGameSceneInstance);
+        var pausedGamePackedScene = ResourceLoader.Load<PackedScene>(PausedGameScenePath);
+
+        GetParent().AddChild(pausedGamePackedScene.Instantiate<PausedGameUi>());
     }
 }
