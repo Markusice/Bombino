@@ -102,7 +102,6 @@ namespace Bombino.ui.rounds_menu
                 return;
             
             }
-
             _gameManager.StartNextRound();
         }
 

@@ -57,8 +57,8 @@ internal partial class GameManager : WorldEnvironment
     public static int NumberOfRounds { get; set; }
     public static int CurrentRound { get; set; } = 1;
 
-    public static Array<PlayerData> PlayersData { get; } = new();
-    public static Array<EnemyData> EnemiesData { get; } = new();
+    public static Array<PlayerData> PlayersData { get; set; } = new();
+    public static Array<EnemyData> EnemiesData { get; set; } = new();
 
     private GameLoadingScene _pausedGameSceneInstance;
 
@@ -234,8 +234,9 @@ internal partial class GameManager : WorldEnvironment
     public void GameOver()
     {
         CurrentRound = 1;
-        PlayersData.Clear();
-        EnemiesData.Clear();
+        PlayersData = new Array<PlayerData>();
+        EnemiesData = new Array<EnemyData>();
+        
         foreach (var node in GetChildren())
         {
             node.QueueFree();
