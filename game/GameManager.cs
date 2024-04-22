@@ -5,6 +5,7 @@ using Bombino.game.persistence.storage_layers.game_state;
 using Bombino.map;
 using Bombino.player;
 using Bombino.ui.game_loading_screen;
+using Bombino.ui.main_ui;
 using Bombino.ui.scripts;
 using Godot;
 using Godot.Collections;
@@ -27,6 +28,10 @@ internal partial class GameManager : WorldEnvironment
 
     [Export(PropertyHint.File, "*.tscn")] private string _enemyScenePath;
 
+    [Export(PropertyHint.File, "*.tscn")] private string _roundStatsScenePath;
+
+    [Export(PropertyHint.File, "*.tscn")] private string _mainUiScenePath;
+
     #endregion
 
     #region Signals
@@ -47,12 +52,14 @@ internal partial class GameManager : WorldEnvironment
 
     #region Fields
 
+    private MainUi MainUi { get; set; }
+
     public static WorldEnvironment WorldEnvironment { get; private set; }
     public static BombinoMap GameMap { get; private set; }
 
     public static int NumberOfPlayers { get; set; } = 3;
     private int _alivePlayers = NumberOfPlayers;
-    
+
     public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
     public static int CurrentRound { get; set; } = 1;
@@ -67,7 +74,10 @@ internal partial class GameManager : WorldEnvironment
     private Array _mapSceneLoadProgress = new();
 
     private Godot.Collections.Dictionary<string, PlayerData> _playerScenesPathAndData = new();
-    private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus> _playerScenesPathAndLoadStatus = new();
+
+    private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus>
+        _playerScenesPathAndLoadStatus = new();
+
     private Array _playerSceneLoadProgress = new();
     private double _playerScenesLoadProgressSum;
 
@@ -80,9 +90,9 @@ internal partial class GameManager : WorldEnvironment
     private double _loadProgress;
     private bool _isEverythingLoaded;
 
-    private bool _isRoundOver = false;
+    private bool _isRoundOver;
 
-    public static PlayerColor CurrentWinner { get; set; }
+    public static PlayerColor CurrentWinner { get; private set; }
 
     #endregion
 
@@ -119,7 +129,6 @@ internal partial class GameManager : WorldEnvironment
 
     public override void _Process(double delta)
     {
-
         if (_isEverythingLoaded)
         {
             return;
@@ -163,8 +172,6 @@ internal partial class GameManager : WorldEnvironment
         CreateEnemiesFromSavedData();
 
         EmitAndSetEverythingLoaded_And_EnableInputProcess();
-
-
     }
 
     /// <summary>
@@ -185,6 +192,7 @@ internal partial class GameManager : WorldEnvironment
                     break;
                 }
             }
+
             await ToSignal(GetTree().CreateTimer(1), SceneTreeTimer.SignalName.Timeout);
             EndRound();
         }
@@ -205,7 +213,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void OpenRoundStatsScreen()
     {
-        var roundStatsScene = ResourceLoader.Load("res://ui/rounds_stats_screen/round_stats.tscn") as PackedScene;
+        var roundStatsScene = (PackedScene)ResourceLoader.Load(_roundStatsScenePath);
+
         GetParent().AddChild(roundStatsScene.Instantiate());
     }
 
@@ -214,6 +223,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     public void StartNextRound()
     {
+        ReplaceOrAddMainUi();
+        
         CurrentRound++;
         _isRoundOver = false;
         _alivePlayers = NumberOfPlayers;
@@ -221,12 +232,12 @@ internal partial class GameManager : WorldEnvironment
         {
             playerData.IsDead = false;
         }
-        
+
         GameMap.SetUpMapFromTextFile(_mapTextFilePath);
         RecreatePlayersForNextRound();
         RecreateEnemiesForNextRound();
-
     }
+
     /// <summary>
     /// Ends the game by setting all the static fields to default values,
     /// clearing the player and enemy data, and destroying the game map.
@@ -236,11 +247,12 @@ internal partial class GameManager : WorldEnvironment
         CurrentRound = 1;
         PlayersData = new Array<PlayerData>();
         EnemiesData = new Array<EnemyData>();
-        
+
         foreach (var node in GetChildren())
         {
             node.QueueFree();
         }
+
         QueueFree();
     }
 
@@ -265,7 +277,7 @@ internal partial class GameManager : WorldEnvironment
             }
         }
     }
-    
+
     /// <summary>
     /// Recreates the players for the next round.
     /// </summary>
@@ -316,7 +328,7 @@ internal partial class GameManager : WorldEnvironment
     private void EmitLoadedProgressAndAddGameMap_IfGameMapNotAdded()
     {
         _gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
-        
+
         if (_gameMapScene == null)
             return;
 
@@ -363,7 +375,6 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreatePlayersFromSavedData()
     {
-
         foreach (var playerScenePathAndData in _playerScenesPathAndData)
         {
             var playerScene = (PackedScene)ResourceLoader.LoadThreadedGet(playerScenePathAndData.Key);
@@ -397,12 +408,19 @@ internal partial class GameManager : WorldEnvironment
         EmitSignal(SignalName.EverythingLoaded);
         _isEverythingLoaded = true;
 
-        var mainUiScene = ResourceLoader.Load("res://ui/main_ui/main_ui.tscn") as PackedScene;
-        var mainUiSceneInstance = mainUiScene.Instantiate();
-
-        AddChild(mainUiSceneInstance);
+        ReplaceOrAddMainUi();
 
         SetProcessInput(true);
+    }
+
+    private void ReplaceOrAddMainUi()
+    {
+        var mainUiScene = (PackedScene)ResourceLoader.Load(_mainUiScenePath);
+
+        MainUi?.QueueFree();
+        MainUi = mainUiScene.Instantiate<MainUi>();
+
+        AddChild(MainUi);
     }
 
     /// <summary>

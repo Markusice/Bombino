@@ -16,6 +16,8 @@ _pausedGameScene = ExtResource("2_f6low")
 _startingScreenScene = ExtResource("3_bjmvg")
 _mapScenePath = "res://map/map.tscn"
 _enemyScenePath = "res://enemy/enemy.tscn"
+_roundStatsScenePath = "res://ui/rounds_stats_screen/round_stats.tscn"
+_mainUiScenePath = "res://ui/main_ui/main_ui.tscn"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, 0.843091, 0.537771, 0, -0.537771, 0.843091, 0, 3.30227, 0)
