@@ -124,11 +124,14 @@ internal class BombPlace
         {
             Size = new Vector3(
                 bombInstanceCollisionLength + bombToPlace.Range * collisionShapeOneTileLengthInBothDirection,
-                ((BoxShape3D)collisionShapeX.Shape).Size.Y, ((BoxShape3D)collisionShapeX.Shape).Size.Z)
+                ((BoxShape3D)collisionShapeX.Shape).Size.Y,
+                ((BoxShape3D)collisionShapeX.Shape).Size.Z)
         };
+
         collisionShapeZ.Shape = new BoxShape3D
         {
-            Size = new Vector3(((BoxShape3D)collisionShapeX.Shape).Size.X, ((BoxShape3D)collisionShapeX.Shape).Size.Y,
+            Size = new Vector3(((BoxShape3D)collisionShapeZ.Shape).Size.X,
+                ((BoxShape3D)collisionShapeZ.Shape).Size.Y,
                 bombInstanceCollisionLength + bombToPlace.Range * collisionShapeOneTileLengthInBothDirection)
         };
 
