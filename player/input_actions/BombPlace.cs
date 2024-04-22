@@ -68,7 +68,7 @@ internal class BombPlace
     /// <summary>
     /// Checks if the player is unable to place a bomb.
     /// </summary>
-    /// <param name="node">The player node.</param>
+    /// <param name="player">The player node.</param>
     /// <param name="bombToPlacePosition">The position where the bomb is to be placed.</param>
     /// <returns>True if the player is unable to place a bomb, false otherwise.</returns>
     private static bool IsUnableToPlaceBomb(Player player, Vector3 bombToPlacePosition)
@@ -86,10 +86,10 @@ internal class BombPlace
 
     /// <summary>
     /// Checks if a body is near the bomb placement.
+    /// </summary>
     /// <param name="player">The player who is placing the bomb.</param>
     /// <param name="bombToPlacePosition">The position where the bomb is to be placed.</param>
     /// <returns>True if a body other than the placer is near the bomb placement, false otherwise.</returns>
-    /// </summary>
     private static bool IsBodyNearBombPosition(Player player, Vector3 bombToPlacePosition)
     {
         var collisionGroups = new string[] { "players", "enemies" };
@@ -129,6 +129,12 @@ internal class BombPlace
         bombToPlace.Position = bombToPlacePosition;
         bombToPlace.Range = player.PlayerData.BombRange;
         bombToPlace.Player = player;
+
+        var collisionShapeX = bombToPlace.GetNode<CollisionShape3D>("CollisionShapeX");
+        var collisionShapeZ = bombToPlace.GetNode<CollisionShape3D>("CollisionShapeZ");
+
+        collisionShapeX.Shape = new BoxShape3D { Size = new Vector3(bombToPlace.Range * 4 + 2, 1, 1.5f) };
+        collisionShapeZ.Shape = new BoxShape3D { Size = new Vector3(1.5f, 1, bombToPlace.Range * 4 + 2) };
 
         return bombToPlace;
     }
