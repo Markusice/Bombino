@@ -11,6 +11,7 @@ corner_radius_bottom_left = 10
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_s4ohh")
+_startingScreenPath = "res://ui/starting_screen/starting_screen.tscn"
 
 [node name="Background" type="TextureRect" parent="."]
 offset_right = 40.0

@@ -82,6 +82,8 @@ internal partial class GameManager : WorldEnvironment
 
     private bool _isRoundOver = false;
 
+    public static PlayerColor CurrentWinner { get; set; }
+
     #endregion
 
     #region MethodsForSignals
@@ -104,10 +106,12 @@ internal partial class GameManager : WorldEnvironment
     public override void _Ready()
     {
         GD.Print("---------------\tnew GameManager created\t---------------");
+        GD.Print(PlayersData.Count);
         SetProcessInput(false);
         WorldEnvironment = this;
-
+        GD.Print($"Alive players: {NumberOfPlayers}");
         _alivePlayers = NumberOfPlayers;
+        GD.Print($"Alive players: {NumberOfPlayers}");
         Events.Instance.PlayerDied += CheckPlayersAndOpenRoundStats;
 
         // CheckForSavedDataAndSetUpGame();
@@ -115,6 +119,7 @@ internal partial class GameManager : WorldEnvironment
 
     public override void _Process(double delta)
     {
+
         if (_isEverythingLoaded)
         {
             return;
@@ -158,6 +163,8 @@ internal partial class GameManager : WorldEnvironment
         CreateEnemiesFromSavedData();
 
         EmitAndSetEverythingLoaded_And_EnableInputProcess();
+
+
     }
 
     /// <summary>
@@ -166,13 +173,14 @@ internal partial class GameManager : WorldEnvironment
     private async void CheckPlayersAndOpenRoundStats(string color)
     {
         _alivePlayers--;
-
+        GD.Print($"{_alivePlayers} players left.");
         if (_alivePlayers == 1)
         {
             foreach (var playerData in PlayersData)
             {
                 if (!playerData.IsDead)
                 {
+                    CurrentWinner = playerData.Color;
                     playerData.Wins++;
                     break;
                 }
@@ -182,9 +190,13 @@ internal partial class GameManager : WorldEnvironment
         }
     }
 
+    /// <summary>
+    /// Ends the round.
+    /// </summary>
     private void EndRound()
     {
         _isRoundOver = true;
+        DestroyCurrentGameState();
         OpenRoundStatsScreen();
     }
 
@@ -194,7 +206,96 @@ internal partial class GameManager : WorldEnvironment
     private void OpenRoundStatsScreen()
     {
         var roundStatsScene = ResourceLoader.Load("res://ui/rounds_stats_screen/round_stats.tscn") as PackedScene;
-        GetTree().ChangeSceneToPacked(roundStatsScene);
+        GetParent().AddChild(roundStatsScene.Instantiate());
+    }
+
+    /// <summary>
+    /// Starts the next round.
+    /// </summary>
+    public void StartNextRound()
+    {
+        CurrentRound++;
+        _isRoundOver = false;
+        _alivePlayers = NumberOfPlayers;
+        foreach (var playerData in PlayersData)
+        {
+            playerData.IsDead = false;
+        }
+        
+        GameMap.SetUpMapFromTextFile(_mapTextFilePath);
+        RecreatePlayersForNextRound();
+        RecreateEnemiesForNextRound();
+
+    }
+    /// <summary>
+    /// Ends the game by setting all the static fields to default values,
+    /// clearing the player and enemy data, and destroying the game map.
+    /// </summary>
+    public void GameOver()
+    {
+        CurrentRound = 1;
+        PlayersData.Clear();
+        EnemiesData.Clear();
+        foreach (var node in GetChildren())
+        {
+            node.QueueFree();
+        }
+        QueueFree();
+    }
+
+    /// <summary>
+    /// Destroys the current game state, making it ready for the next round.
+    /// </summary>
+    public void DestroyCurrentGameState()
+    {
+        foreach (var node in GetChildren())
+        {
+            switch (node)
+            {
+                case Player player:
+                    player.QueueFree();
+                    break;
+                case Enemy enemy:
+                    enemy.QueueFree();
+                    break;
+                case BombinoMap map:
+                    map.Clear();
+                    break;
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Recreates the players for the next round.
+    /// </summary>
+    private void RecreatePlayersForNextRound()
+    {
+        foreach (var playerData in PlayersData)
+        {
+            var playerScenePath =
+                $"res://player/player_{playerData.Color.ToString().ToLower()}/player_{playerData.Color.ToString().ToLower()}.tscn";
+
+            var playerScene = (PackedScene)ResourceLoader.Load(playerScenePath);
+            var player = playerScene.Instantiate<Player>();
+
+            player.PlayerData = playerData;
+
+            AddChild(player);
+        }
+    }
+
+    /// <summary>
+    /// Recreates the enemies for the next round.
+    /// </summary>
+    private void RecreateEnemiesForNextRound()
+    {
+        foreach (var enemyData in _enemiesData.Values)
+        {
+            var enemy = _enemyScene.Instantiate<Enemy>();
+            enemy.EnemyData = enemyData;
+
+            AddChild(enemy);
+        }
     }
 
     /// <summary>
@@ -261,7 +362,6 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreatePlayersFromSavedData()
     {
-        PlayersData.Clear();
 
         foreach (var playerScenePathAndData in _playerScenesPathAndData)
         {
@@ -392,20 +492,8 @@ internal partial class GameManager : WorldEnvironment
     {
         var playerScenePath =
             $"res://player/player_{playerColor.ToString().ToLower()}/player_{playerColor.ToString().ToLower()}.tscn";
-        
+
         var _playerData = new PlayerData(position, playerColor);
-
-        foreach (var playerData in PlayersData)
-        {
-            if (playerData.Color == playerColor)
-            {
-                GD.Print("Player already exists");
-                _playerData = playerData;
-                _playerData.Position = position;
-                break;
-            }
-        }
-
         _playerScenesPathAndData.Add(playerScenePath, _playerData);
         _playerScenesPathAndLoadStatus.Add(playerScenePath, ResourceLoader.ThreadLoadStatus.InProgress);
 
