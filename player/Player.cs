@@ -62,7 +62,7 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Called every frame. 'delta' is the elapsed time since the previous frame.
     /// </summary>
-    /// <param name="delta"></param>
+    /// <param name="delta"> The time passed since the last frame. </param>
     public override void _PhysicsProcess(double delta)
     {
         if (_isDead) return;
@@ -73,7 +73,7 @@ internal partial class Player : CharacterBody3D
         // We check for each move input and update the direction accordingly.
         CheckActionKeysForInput(ref direction);
 
-        GD.Print($"Player position: {Position}");
+        //GD.Print($"Player position: {Position}");
 
         if (direction != Vector3.Zero)
         {
@@ -142,7 +142,7 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Checks the action keys for input.
     /// </summary>
-    /// <param name="direction"></param>
+    /// <param name="direction"> The direction to be modified. </param>
     private void CheckActionKeysForInput(ref Vector3 direction)
     {
         ModifyDirectionOnMovement(ref direction);
@@ -152,7 +152,7 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Modifies the direction based on the movement keys.
     /// </summary>
-    /// <param name="direction"></param>
+    /// <param name="direction"> The direction to be modified. </param>
     private void ModifyDirectionOnMovement(ref Vector3 direction)
     {
         direction = PlayerInputActions.Movements.Where(movement =>
@@ -175,7 +175,7 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Sets the state machine.
     /// </summary>
-    /// <param name="stateName"></param>
+    /// <param name="stateName"> The name of the state. </param>
     private void SetStateMachine(string stateName)
     {
         _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
