@@ -20,17 +20,18 @@ internal partial class GameManager : WorldEnvironment
 {
     #region Exports
 
-    [Export] private PackedScene _pausedGameScene;
+    [Export(PropertyHint.File, "*.tscn")] private string PausedGameScenePath { get; set; }
 
-    [Export] private PackedScene _startingScreenScene;
+    [Export(PropertyHint.File, "*.tscn")] private string StartingScreenScenePath { get; set; }
 
-    [Export(PropertyHint.File, "*.tscn")] private string _mapScenePath;
+    [Export(PropertyHint.File, "*.tscn")] private string RoundStatsScenePath { get; set; }
 
-    [Export(PropertyHint.File, "*.tscn")] private string _enemyScenePath;
+    [Export(PropertyHint.File, "*.tscn")] private string MainUiScenePath { get; set; }
 
-    [Export(PropertyHint.File, "*.tscn")] private string _roundStatsScenePath;
 
-    [Export(PropertyHint.File, "*.tscn")] private string _mainUiScenePath;
+    [Export(PropertyHint.File, "*.tscn")] private string MapScenePath { get; set; }
+
+    [Export(PropertyHint.File, "*.tscn")] private string EnemyScenePath { get; set; }
 
     #endregion
 
@@ -108,20 +109,18 @@ internal partial class GameManager : WorldEnvironment
 
     #endregion
 
-    #region SceneUpdateMethods
+    #region Overrides
 
     /// <summary>
     /// Called when the node enters the scene tree for the first time.
     /// </summary>
     public override void _Ready()
     {
-        GD.Print("---------------\tnew GameManager created\t---------------");
-        GD.Print(PlayersData.Count);
         SetProcessInput(false);
+
         WorldEnvironment = this;
-        GD.Print($"Alive players: {NumberOfPlayers}");
         _alivePlayers = NumberOfPlayers;
-        GD.Print($"Alive players: {NumberOfPlayers}");
+
         Events.Instance.PlayerDied += CheckPlayersAndOpenRoundStats;
 
         // CheckForSavedDataAndSetUpGame();
@@ -136,11 +135,11 @@ internal partial class GameManager : WorldEnvironment
 
         // default initialized value is InvalidResource
         if (_mapSceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
-            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mapScenePath, _mapSceneLoadProgress);
+            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(MapScenePath, _mapSceneLoadProgress);
 
         if (_mapSceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded)
         {
-            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_mapScenePath, _mapSceneLoadProgress);
+            _mapSceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(MapScenePath, _mapSceneLoadProgress);
 
             _loadProgress = (double)_mapSceneLoadProgress[0];
             EmitSignal(SignalName.SceneLoad, _loadProgress);
@@ -154,11 +153,11 @@ internal partial class GameManager : WorldEnvironment
             _playerScenesLoadProgressSum = SetPlayerScenesStatus_And_GetLoadProgressSum();
 
         if (_enemySceneLoadStatus == ResourceLoader.ThreadLoadStatus.InvalidResource)
-            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_enemyScenePath, _enemySceneLoadProgress);
+            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(EnemyScenePath, _enemySceneLoadProgress);
 
         if (_enemySceneLoadStatus != ResourceLoader.ThreadLoadStatus.Loaded || IsNotEveryPlayerLoaded())
         {
-            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(_enemyScenePath, _enemySceneLoadProgress);
+            _enemySceneLoadStatus = ResourceLoader.LoadThreadedGetStatus(EnemyScenePath, _enemySceneLoadProgress);
             _playerScenesLoadProgressSum = SetPlayerScenesStatus_And_GetLoadProgressSum();
 
             var loadProgressSum = _playerScenesLoadProgressSum + (double)_enemySceneLoadProgress[0];
@@ -175,27 +174,40 @@ internal partial class GameManager : WorldEnvironment
     }
 
     /// <summary>
+    /// Pauses the game if Escape key is pressed.
+    /// </summary>
+    /// <param name="event">Event when a key is pressed.</param>
+    public override void _Input(InputEvent @event)
+    {
+        if (!InputEventChecker.IsEscapeKeyPressed(@event))
+            return;
+
+        Pause();
+    }
+
+    #endregion
+
+    /// <summary>
     /// Checks the players and opens the round stats.
     /// </summary>
     private async void CheckPlayersAndOpenRoundStats(string color)
     {
         _alivePlayers--;
-        GD.Print($"{_alivePlayers} players left.");
-        if (_alivePlayers == 1)
-        {
-            foreach (var playerData in PlayersData)
-            {
-                if (!playerData.IsDead)
-                {
-                    CurrentWinner = playerData.Color;
-                    playerData.Wins++;
-                    break;
-                }
-            }
 
-            await ToSignal(GetTree().CreateTimer(1), SceneTreeTimer.SignalName.Timeout);
-            EndRound();
+        if (_alivePlayers != 1) return;
+
+        foreach (var playerData in PlayersData)
+        {
+            if (playerData.IsDead) continue;
+
+            CurrentWinner = playerData.Color;
+            playerData.Wins++;
+
+            break;
         }
+
+        await ToSignal(GetTree().CreateTimer(1), SceneTreeTimer.SignalName.Timeout);
+        EndRound();
     }
 
     /// <summary>
@@ -213,7 +225,9 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void OpenRoundStatsScreen()
     {
-        var roundStatsScene = (PackedScene)ResourceLoader.Load(_roundStatsScenePath);
+        MainUi.QueueFree();
+
+        var roundStatsScene = ResourceLoader.Load<PackedScene>(RoundStatsScenePath);
 
         GetParent().AddChild(roundStatsScene.Instantiate());
     }
@@ -223,8 +237,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     public void StartNextRound()
     {
-        ReplaceOrAddMainUi();
-        
+        AddMainUi();
+
         CurrentRound++;
         _isRoundOver = false;
         _alivePlayers = NumberOfPlayers;
@@ -259,7 +273,7 @@ internal partial class GameManager : WorldEnvironment
     /// <summary>
     /// Destroys the current game state, making it ready for the next round.
     /// </summary>
-    public void DestroyCurrentGameState()
+    private void DestroyCurrentGameState()
     {
         foreach (var node in GetChildren())
         {
@@ -311,23 +325,9 @@ internal partial class GameManager : WorldEnvironment
         }
     }
 
-    /// <summary>
-    /// Called every frame. 'delta' is the elapsed time since the previous frame.
-    /// </summary>
-    /// <param name="event">Event when a key is pressed.</param>
-    public override void _Input(InputEvent @event)
-    {
-        if (!InputEventChecker.IsEscapeKeyPressed(@event))
-            return;
-
-        Pause();
-    }
-
-    #endregion
-
     private void EmitLoadedProgressAndAddGameMap_IfGameMapNotAdded()
     {
-        _gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(_mapScenePath);
+        _gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(MapScenePath);
 
         if (_gameMapScene == null)
             return;
@@ -392,7 +392,7 @@ internal partial class GameManager : WorldEnvironment
 
     private void CreateEnemiesFromSavedData()
     {
-        _enemyScene ??= (PackedScene)ResourceLoader.LoadThreadedGet(_enemyScenePath);
+        _enemyScene ??= (PackedScene)ResourceLoader.LoadThreadedGet(EnemyScenePath);
 
         foreach (var enemyData in _enemiesData.Values)
         {
@@ -408,16 +408,15 @@ internal partial class GameManager : WorldEnvironment
         EmitSignal(SignalName.EverythingLoaded);
         _isEverythingLoaded = true;
 
-        ReplaceOrAddMainUi();
+        AddMainUi();
 
         SetProcessInput(true);
     }
 
-    private void ReplaceOrAddMainUi()
+    private void AddMainUi()
     {
-        var mainUiScene = (PackedScene)ResourceLoader.Load(_mainUiScenePath);
+        var mainUiScene = ResourceLoader.Load<PackedScene>(MainUiScenePath);
 
-        MainUi?.QueueFree();
         MainUi = mainUiScene.Instantiate<MainUi>();
 
         AddChild(MainUi);
@@ -459,7 +458,7 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void RequestMapLoad()
     {
-        ResourceLoader.LoadThreadedRequest(_mapScenePath);
+        ResourceLoader.LoadThreadedRequest(MapScenePath);
     }
 
     /// <summary>
@@ -526,7 +525,7 @@ internal partial class GameManager : WorldEnvironment
     private void SaveEnemyDataAndRequestLoad(Vector3 position)
     {
         if (_enemyScene == null)
-            ResourceLoader.LoadThreadedRequest(_enemyScenePath);
+            ResourceLoader.LoadThreadedRequest(EnemyScenePath);
 
         var enemyData = new EnemyData(position);
         _enemiesData.Add(enemyData.GetInstanceId(), enemyData);
@@ -553,7 +552,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void SetAndAddPausedGame()
     {
-        _pausedGameSceneInstance = _pausedGameScene.Instantiate<GameLoadingScene>();
+        _pausedGameSceneInstance =
+            ResourceLoader.Load<PackedScene>(PausedGameScenePath).Instantiate<GameLoadingScene>();
         GetParent().AddChild(_pausedGameSceneInstance);
     }
 
@@ -593,7 +593,7 @@ internal partial class GameManager : WorldEnvironment
     {
         GameSaveHandler.SaveGame();
 
-        GetTree().ChangeSceneToPacked(_startingScreenScene);
+        GetTree().ChangeSceneToPacked(ResourceLoader.Load<PackedScene>(StartingScreenScenePath));
     }
 
     /// <summary>
