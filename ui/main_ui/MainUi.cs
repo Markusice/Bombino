@@ -1,3 +1,4 @@
+using Bombino.events;
 using Bombino.game;
 using Bombino.game.persistence.state_storage;
 using Godot;
@@ -17,8 +18,14 @@ internal partial class MainUi : CanvasLayer
 
     #endregion
 
+    #region Fields
+
     private Label TimerLabel { get; set; }
     private GridContainer PlayersBombData { get; set; }
+
+    #endregion
+
+    #region Overrides
 
     public override void _Ready()
     {
@@ -27,17 +34,20 @@ internal partial class MainUi : CanvasLayer
         SetTimerLabelText(60);
     }
 
+    #endregion
+
     /// <summary>
     /// Sets up the UI fields by finding and assigning the necessary nodes.
     /// </summary>
     private void SetUiFields()
     {
         TimerLabel = GetNode<Label>("TimerPanelContainer/TimerPanel/TimerLabel");
-
         PlayersBombData = GetNode<GridContainer>("%PlayersBombData");
 
         foreach (var playerData in GameManager.PlayersData)
+        {
             CreatePlayerBombData(playerData);
+        }
     }
 
     /// <summary>
@@ -108,10 +118,9 @@ internal partial class MainUi : CanvasLayer
             .ParseExact(TimerLabel.Text, @"m\:ss", null)
             .TotalSeconds;
 
-        if (timerLabelInTotalSeconds > 0)
-        {
-            timerLabelInTotalSeconds--;
-            SetTimerLabelText((int)timerLabelInTotalSeconds);
-        }
+        if (!(timerLabelInTotalSeconds > 0)) return;
+
+        timerLabelInTotalSeconds--;
+        SetTimerLabelText((int)timerLabelInTotalSeconds);
     }
 }
