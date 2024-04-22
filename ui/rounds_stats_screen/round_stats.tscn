@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://513ouqm5a"]
+[gd_scene load_steps=3 format=3 uid="uid://513ouqm5a"]
+
+[ext_resource type="Script" path="res://ui/rounds_stats_screen/RoundStats.cs" id="1_s4ohh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v5lrk"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -8,6 +10,8 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_s4ohh")
+_startingScreenPath = "res://ui/starting_screen/starting_screen.tscn"
 
 [node name="Background" type="TextureRect" parent="."]
 offset_right = 40.0

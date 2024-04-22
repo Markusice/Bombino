@@ -38,6 +38,12 @@ internal partial class PlayerData : Resource
     [Export]
     public int MaxNumberOfAvailableBombs { get; set; } = 1;
 
+    [Export]
+    public bool IsDead { get; set; } = false;
+
+    [Export]
+    public int Wins { get; set; } = 0;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PlayerData"/> class with default values.
     /// </summary>

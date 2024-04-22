@@ -5,17 +5,35 @@ namespace Bombino.ui.main_ui.animation_scripts;
 
 internal partial class PlayerBombNumberChangeAnimation : Node
 {
+    #region Fields
+
     private const float TweenDuration = 0.3f;
 
-    private GridContainer _playersBombData;
+    private GridContainer PlayersBombData { get; set; }
+
+    #endregion
+
+    #region Overrides
 
     public override void _Ready()
     {
+        PlayersBombData = GetNode<GridContainer>("%PlayersBombData");
+
         Events.Instance.PlayerBombNumberIncremented += PlayerBombNumberIncremented;
         Events.Instance.PlayerBombNumberDecreased += PlayerBombNumberDecreased;
-
-        _playersBombData = GetNode<GridContainer>("%PlayersBombData");
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        Events.Instance.PlayerBombNumberIncremented -= PlayerBombNumberIncremented;
+        Events.Instance.PlayerBombNumberDecreased -= PlayerBombNumberDecreased;
+
+        base.Dispose(disposing);
+    }
+
+    #endregion
+
+    #region MethodsForSignals
 
     private void PlayerBombNumberIncremented(string playerColor, int numberOfAvailableBombs)
     {
@@ -29,11 +47,25 @@ internal partial class PlayerBombNumberChangeAnimation : Node
         PlayAnimationsForNumberIncrement(bombPicture, bombNumberCircle, tweenScale);
     }
 
+    private void PlayerBombNumberDecreased(string playerColor, int numberOfAvailableBombs)
+    {
+        const float tweenScale = 0.85f;
+
+        var bombStatusContainer = GetNecessaryNodes(playerColor,
+            out var bombPicture, out var bombNumberCircle);
+
+        ChangeNumberLabelText(numberOfAvailableBombs, bombStatusContainer);
+
+        PlayAnimationForNumberDecrement(numberOfAvailableBombs, bombNumberCircle, tweenScale, bombPicture);
+    }
+
+    #endregion
+
     private PanelContainer GetNecessaryNodes(string playerColor, out TextureRect bombPicture,
         out Panel bombNumberCircle)
     {
         var bombStatusContainerName = $"BombStatusContainer_{playerColor}";
-        var bombStatusContainer = _playersBombData.GetNode<PanelContainer>(bombStatusContainerName);
+        var bombStatusContainer = PlayersBombData.GetNode<PanelContainer>(bombStatusContainerName);
 
         bombPicture = bombStatusContainer.GetNode<TextureRect>("BombPicture");
         bombNumberCircle = bombStatusContainer.GetNode<Panel>("%BombNumberCircle");
@@ -71,18 +103,6 @@ internal partial class PlayerBombNumberChangeAnimation : Node
         tween.TweenProperty(bombNumberCircle, "scale",
             Vector2.One,
             TweenDuration);
-    }
-
-    private void PlayerBombNumberDecreased(string playerColor, int numberOfAvailableBombs)
-    {
-        const float tweenScale = 0.85f;
-
-        var bombStatusContainer = GetNecessaryNodes(playerColor,
-            out var bombPicture, out var bombNumberCircle);
-
-        ChangeNumberLabelText(numberOfAvailableBombs, bombStatusContainer);
-
-        PlayAnimationForNumberDecrement(numberOfAvailableBombs, bombNumberCircle, tweenScale, bombPicture);
     }
 
     private void PlayAnimationForNumberDecrement(int numberOfAvailableBombs, Panel bombNumberCircle, float tweenScale,

@@ -38,8 +38,6 @@ internal partial class Player : CharacterBody3D
     private AnimationNodeStateMachinePlayback _stateMachine;
     public Vector3I MapPosition;
 
-    private bool _isDead = false;
-
     public PlayerInputActions PlayerInputActions { get; } = new();
 
     public PlayerData PlayerData { get; set; }
@@ -65,7 +63,7 @@ internal partial class Player : CharacterBody3D
     /// <param name="delta"> The time passed since the last frame. </param>
     public override void _PhysicsProcess(double delta)
     {
-        if (_isDead) return;
+        if (PlayerData.IsDead) return;
 
         // We create a local variable to store the input direction.
         var direction = Vector3.Zero;
@@ -73,7 +71,7 @@ internal partial class Player : CharacterBody3D
         // We check for each move input and update the direction accordingly.
         CheckActionKeysForInput(ref direction);
 
-        //GD.Print($"Player position: {Position}");
+        // GD.Print($"Player position: {Position}");
 
         if (direction != Vector3.Zero)
         {
@@ -113,7 +111,7 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void OnHit()
     {
-        _isDead = true;
+        PlayerData.IsDead = true;
         SetStateMachine("Die");
         Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
 
