@@ -22,7 +22,7 @@ internal partial class Enemy : CharacterBody3D
 
     #region Fields
 
-    private const int Speed = 6;
+    private const int Speed = 5;
     private bool _isDead;
     private Vector3 _targetVelocity = Vector3.Zero;
     private AnimationTree _animTree;
@@ -62,7 +62,7 @@ internal partial class Enemy : CharacterBody3D
         _targetVelocity.X = direction.X * Speed;
         _targetVelocity.Z = direction.Z * Speed;
 
-        var targetPosition = Position - direction + new Vector3(0.01f, 0.01f, 0.01f);
+        var targetPosition = Position - direction;
 
         LookAt(targetPosition, Vector3.Up);
 
@@ -94,9 +94,10 @@ internal partial class Enemy : CharacterBody3D
             _targetVelocity.X = direction.X * Speed;
             _targetVelocity.Z = direction.Z * Speed;
 
-            var targetPosition = Position - direction + new Vector3(0.01f, 0.01f, 0.01f);
+            var targetPosition = Position - direction;
             LookAt(targetPosition, Vector3.Up);
         }
+
         BlendMovementAnimation();
 
         Velocity = _targetVelocity;
@@ -140,8 +141,7 @@ internal partial class Enemy : CharacterBody3D
     /// </summary>
     /// <param name="direction">The current direction.</param>
     private void ChangeDirection(ref Vector3 direction)
-    {   
-        GD.Print("\n");
+    {
         var selectedDirection = SelectDirection();
         switch (selectedDirection)
         {
@@ -161,9 +161,8 @@ internal partial class Enemy : CharacterBody3D
                 direction = Vector3.Zero;
                 break;
         }
-        GD.Print($"Enemy changed direction, position: {Position}, direction: {direction}");
+
         Position = new Vector3(MathF.Round(Position.X), Position.Y, MathF.Round(Position.Z));
-        GD.Print($"Enemy rounded position: {Position}");
     }
 
     /// <summary>
@@ -175,15 +174,13 @@ internal partial class Enemy : CharacterBody3D
         Vector3 selectedDirection = Vector3.Zero;
 
         foreach (var randomDirection in randomDirections)
-        {   
-            GD.Print($"Random direction: {randomDirection}");
-            GD.Print($"Can move to tile: {CanMoveToTile(randomDirection)}");
+        {
             if (!CanMoveToTile(randomDirection)) continue;
-            
+
             selectedDirection = randomDirection;
             break;
         }
-        
+
         return selectedDirection;
     }
 
@@ -205,12 +202,11 @@ internal partial class Enemy : CharacterBody3D
     private bool CanMoveToTile(Vector3 direction)
     {
         Vector3I tilePosition = GetTilePositionBasedOnDirection(direction);
-        GD.Print($"Tile position: {tilePosition}");
         var tileId = GameManager.GameMap.GetCellItem(tilePosition);
 
         return tileId == -1;
     }
-    
+
     /// <summary>
     /// Gets the tile position based on the specified direction.
     /// </summary>
@@ -218,23 +214,24 @@ internal partial class Enemy : CharacterBody3D
     /// <returns>The tile position based on the specified direction.</returns>
     private Vector3I GetTilePositionBasedOnDirection(Vector3 direction)
     {
+        var cellSize = GameManager.GameMap.CellSize.X;
         return direction switch
         {
             _ when direction == Vector3.Right
                 => GameManager.GameMap.LocalToMap(
-                    new Vector3(Position.X + 2, Position.Y + 1, Position.Z)
+                    new Vector3(Position.X + cellSize, Position.Y, Position.Z)
                 ),
             _ when direction == Vector3.Left
                 => GameManager.GameMap.LocalToMap(
-                    new Vector3(Position.X - 2, Position.Y + 1, Position.Z)
+                    new Vector3(Position.X - cellSize, Position.Y, Position.Z)
                 ),
             _ when direction == Vector3.Forward
                 => GameManager.GameMap.LocalToMap(
-                    new Vector3(Position.X, Position.Y + 1, Position.Z + 2)
+                    new Vector3(Position.X, Position.Y, Position.Z - cellSize)
                 ),
             _ when direction == Vector3.Back
                 => GameManager.GameMap.LocalToMap(
-                    new Vector3(Position.X, Position.Y + 1, Position.Z - 2)
+                    new Vector3(Position.X, Position.Y, Position.Z + cellSize)
                 ),
             _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
         };
@@ -252,7 +249,6 @@ internal partial class Enemy : CharacterBody3D
         if (body.IsInGroup("players"))
         {
             body.EmitSignal(Player.SignalName.Hit);
-            GD.Print($"Player hit by enemy at position: {Position} by {body.Name}");
         }
     }
 }
