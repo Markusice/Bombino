@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Bombino.game;
+﻿using Bombino.game;
 using Bombino.game.persistence.state_storage;
 using Bombino.player;
 using Godot;
@@ -24,10 +23,11 @@ internal partial class Enemy : CharacterBody3D
     #region Fields
 
     private const int Speed = 6;
-    private bool _isDead = false;
+    private bool _isDead;
     private Vector3 _targetVelocity = Vector3.Zero;
     private AnimationTree _animTree;
     private AnimationNodeStateMachinePlayback _stateMachine;
+
     private static readonly Vector3[] _directions =
     {
         Vector3.Right,
@@ -35,7 +35,7 @@ internal partial class Enemy : CharacterBody3D
         Vector3.Back,
         Vector3.Forward
     };
-    private static Vector3 _lastDirection = Vector3.Zero;
+
     private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     public EnemyData EnemyData { get; set; }
 
@@ -62,7 +62,8 @@ internal partial class Enemy : CharacterBody3D
         _targetVelocity.X = direction.X * Speed;
         _targetVelocity.Z = direction.Z * Speed;
 
-        var targetPosition = Position - direction;
+        var targetPosition = Position - direction + new Vector3(0.01f, 0.01f, 0.01f);
+
         LookAt(targetPosition, Vector3.Up);
 
         Velocity = _targetVelocity;
@@ -76,11 +77,14 @@ internal partial class Enemy : CharacterBody3D
     /// <param name="delta">The time elapsed since the previous frame.</param>
     public override void _PhysicsProcess(double delta)
     {
-        if (_isDead) return;
+        if (_isDead)
+            return;
 
         // Vertical velocity
         if (!IsOnFloor()) // If in the air, fall towards the floor. Literally gravity
             _targetVelocity.Y -= _gravity * (float)delta;
+
+        MoveAndSlide();
 
         if (IsOnWall())
         {
@@ -90,15 +94,12 @@ internal partial class Enemy : CharacterBody3D
             _targetVelocity.X = direction.X * Speed;
             _targetVelocity.Z = direction.Z * Speed;
 
-            var targetPosition = Position - direction;
+            var targetPosition = Position - direction + new Vector3(0.01f, 0.01f, 0.01f);
             LookAt(targetPosition, Vector3.Up);
         }
-
         BlendMovementAnimation();
 
         Velocity = _targetVelocity;
-
-        MoveAndSlide();
     }
 
     /// <summary>
@@ -135,84 +136,13 @@ internal partial class Enemy : CharacterBody3D
     #endregion
 
     /// <summary>
-    /// Checks if the enemy can move to the specified tile.
-    /// </summary>
-    /// <param name="position">The position to check.</param>
-    /// <returns>True if the enemy can move to the tile; otherwise, false.</returns>
-    private static bool CanMoveToTile(Vector3 position)
-    {
-        var canMoveToTileOnDirections = new Dictionary<
-            Vector3,
-            Vector3I
-        >()
-        {
-            {
-                Vector3.Right,
-                GameManager.GameMap.LocalToMap(
-                    new Vector3(position.X + 1, position.Y + 1, position.Z)
-                )
-            },
-            {
-                Vector3.Left,
-                GameManager.GameMap.LocalToMap(
-                    new Vector3(position.X - 1, position.Y + 1, position.Z)
-                )
-            },
-            {
-                Vector3.Forward,
-                GameManager.GameMap.LocalToMap(
-                    new Vector3(position.X, position.Y + 1, position.Z + 1)
-                )
-            },
-            {
-                Vector3.Back,
-                GameManager.GameMap.LocalToMap(
-                    new Vector3(position.X, position.Y + 1, position.Z - 1)
-                )
-            }
-        };
-
-        var canMoveToTileOnDirection = canMoveToTileOnDirections[position];
-        var tileId = GameManager.GameMap.GetCellItem(canMoveToTileOnDirection);
-
-        return tileId == -1;
-    }
-
-    /// <summary>
-    /// Gets a random direction from the specified array of directions.
-    /// </summary>
-    /// <param name="directions">An array of directions to choose from.</param>
-    /// <returns>A random direction.</returns>
-    private static Vector3 GetRandomDirection(Vector3[] directions)
-    {
-        var randomIndex = new Random().Next(0, directions.Length);
-
-        return directions[randomIndex];
-    }
-
-    /// <summary>
     /// Changes the direction based on the selected direction.
     /// </summary>
-    /// <param name="selectedDirection">The selected direction.</param>
     /// <param name="direction">The current direction.</param>
-    private static void ChangeDirection(ref Vector3 direction)
+    private void ChangeDirection(ref Vector3 direction)
     {   
-        Vector3 selectedDirection = GetRandomDirection(_directions);
-
-        if (_lastDirection == Vector3.Zero)
-        {
-            _lastDirection = selectedDirection;
-        }
-        else
-        {
-            while (selectedDirection == _lastDirection)
-            {
-                selectedDirection = GetRandomDirection(_directions);
-            }
-
-            _lastDirection = selectedDirection;
-        }
-
+        GD.Print("\n");
+        var selectedDirection = SelectDirection();
         switch (selectedDirection)
         {
             case var _ when selectedDirection == Vector3.Right:
@@ -227,7 +157,87 @@ internal partial class Enemy : CharacterBody3D
             case var _ when selectedDirection == Vector3.Forward:
                 direction.Z -= 1.0f;
                 break;
+            case var _ when selectedDirection == Vector3.Zero:
+                direction = Vector3.Zero;
+                break;
         }
+        GD.Print($"Enemy changed direction, position: {Position}, direction: {direction}");
+        Position = new Vector3(MathF.Round(Position.X), Position.Y, MathF.Round(Position.Z));
+        GD.Print($"Enemy rounded position: {Position}");
+    }
+
+    /// <summary>
+    /// Selects a direction for the enemy to move to.
+    /// </summary>
+    private Vector3 SelectDirection()
+    {
+        var randomDirections = GetRandomDirectionsArray(_directions);
+        Vector3 selectedDirection = Vector3.Zero;
+
+        foreach (var randomDirection in randomDirections)
+        {   
+            GD.Print($"Random direction: {randomDirection}");
+            GD.Print($"Can move to tile: {CanMoveToTile(randomDirection)}");
+            if (!CanMoveToTile(randomDirection)) continue;
+            
+            selectedDirection = randomDirection;
+            break;
+        }
+        
+        return selectedDirection;
+    }
+
+    /// <summary>
+    /// Gets a randomly sorted directions array.
+    /// </summary>
+    /// <param name="directions">An array of directions to choose from.</param>
+    /// <returns>A randomly sorted directions array.</returns>
+    private static Vector3[] GetRandomDirectionsArray(Vector3[] directions)
+    {
+        return directions.OrderBy(_ => Guid.NewGuid()).ToArray();
+    }
+
+    /// <summary>
+    /// Checks if the enemy can move to the specified tile.
+    /// </summary>
+    /// <param name="direction">The direction to check.</param>
+    /// <returns>True if the enemy can move to the tile; otherwise, false.</returns>
+    private bool CanMoveToTile(Vector3 direction)
+    {
+        Vector3I tilePosition = GetTilePositionBasedOnDirection(direction);
+        GD.Print($"Tile position: {tilePosition}");
+        var tileId = GameManager.GameMap.GetCellItem(tilePosition);
+
+        return tileId == -1;
+    }
+    
+    /// <summary>
+    /// Gets the tile position based on the specified direction.
+    /// </summary>
+    /// <param name="direction">The direction to get the tile position from.</param>
+    /// <returns>The tile position based on the specified direction.</returns>
+    private Vector3I GetTilePositionBasedOnDirection(Vector3 direction)
+    {
+        return direction switch
+        {
+            _ when direction == Vector3.Right
+                => GameManager.GameMap.LocalToMap(
+                    new Vector3(Position.X + 2, Position.Y + 1, Position.Z)
+                ),
+            _ when direction == Vector3.Left
+                => GameManager.GameMap.LocalToMap(
+                    new Vector3(Position.X - 2, Position.Y + 1, Position.Z)
+                ),
+            _ when direction == Vector3.Forward
+                => GameManager.GameMap.LocalToMap(
+                    new Vector3(Position.X, Position.Y + 1, Position.Z + 2)
+                ),
+            _ when direction == Vector3.Back
+                => GameManager.GameMap.LocalToMap(
+                    new Vector3(Position.X, Position.Y + 1, Position.Z - 2)
+                ),
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+        };
     }
 
     /// <summary>
@@ -236,7 +246,8 @@ internal partial class Enemy : CharacterBody3D
     /// <param name="body">The body that entered the area.</param>
     private void OnAreaEntered(Node3D body)
     {
-        if (_isDead) return;
+        if (_isDead)
+            return;
 
         if (body.IsInGroup("players"))
         {
