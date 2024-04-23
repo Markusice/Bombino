@@ -54,12 +54,16 @@ internal class BombPlace
 
         var timer = bombToPlace.GetNode<Timer>("BombTimer");
         timer.Timeout += () =>
+        {
+            if (player.PlayerData.IsDead) return;
+
             Events.Instance.EmitSignal(
                 Events.SignalName.PlayerBombNumberIncremented,
                 player.PlayerData.Color.ToString(),
                 player.PlayerData.MaxNumberOfAvailableBombs
                 - player.PlayerData.NumberOfPlacedBombs
             );
+        };
 
         GameManager.WorldEnvironment.AddChild(bombToPlace);
     };
