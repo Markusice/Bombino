@@ -138,9 +138,9 @@ internal partial class Bomb : Area3D
     /// Called when the Player exits a bomb's Area3D.
     /// </summary>
     /// <param name="body">The body that exited the bomb's Area3D.</param>
-    private void OnEnableCollisionMaskOnPlacer(Node3D body)
+    private void OnEnableBombCollisionForPlacer(Node3D body)
     {
-        if (!body.IsInGroup("players"))
+        if (body != Player)
             return;
 
         if (!GetNode<StaticBody3D>("%BombObject").GetCollisionLayerValue(6))

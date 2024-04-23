@@ -191,4 +191,4 @@ shape = SubResource("BoxShape3D_fsnjq")
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]
 [connection signal="body_exited" from="." to="." method="OnBodyExited"]
 [connection signal="timeout" from="BombTimer" to="." method="OnTimerTimeout"]
-[connection signal="body_exited" from="Bomb/CollisionArea" to="." method="OnEnableCollisionMaskOnPlacer"]
+[connection signal="body_exited" from="Bomb/CollisionArea" to="." method="OnEnableBombCollisionForPlacer"]
