@@ -17,8 +17,8 @@ offset_bottom = 199.0
 
 [node name="MarginContainer" type="MarginContainer" parent="PlayerBombsContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 20
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 38
 
 [node name="PlayersBombData" type="GridContainer" parent="PlayerBombsContainer/MarginContainer"]
 unique_name_in_owner = true
