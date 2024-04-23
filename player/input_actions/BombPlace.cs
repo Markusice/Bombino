@@ -19,62 +19,89 @@ internal class BombPlace
     /// <summary>
     /// Action that places a bomb for the player.
     /// </summary>
-    public Action<Player> Action { get; } =
-        (player) =>
+    public Action<Player> Action { get; } = player =>
+    {
+        if (
+            player.PlayerData.NumberOfPlacedBombs >= player.PlayerData.MaxNumberOfAvailableBombs
+        )
+            return;
+
+        var playerCollisionObject = player as CollisionObject3D;
+        playerCollisionObject.SetCollisionMaskValue(5, false);
+
+        var bombTilePosition = GameManager.GameMap.MapToLocal(player.MapPosition);
+        var bombToPlacePosition = new Vector3(
+            bombTilePosition.X,
+            GameManager.GameMap.CellSize.Y + 1,
+            bombTilePosition.Z
+        );
+
+        if (IsUnableToPlaceBomb(player, bombToPlacePosition))
+            return;
+
+        player.PlayerData.NumberOfPlacedBombs++;
+
+        Events.Instance.EmitSignal(
+            Events.SignalName.PlayerBombNumberDecreased,
+            player.PlayerData.Color.ToString(),
+            player.PlayerData.MaxNumberOfAvailableBombs - player.PlayerData.NumberOfPlacedBombs
+        );
+
+        var bombToPlace = CreateBomb(player, bombToPlacePosition);
+
+        var bombCollisionObject = bombToPlace.GetNode<StaticBody3D>("%BombObject");
+        bombCollisionObject.SetCollisionLayerValue(6, false);
+
+        var timer = bombToPlace.GetNode<Timer>("BombTimer");
+        timer.Timeout += () =>
         {
-            if (
-                player.PlayerData.NumberOfPlacedBombs >= player.PlayerData.MaxNumberOfAvailableBombs
-            )
-                return;
-
-            var collisionObject = player as CollisionObject3D;
-            collisionObject.SetCollisionMaskValue(5, false);
-
-            var bombTilePosition = GameManager.GameMap.MapToLocal(player.MapPosition);
-            var bombToPlacePosition = new Vector3(
-                bombTilePosition.X,
-                GameManager.GameMap.CellSize.Y + 1,
-                bombTilePosition.Z
-            );
-
-            if (IsUnableToPlaceBomb(player, bombToPlacePosition))
-                return;
-
-            player.PlayerData.NumberOfPlacedBombs++;
+            if (player.PlayerData.IsDead) return;
 
             Events.Instance.EmitSignal(
-                Events.SignalName.PlayerBombNumberDecreased,
+                Events.SignalName.PlayerBombNumberIncremented,
                 player.PlayerData.Color.ToString(),
-                player.PlayerData.MaxNumberOfAvailableBombs - player.PlayerData.NumberOfPlacedBombs
+                player.PlayerData.MaxNumberOfAvailableBombs
+                - player.PlayerData.NumberOfPlacedBombs
             );
-
-            var bombToPlace = CreateBomb(player, bombToPlacePosition);
-
-            var timer = bombToPlace.GetNode<Timer>("BombTimer");
-            timer.Timeout += () =>
-                Events.Instance.EmitSignal(
-                    Events.SignalName.PlayerBombNumberIncremented,
-                    player.PlayerData.Color.ToString(),
-                    player.PlayerData.MaxNumberOfAvailableBombs
-                    - player.PlayerData.NumberOfPlacedBombs
-                );
-
-            GameManager.WorldEnvironment.AddChild(bombToPlace);
         };
+
+        GameManager.WorldEnvironment.AddChild(bombToPlace);
+    };
 
     /// <summary>
     /// Checks if the player is unable to place a bomb.
     /// </summary>
-    /// <param name="node">The player node.</param>
+    /// <param name="player">The player node.</param>
     /// <param name="bombToPlacePosition">The position where the bomb is to be placed.</param>
     /// <returns>True if the player is unable to place a bomb, false otherwise.</returns>
-    private static bool IsUnableToPlaceBomb(Node node, Vector3 bombToPlacePosition)
+    private static bool IsUnableToPlaceBomb(Player player, Vector3 bombToPlacePosition)
     {
-        var placedBombs = node.GetTree().GetNodesInGroup("bombs");
+        var placedBombs = player.GetTree().GetNodesInGroup("bombs");
 
-        return placedBombs
-            .Cast<Area3D>()
-            .Any(bombArea3D => bombArea3D.Position == bombToPlacePosition);
+        var isBodyNearBombPlacement = IsBodyNearBombPosition(player, bombToPlacePosition);
+
+        return isBodyNearBombPlacement ||
+               placedBombs
+                   .Cast<Area3D>()
+                   .Any(bombArea3D => bombArea3D.Position == bombToPlacePosition);
+    }
+
+    /// <summary>
+    /// Checks if a body is near the bomb placement.
+    /// </summary>
+    /// <param name="player">The player who is placing the bomb.</param>
+    /// <param name="bombToPlacePosition">The position where the bomb is to be placed.</param>
+    /// <returns>True if a body other than the placer is near the bomb placement, false otherwise.</returns>
+    private static bool IsBodyNearBombPosition(Player player, Vector3 bombToPlacePosition)
+    {
+        var collisionGroups = new[] { "players", "enemies" };
+        var safeDistance = GameManager.GameMap.CellSize.X;
+
+        return collisionGroups.SelectMany(group => player.GetTree()
+                .GetNodesInGroup(group)
+                .Cast<CharacterBody3D>()
+                .Where(body => body != player))
+            .Any(body => body.Position.DistanceTo(bombToPlacePosition) < safeDistance);
     }
 
     /// <summary>
@@ -90,6 +117,27 @@ internal class BombPlace
         bombToPlace.Position = bombToPlacePosition;
         bombToPlace.Range = player.PlayerData.BombRange;
         bombToPlace.Player = player;
+
+        var collisionShapeX = bombToPlace.GetNode<CollisionShape3D>("CollisionShapeX");
+        var collisionShapeZ = bombToPlace.GetNode<CollisionShape3D>("CollisionShapeZ");
+
+        const int collisionShapeOneTileLengthInBothDirection = 4;
+        var bombInstanceCollisionLength = GameManager.GameMap.CellSize.X;
+
+        collisionShapeX.Shape = new BoxShape3D
+        {
+            Size = new Vector3(
+                bombInstanceCollisionLength + bombToPlace.Range * collisionShapeOneTileLengthInBothDirection,
+                ((BoxShape3D)collisionShapeX.Shape).Size.Y,
+                ((BoxShape3D)collisionShapeX.Shape).Size.Z)
+        };
+
+        collisionShapeZ.Shape = new BoxShape3D
+        {
+            Size = new Vector3(((BoxShape3D)collisionShapeZ.Shape).Size.X,
+                ((BoxShape3D)collisionShapeZ.Shape).Size.Y,
+                bombInstanceCollisionLength + bombToPlace.Range * collisionShapeOneTileLengthInBothDirection)
+        };
 
         return bombToPlace;
     }

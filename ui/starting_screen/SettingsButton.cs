@@ -8,7 +8,13 @@ namespace Bombino.ui.starting_screen;
 /// </summary>
 internal partial class SettingsButton : Button, IUiButton
 {
+    #region Exports
+
     [Export(PropertyHint.File, "*.tscn")] private string _settingsMenuPath;
+
+    #endregion
+
+    #region MethodsForSignals
 
     /// <summary>
     /// Called when the settings button is pressed.
@@ -17,4 +23,6 @@ internal partial class SettingsButton : Button, IUiButton
     {
         GetTree().ChangeSceneToFile(_settingsMenuPath);
     }
+
+    #endregion
 }

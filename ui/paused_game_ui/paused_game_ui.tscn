@@ -50,7 +50,7 @@ _data = {
 [node name="PausedGameUI" type="CanvasLayer"]
 process_mode = 2
 script = ExtResource("1_y8mo4")
-_startingScreenScenePath = "res://ui/starting_screen/starting_screen.tscn"
+StartingScreenScenePath = "res://ui/starting_screen/starting_screen.tscn"
 
 [node name="Blur" type="ColorRect" parent="."]
 material = ExtResource("1_fu6uk")

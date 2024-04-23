@@ -1,7 +1,8 @@
-namespace BombinoTest;
+namespace Bombino.BombinoTest;
 
 public class Tests
 {
+    
     [SetUp]
     public void Setup()
     {

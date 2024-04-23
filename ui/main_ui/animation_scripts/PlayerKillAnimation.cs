@@ -5,26 +5,43 @@ namespace Bombino.ui.main_ui.animation_scripts;
 
 internal partial class PlayerKillAnimation : Node
 {
+    #region Fields
+
     private const float TweenDuration = 0.2f;
 
-    private GridContainer _playersBombData;
+    private GridContainer PlayersBombData { get; set; }
+
+    #endregion
+
+    #region Overrides
 
     public override void _Ready()
     {
-        Events.Instance.PlayerDied += OnPlayerDied;
+        PlayersBombData = GetNode<GridContainer>("%PlayersBombData");
 
-        _playersBombData = GetNode<GridContainer>("%PlayersBombData");
+        Events.Instance.PlayerDied += OnPlayerDied;
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        Events.Instance.PlayerDied -= OnPlayerDied;
+
+        base.Dispose(disposing);
+    }
+
+    #endregion
+
+    #region MethodsForSignals
 
     private void OnPlayerDied(string playerColor)
     {
         var playerNameContainerName = $"PlayerNameContainer_{playerColor}";
-        var playerNameContainer = _playersBombData.GetNode<MarginContainer>(playerNameContainerName);
+        var playerNameContainer = PlayersBombData.GetNode<MarginContainer>(playerNameContainerName);
 
         var playerNameLabel = playerNameContainer.GetNode<Label>("PlayerNameLabel");
 
         var bombStatusContainerName = $"BombStatusContainer_{playerColor}";
-        var bombStatusContainer = _playersBombData.GetNode<PanelContainer>(bombStatusContainerName);
+        var bombStatusContainer = PlayersBombData.GetNode<PanelContainer>(bombStatusContainerName);
 
         var bombPicture = bombStatusContainer.GetNode<TextureRect>("BombPicture");
         var bombNumberLabel = bombStatusContainer.GetNode<Label>("%BombNumberLabel");
@@ -33,6 +50,8 @@ internal partial class PlayerKillAnimation : Node
 
         bombNumberLabel.Text = 0.ToString();
     }
+
+    #endregion
 
     private void PlayAnimationForPlayerKill(Label playerNameLabel, TextureRect bombPicture)
     {

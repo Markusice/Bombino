@@ -28,8 +28,8 @@ internal partial class Bomb : Area3D
 
     /// <summary>
     /// Signal emitted when the bomb explodes sooner.
-    /// </summary>
     /// <param name="newTimerWaitTime"></param>
+    /// </summary>
     [Signal]
     public delegate void ExplodeSoonerEventHandler(float newTimerWaitTime);
 
@@ -42,7 +42,7 @@ internal partial class Bomb : Area3D
 
     private const float ExplosionDistanceDivider = Mathf.E;
 
-    private Area3D _bombMaskArea;
+    private Area3D _bombCollisionArea;
 
     public Player Player { get; set; }
 
@@ -56,7 +56,7 @@ internal partial class Bomb : Area3D
     public override void _Ready()
     {
         GD.Print($"bomb pos: {Position}");
-        _bombMaskArea = GetNode<Area3D>("Bomb/MaskArea");
+        _bombCollisionArea = GetNode<Area3D>("%CollisionArea");
 
         var timer = GetNode<Timer>("BombTimer");
         timer.WaitTime = _explodeTime;
@@ -68,8 +68,8 @@ internal partial class Bomb : Area3D
 
     /// <summary>
     /// Called when the bomb explodes sooner.
-    /// </summary>
     /// <param name="newTimerWaitTime"></param>
+    /// </summary>
     private void OnExplodeSooner(float newTimerWaitTime)
     {
         var bombTimer = GetNode<Timer>("BombTimer");
@@ -104,37 +104,47 @@ internal partial class Bomb : Area3D
             _bodiesToExplode.Remove(body);
     }
 
+    /// <summary>
+    /// Called when the bomb enters an area
+    /// <param name="area">The area that the bomb entered.</param>
+    /// </summary>
     private void OnAreaEntered(Area3D area)
     {
-        if (!area.IsInGroup("bombobjects"))
+        if (!area.IsInGroup("collisionareas"))
             return;
 
-        if (_bombMaskArea.GetRid() == area.GetRid())
+        if (_bombCollisionArea.GetRid() == area.GetRid())
             return;
 
         _bombsInRange.Add(GetBombFromBombObject(area));
     }
 
+    /// <summary>
+    /// Called when the bomb exits an area.
+    /// <param name="area">The area that the bomb exited.</param>
+    /// </summary>
     private void OnAreaExited(Area3D area)
     {
-        if (!area.IsInGroup("bombobjects"))
+        if (!area.IsInGroup("collisionareas"))
             return;
 
-        if (_bombMaskArea.GetRid() == area.GetRid())
+        if (_bombCollisionArea.GetRid() == area.GetRid())
             return;
 
         _bombsInRange.Remove(GetBombFromBombObject(area));
     }
 
+    /// <summary>
+    /// Called when the Player exits a bomb's Area3D.
+    /// </summary>
+    /// <param name="body">The body that exited the bomb's Area3D.</param>
     private void OnEnableCollisionMaskOnPlacer(Node3D body)
     {
         if (!body.IsInGroup("players"))
             return;
 
-        var bombCollisionObject = this as CollisionObject3D;
-
-        if (!bombCollisionObject.GetCollisionMaskValue(2))
-            bombCollisionObject.SetCollisionMaskValue(2, true);
+        if (!GetNode<StaticBody3D>("%BombObject").GetCollisionLayerValue(6))
+            GetNode<StaticBody3D>("%BombObject").SetCollisionLayerValue(6, true);
     }
 
     /// <summary>
@@ -167,6 +177,11 @@ internal partial class Bomb : Area3D
         Player.PlayerData.NumberOfPlacedBombs--;
     }
 
+    /// <summary>
+    /// Gets the bomb from the bomb object.
+    /// </summary>
+    /// <param name="body">The bomb object.</param>
+    /// <returns>The bomb.</returns>
     private static Area3D GetBombFromBombObject(Node3D body)
     {
         return body.GetParent<MeshInstance3D>().GetParent<Area3D>();
@@ -201,7 +216,7 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Gets the raycast directions.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>An array of raycast directions.</returns>
     private static Vector3[] GetRayCastDirections()
     {
         return new[] { Vector3.Left, Vector3.Right, Vector3.Back, Vector3.Forward };
@@ -212,7 +227,7 @@ internal partial class Bomb : Area3D
     /// </summary>
     /// <param name="bodyToExplode"></param>
     /// <param name="rayDirections"></param>
-    /// <returns></returns>
+    /// <returns>True if the body should not die, false otherwise.</returns>
     private bool CastRaysInDirectionsAndGetBodyShouldNotDie(
         Node3D bodyToExplode,
         Vector3[] rayDirections
@@ -246,6 +261,13 @@ internal partial class Bomb : Area3D
         return bodyShouldNotDie;
     }
 
+    /// <summary>
+    /// Gets if the body should not die in the specified direction.
+    /// </summary>
+    /// <param name="direction">The direction to check.</param>
+    /// <param name="colliderPosition">The position of the collider.</param>
+    /// <param name="body">The body to check.</param>
+    /// <returns>True if the body should not die in the specified direction, false otherwise.</returns>
     private static bool GetBodyShouldNotDieInDirection(
         Vector3 direction,
         Vector3 colliderPosition,
@@ -266,21 +288,45 @@ internal partial class Bomb : Area3D
         return isBodySafeInDirections[direction].Invoke(colliderPosition, body);
     }
 
+    /// <summary>
+    /// Checks if the body is safe from the bomb on the left.
+    /// </summary>
+    /// <param name="colliderPosition">The position of the collider.</param>
+    /// <param name="body">The body to check.</param>
+    /// <returns>True if the body is safe from the bomb on the left, false otherwise.</returns>
     private static bool IsBodySafeFromBombOnLeft(Vector3 colliderPosition, Node3D body)
     {
         return colliderPosition.X - body.Position.X >= GameManager.GameMap.CellSize.X;
     }
 
+    /// <summary>
+    /// Checks if the body is safe from the bomb on the right.
+    /// </summary>
+    /// <param name="colliderPosition">The position of the collider.</param>
+    /// <param name="body">The body to check.</param>
+    /// <returns>True if the body is safe from the bomb on the right, false otherwise.</returns>
     private static bool IsBodySafeFromBombOnRight(Vector3 colliderPosition, Node3D body)
     {
         return body.Position.X - colliderPosition.X >= GameManager.GameMap.CellSize.X;
     }
 
+    /// <summary>
+    /// Checks if the body is safe from the bomb on the back.
+    /// </summary>
+    /// <param name="colliderPosition">The position of the collider.</param>
+    /// <param name="body">The body to check.</param>
+    /// <returns>True if the body is safe from the bomb on the back, false otherwise.</returns>
     private static bool IsBodySafeFromBombOnBack(Vector3 colliderPosition, Node3D body)
     {
         return body.Position.Z - colliderPosition.Z >= GameManager.GameMap.CellSize.Z;
     }
 
+    /// <summary>
+    /// Checks if the body is safe from the bomb on the forward.
+    /// </summary>
+    /// <param name="colliderPosition">The position of the collider.</param>
+    /// <param name="body">The body to check.</param>
+    /// <returns>True if the body is safe from the bomb on the forward, false otherwise.</returns>
     private static bool IsBodySafeFromBombOnForward(Vector3 colliderPosition, Node3D body)
     {
         return colliderPosition.Z - body.Position.Z >= GameManager.GameMap.CellSize.Z;
@@ -340,6 +386,7 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Destroys the first crates on the specified axis.
     /// </summary>
+    /// <param name="explosionAxis">The axis to destroy the crates on.</param>
     private void DestroyCratesOnAxis(ExplosionAxis explosionAxis)
     {
         for (var axis = -1; axis < 1; axis++)
@@ -369,6 +416,9 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Checks if the tile type is at the specified position.
     /// </summary>
+    /// <param name="position">The position to check.</param>
+    /// <param name="tileType">The tile type to check.</param>
+    /// <returns>True if the tile type is at the specified position, false otherwise.</returns>
     private static bool IsTileTypeAtPosition(Vector3 position, long tileType)
     {
         var mapCoordinates = GameManager.GameMap.LocalToMap(position);
@@ -379,6 +429,7 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Destroys the crate at the specified position.
     /// </summary>
+    /// <param name="position">The position of the crate to destroy.</param>
     private void DestroyCrateAtPosition(Vector3 position)
     {
         var mapCoordinates = GameManager.GameMap.LocalToMap(position);
@@ -391,11 +442,19 @@ internal partial class Bomb : Area3D
         }
     }
 
+    /// <summary>
+    /// Gets a random power up spawn chance.
+    /// </summary>
+    /// <returns>A random integer from 0 to 10.</returns>
     private static int GetRandomPowerUpSpawnChance()
     {
         return new Random().Next(0, 10);
     }
 
+    /// <summary>
+    /// Spawns a power up at the specified position.
+    /// </summary>
+    /// <param name="position">The position to spawn the power up at.</param>
     private void SpawnPowerUp(Vector3 position)
     {
         var powerUpInstance = ResourceLoader.Load<PackedScene>(_powerUpScenePath);
@@ -457,10 +516,10 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Gets the effect position on the specified axis.
     /// </summary>
-    /// <param name="explosionAxis"></param>
-    /// <param name="axis"></param>
-    /// <param name="nthTile"></param>
-    /// <returns></returns>
+    /// <param name="explosionAxis"> The axis to get the effect position on.</param>
+    /// <param name="axis"> The axis to get the effect position on.</param>
+    /// <param name="nthTile"> The nth tile to get the effect position on.</param>
+    /// <returns>The effect position on the specified axis.</returns>
     private Vector3 GetEffectPositionOnAxisOnNthTile(
         ExplosionAxis explosionAxis,
         int axis,
@@ -490,8 +549,8 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Checks if an explosion can be created at the specified position.
     /// </summary>
-    /// <param name="position"></param>
-    /// <returns></returns>
+    /// <param name="position"> The position to check.</param>
+    /// <returns>True if an explosion can be created at the specified position, false otherwise.</returns>
     private static bool CanCreateExplosionAtPosition(Vector3 position)
     {
         var mapCoordinates = GameManager.GameMap.LocalToMap(position);
@@ -503,7 +562,7 @@ internal partial class Bomb : Area3D
     /// <summary>
     /// Creates an explosion at the specified position.
     /// </summary>
-    /// <param name="position"></param>
+    /// <param name="position"> The position to create the explosion at.</param>
     private void CreateExplosionAtPosition(Vector3 position)
     {
         var effectInstance = _effectScene.Instantiate<VfxExplosion>();

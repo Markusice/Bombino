@@ -8,6 +8,8 @@ namespace Bombino.ui.starting_screen;
 /// </summary>
 internal partial class ExitToDesktopButton : Button, IUiButton
 {
+    #region MethodsForSignals
+
     /// <summary>
     /// Called when the exit to desktop button is pressed.
     /// </summary>
@@ -15,4 +17,6 @@ internal partial class ExitToDesktopButton : Button, IUiButton
     {
         GetTree().Quit();
     }
+
+    #endregion
 }

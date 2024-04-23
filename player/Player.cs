@@ -38,8 +38,6 @@ internal partial class Player : CharacterBody3D
     private AnimationNodeStateMachinePlayback _stateMachine;
     public Vector3I MapPosition;
 
-    private bool _isDead = false;
-
     public PlayerInputActions PlayerInputActions { get; } = new();
 
     public PlayerData PlayerData { get; set; }
@@ -62,10 +60,10 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Called every frame. 'delta' is the elapsed time since the previous frame.
     /// </summary>
-    /// <param name="delta"></param>
+    /// <param name="delta"> The time passed since the last frame. </param>
     public override void _PhysicsProcess(double delta)
     {
-        if (_isDead) return;
+        if (PlayerData.IsDead) return;
 
         // We create a local variable to store the input direction.
         var direction = Vector3.Zero;
@@ -113,7 +111,7 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void OnHit()
     {
-        _isDead = true;
+        PlayerData.IsDead = true;
         SetStateMachine("Die");
         Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
 
@@ -142,7 +140,7 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Checks the action keys for input.
     /// </summary>
-    /// <param name="direction"></param>
+    /// <param name="direction"> The direction to be modified. </param>
     private void CheckActionKeysForInput(ref Vector3 direction)
     {
         ModifyDirectionOnMovement(ref direction);
@@ -152,7 +150,7 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Modifies the direction based on the movement keys.
     /// </summary>
-    /// <param name="direction"></param>
+    /// <param name="direction"> The direction to be modified. </param>
     private void ModifyDirectionOnMovement(ref Vector3 direction)
     {
         direction = PlayerInputActions.Movements.Where(movement =>
@@ -175,7 +173,7 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Sets the state machine.
     /// </summary>
-    /// <param name="stateName"></param>
+    /// <param name="stateName"> The name of the state. </param>
     private void SetStateMachine(string stateName)
     {
         _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");

@@ -1,15 +1,13 @@
 using Bombino.game;
-using Bombino.ui.scripts;
-using Godot;
 
 namespace Bombino.ui.play_menu;
 
 /// <summary>
 /// Represents a button that allows the user to select the number of players as 2.
 /// </summary>
-internal partial class Players2Button : Button, IUiButton
+internal partial class Players2Button : PlayerButton
 {
-    [Export(PropertyHint.File, "*.tscn")] private string _mapsMenuPath;
+    #region MethodsForSignals
 
     /// <summary>
     /// Event handler for the button press event.
@@ -18,6 +16,8 @@ internal partial class Players2Button : Button, IUiButton
     {
         GameManager.NumberOfPlayers = 2;
 
-        GetTree().ChangeSceneToFile(_mapsMenuPath);
+        _OnPressed();
     }
+
+    #endregion
 }
