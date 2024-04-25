@@ -302,7 +302,6 @@ internal partial class GameManager : WorldEnvironment
     {
         foreach (var playerData in PlayersData)
         {
-            GD.Print($"Resetting player {playerData.Color}");
             var playerScenePath =
                 $"res://player/player_{playerData.Color.ToString().ToLower()}/player_{playerData.Color.ToString().ToLower()}.tscn";
 
@@ -311,8 +310,6 @@ internal partial class GameManager : WorldEnvironment
             var tempPlayerData = playerData;
             PlayerData.ResetToNewRound(ref tempPlayerData);
             player.PlayerData = tempPlayerData;
-            GD.Print($"{player.PlayerData.MaxNumberOfAvailableBombs} bombs for {player.PlayerData.Color}");
-
             AddChild(player);
         }
     }
