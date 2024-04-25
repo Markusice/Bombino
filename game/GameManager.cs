@@ -91,7 +91,7 @@ internal partial class GameManager : WorldEnvironment
 
     private bool _isRoundOver;
 
-    public static PlayerColor CurrentWinner { get; private set; }
+    public static PlayerColor? CurrentWinner { get; private set; }
 
     #endregion
 
@@ -191,8 +191,21 @@ internal partial class GameManager : WorldEnvironment
     {
         _alivePlayers--;
 
-        if (_alivePlayers != 1) return;
+        await ToSignal(GetTree().CreateTimer(Mathf.Pi), SceneTreeTimer.SignalName.Timeout);
 
+        if (_alivePlayers > 1 || _isRoundOver) return;
+
+        if (_alivePlayers == 1)
+            CheckForWinner();
+
+        else if (_alivePlayers == 0)
+            CurrentWinner = null;
+
+        EndRound();
+    }
+
+    private void CheckForWinner()
+    {
         foreach (var playerData in PlayersData)
         {
             if (playerData.IsDead) continue;
@@ -202,9 +215,6 @@ internal partial class GameManager : WorldEnvironment
 
             break;
         }
-
-        await ToSignal(GetTree().CreateTimer(1), SceneTreeTimer.SignalName.Timeout);
-        EndRound();
     }
 
     /// <summary>

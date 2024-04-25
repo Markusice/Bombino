@@ -70,6 +70,11 @@ internal partial class RoundStats : CanvasLayer
 
         if (GameManager.CurrentRound < GameManager.NumberOfRounds)
         {
+            if (GameManager.CurrentWinner == null)
+            {
+                _roundLabel.Text = $"Round {GameManager.CurrentRound} - Draw!";
+                return;
+            }
             _roundLabel.Text = $"Round {GameManager.CurrentRound} - {GameManager.CurrentWinner} won";
         }
         else
