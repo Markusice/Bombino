@@ -62,4 +62,15 @@ internal partial class PlayerData : Resource
         Position = position;
         Color = color;
     }
+
+    /// <summary>
+    /// Resets the player data to the default values for a new round.
+    /// </summary>
+    public static void ResetToNewRound(ref PlayerData playerData)
+    {
+        playerData.IsDead = false;
+        playerData.MaxNumberOfAvailableBombs = 1;
+        playerData.NumberOfPlacedBombs = 0;
+        playerData.BombRange = 2;
+    }
 }

@@ -249,10 +249,6 @@ internal partial class GameManager : WorldEnvironment
         CurrentRound++;
         _isRoundOver = false;
         _alivePlayers = NumberOfPlayers;
-        foreach (var playerData in PlayersData)
-        {
-            playerData.IsDead = false;
-        }
 
         GameMap.SetUpMapFromTextFile(_mapTextFilePath);
         RecreatePlayersForNextRound();
@@ -306,13 +302,16 @@ internal partial class GameManager : WorldEnvironment
     {
         foreach (var playerData in PlayersData)
         {
+            GD.Print($"Resetting player {playerData.Color}");
             var playerScenePath =
                 $"res://player/player_{playerData.Color.ToString().ToLower()}/player_{playerData.Color.ToString().ToLower()}.tscn";
 
             var playerScene = (PackedScene)ResourceLoader.Load(playerScenePath);
             var player = playerScene.Instantiate<Player>();
-
-            player.PlayerData = playerData;
+            var tempPlayerData = playerData;
+            PlayerData.ResetToNewRound(ref tempPlayerData);
+            player.PlayerData = tempPlayerData;
+            GD.Print($"{player.PlayerData.MaxNumberOfAvailableBombs} bombs for {player.PlayerData.Color}");
 
             AddChild(player);
         }
