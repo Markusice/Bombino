@@ -64,37 +64,49 @@ internal partial class RoundStats : CanvasLayer
 
     #endregion
 
+    /// <summary>
+    /// Updates the player stats on the screen.
+    /// </summary>
     private void UpdatePlayerStats()
     {
-        var playersData = GameManager.PlayersData.OrderByDescending(p => p.Wins).ToList();
+        UpdateRoundLabel();
 
+        UpdatePlayerLabels();
+    }
+
+    /// <summary>
+    /// Updates the round label with the current round and winner.
+    /// </summary>
+    private void UpdateRoundLabel()
+    {
         if (GameManager.CurrentRound < GameManager.NumberOfRounds)
         {
             if (GameManager.CurrentWinner == null)
             {
                 _roundLabel.Text = $"Round {GameManager.CurrentRound} - Draw!";
+                return;
             }
-            else
-            {
-                _roundLabel.Text = $"Round {GameManager.CurrentRound} - {GameManager.CurrentWinner} won";
-            }
+            _roundLabel.Text = $"Round {GameManager.CurrentRound} - {GameManager.CurrentWinner} won";
+            return;
+
         }
-        else
+        var maxWins = GameManager.PlayersData.Max(p => p.Wins);
+        var winners = GameManager.PlayersData.Where(p => p.Wins == maxWins).ToList();
+
+        if (winners.Count > 1)
         {
-            // determine the winner
-            var maxWins = playersData[0].Wins;
-            var winners = playersData.Where(p => p.Wins == maxWins).ToList();
-
-            if (winners.Count > 1)
-            {
-                _roundLabel.Text = "Game Over! - Draw!";
-            }
-            else
-            {
-                _roundLabel.Text = $"Game Over! - {winners[0].Color} won!";
-            }
+            _roundLabel.Text = "Game Over! - Draw!";
+            return;
         }
+        _roundLabel.Text = $"Game Over! - {winners[0].Color} won!";
+    }
 
+    /// <summary>
+    /// Updates the player labels with the current player stats.
+    /// </summary>
+    private void UpdatePlayerLabels()
+    {
+        var playersData = GameManager.PlayersData.OrderByDescending(p => p.Wins).ToList();
 
         _playerXPosition.Text = "1st";
         _playerXName.Text = playersData[0].Color.ToString();
@@ -117,6 +129,9 @@ internal partial class RoundStats : CanvasLayer
         _playerXWon3.Text = playersData[2].Wins.ToString();
     }
 
+    /// <summary>
+    /// Called when the continue button is pressed.
+    /// </summary>
     private void OnContinuePressed()
     {
         QueueFree();
