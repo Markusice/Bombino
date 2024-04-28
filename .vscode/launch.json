@@ -28,6 +28,7 @@
       ],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
+      "justMyCode": false
     },
     {
       "name": "Debug Current Test",
