@@ -1,10 +1,13 @@
 <Project Sdk="Godot.NET.Sdk/4.2.1">
   <PropertyGroup>
+    <!-- to avoid ERROR in Godot: CS0579: Duplicate
+        'global::System.Runtime.Versioning.TargetFrameworkAttribute' -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <TargetFramework>net7.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <LangVersion>10.0</LangVersion>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
