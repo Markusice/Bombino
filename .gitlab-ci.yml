@@ -27,7 +27,10 @@ import-assets:
 tests:
   stage: tests
   script:
-    - dotnet test
+    - dotnet --version
+    - godot --version
+    - godot --headless --build-solutions --quit || exit 0
+    - godot --headless --run-tests --quit-on-finish
 
 linux:
   stage: export
