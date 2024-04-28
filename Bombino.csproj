@@ -1,16 +1,34 @@
 <Project Sdk="Godot.NET.Sdk/4.2.1">
   <PropertyGroup>
-    <!-- to avoid ERROR in Godot: CS0579: Duplicate
-        'global::System.Runtime.Versioning.TargetFrameworkAttribute' -->
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-
     <TargetFramework>net7.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Title>Bombino</Title>
+    <!-- Don't include unit tests in release builds. -->
+    <DefaultItemExcludes Condition="'$(Configuration)' == 'ExportRelease'">
+      $(DefaultItemExcludes);test/**/*
+    </DefaultItemExcludes>
   </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <!-- Test dependencies go here! -->
+    <!-- Dependencies added here will not be included in release builds. -->
+    <PackageReference Include="Chickensoft.GoDotTest" Version="1.4.0" />
+    <!-- Used to drive test scenes when testing visual code -->
+    <PackageReference Include="GodotTestDriver" Version="2.1.0" />
+    <!-- Bring your own assertion library for tests! -->
+    <!-- We're using Shouldly for this example, but you can use anything. -->
+    <PackageReference Include="Shouldly" Version="4.2.1" />
+    <!-- LightMock is a mocking library that works without reflection. -->
+    <PackageReference Include="LightMock.Generator" Version="1.2.2" />
+    <!-- LightMoq is a Chickensoft package which makes it more like Moq. -->
+    <PackageReference Include="LightMoq" Version="0.1.0" />
+  </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="BombinoTest\BombinoTest.csproj" />
+    <!-- Production dependencies go here! -->
   </ItemGroup>
 </Project>
-  
