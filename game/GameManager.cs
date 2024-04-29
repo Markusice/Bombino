@@ -121,8 +121,6 @@ internal partial class GameManager : WorldEnvironment
         _alivePlayers = NumberOfPlayers;
 
         Events.Instance.PlayerDied += CheckPlayersAndOpenRoundStats;
-
-        // CheckForSavedDataAndSetUpGame();
     }
 
     public override void _Process(double delta)
@@ -426,34 +424,11 @@ internal partial class GameManager : WorldEnvironment
     }
 
     /// <summary>
-    /// Checks for saved data and sets up the game.
-    /// </summary>
-    private void CheckForSavedDataAndSetUpGame()
-    {
-        if (!GameSaveHandler.IsThereSavedData(out var receivedData))
-        {
-            CreateNewGame();
-
-            return;
-        }
-
-        CreateGameFromSavedData(receivedData);
-    }
-
-    /// <summary>
     /// Creates a new game.
     /// </summary>
     public void CreateNewGame()
     {
         RequestMapLoad();
-    }
-
-    /// <summary>
-    /// Creates a game from the saved data.
-    /// </summary>
-    /// <param name="data"></param>
-    private void CreateGameFromSavedData(Godot.Collections.Dictionary<string, Variant> data)
-    {
     }
 
     /// <summary>
