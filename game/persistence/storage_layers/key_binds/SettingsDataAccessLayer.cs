@@ -21,7 +21,11 @@ internal class SettingsDataAccessLayer : ISettingsDataAccessLayer<Dictionary<str
 
         var error = Config.Save(KeyBindsPath);
 
-        return error == Error.Ok;
+        if (error == Error.Ok) return true;
+
+        GD.PushError(error);
+
+        return false;
     }
 
     public bool LoadData(Dictionary<string, PlayerColor> dataForConfigFile)
