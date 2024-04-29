@@ -18,16 +18,14 @@ internal partial class GameLoadingScene : CanvasLayer
         var mainNode = GetParent().GetNode<Node>("Main");
         GameManager = mainNode.GetNode<GameManager>("WorldEnvironment");
 
-        GameManager.SceneLoad += OnSceneLoad;
-        GameManager.EverythingLoaded += OnEverythingLoaded;
+        AttachMethodsForSignals();
 
         GameManager.CreateNewGame();
     }
 
     protected override void Dispose(bool disposing)
     {
-        GameManager.SceneLoad -= OnSceneLoad;
-        GameManager.EverythingLoaded -= OnEverythingLoaded;
+        DetachMethodsForSignals();
 
         base.Dispose(disposing);
     }
@@ -48,4 +46,16 @@ internal partial class GameLoadingScene : CanvasLayer
     }
 
     #endregion
+
+    private void AttachMethodsForSignals()
+    {
+        GameManager.SceneLoad += OnSceneLoad;
+        GameManager.EverythingLoaded += OnEverythingLoaded;
+    }
+
+    private void DetachMethodsForSignals()
+    {
+        GameManager.SceneLoad -= OnSceneLoad;
+        GameManager.EverythingLoaded -= OnEverythingLoaded;
+    }
 }
