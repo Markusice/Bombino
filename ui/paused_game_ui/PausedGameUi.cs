@@ -1,4 +1,5 @@
 using Bombino.game;
+using Bombino.game.persistence.storage_layers.game_state;
 using Bombino.ui.scripts;
 using Godot;
 
@@ -55,8 +56,7 @@ internal partial class PausedGameUi : CanvasLayer
 
     private void OnSaveAndExitButtonPressed()
     {
-        // TODO
-        // SaveGameAndGoToStartingScreen();
+        SaveGame();
     }
 
     #endregion
@@ -115,5 +115,13 @@ internal partial class PausedGameUi : CanvasLayer
     private void PlayBlurAnimation()
     {
         AnimationPlayer.Play("start_pause");
+    }
+
+    private void SaveGame()
+    {
+        var gameSaver = new GameSaver();
+        var gameSaveHandler = new GameSaveHandler(gameSaver);
+
+        gameSaveHandler.SaveGame();
     }
 }
