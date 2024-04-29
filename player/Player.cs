@@ -101,6 +101,8 @@ internal partial class Player : CharacterBody3D
         Velocity = _targetVelocity;
         MoveAndSlide();
 
+        PlayerData.Position = Position;
+
         SetMapPosition();
     }
 

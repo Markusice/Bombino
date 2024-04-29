@@ -98,6 +98,8 @@ internal partial class Enemy : CharacterBody3D
             LookAt(targetPosition, Vector3.Up);
         }
 
+        EnemyData.Position = Position;
+
         BlendMovementAnimation();
 
         Velocity = _targetVelocity;
