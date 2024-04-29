@@ -15,6 +15,6 @@ internal partial class ActionKeysContainer : GridContainer
 
         settingsKeyBinds.LoadKeyBinds();
 
-        ActionKeysMapper.CreateActionKeys(this, settingsKeyBinds);
+        ActionKeysMapper.CreateActionKeys(this, settingsKeyBinds.InputActionsForPlayerColors);
     }
 }
