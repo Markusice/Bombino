@@ -3,7 +3,7 @@ using Bombino.player.input_actions;
 
 namespace Bombino.game.persistence.storage_layers.key_binds;
 
-internal class SettingsKeyBinds
+internal class SettingsKeyBinds : ISettingsKeyBinds
 {
     #region Fields
 
