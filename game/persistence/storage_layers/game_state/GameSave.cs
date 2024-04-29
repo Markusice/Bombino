@@ -1,63 +1,65 @@
-namespace Bombino.game.persistence.storage_layers.game_state;
-
 using Godot;
-using Godot.Collections;
+using FileAccess = Godot.FileAccess;
+
+namespace Bombino.game.persistence.storage_layers.game_state;
 
 /// <summary>
 /// Represents a game save file.
 /// </summary>
-internal class GameSave
+internal class GameSave : IGameSave<Godot.Collections.Dictionary<string, Variant>>
 {
+    #region Fields
+
     private const string GameSavePath = "user://save.json";
 
-    public static Dictionary<string, Variant> Data { get; private set; }
+    #endregion
+
+    #region InterfaceMethods
+
+    /// <summary>
+    /// Loads the game save data from the file.
+    /// </summary>
+    public (bool, FileAccess) LoadFile(string path, FileAccess.ModeFlags modeFlags)
+    {
+        using var file = GetFileAccess(path, modeFlags);
+
+        return (IsThereFileOpenError(file), file);
+    }
 
     /// <summary>
     /// Writes the game save data to the file.
     /// </summary>
     /// <param name="data">The game save data to write.</param>
-    public static void WriteSave(Dictionary<string, Variant> data)
+    public bool SaveData(Godot.Collections.Dictionary<string, Variant> data)
     {
-        GetFileAccessAndSaveDataToFile(data);
+        var (error, file) = LoadFile(GameSavePath, FileAccess.ModeFlags.Write);
+
+        if (error) return false;
+
+        SaveDataToFile(file, data);
+
+        return true;
     }
 
     /// <summary>
-    /// Loads the game save data from the file.
+    /// Retrieves data from a file and returns it as a dictionary.
     /// </summary>
-    public static void LoadSave()
+    /// <returns>A dictionary containing the retrieved data.</returns>
+    public Godot.Collections.Dictionary<string, Variant> GetData(FileAccess file)
     {
-        GetFileAccessAndLoadDataFromFile();
+        var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
+
+        return data;
     }
 
-    /// <summary>
-    /// Checks if a game save file exists.
-    /// </summary>
-    /// <returns><c>true</c> if the game save file exists; otherwise, <c>false</c>.</returns>
-    public static bool IsSaveExits()
-    {
-        return FileAccess.FileExists(GameSavePath);
-    }
-
-    /// <summary>
-    /// Gets file access and saves the data to a file.
-    /// </summary>
-    /// <param name="data">The data to be saved.</param>
-    private static void GetFileAccessAndSaveDataToFile(Dictionary<string, Variant> data)
-    {
-        using var file = GetFileAccess(FileAccess.ModeFlags.Write);
-
-        if (IsThereFileOpenError(file))
-            return;
-
-        SaveStringifiedDataToFile(data, file);
-    }
+    #endregion
 
     /// <summary>
     /// Provides access to a file.
     /// </summary>
-    private static FileAccess GetFileAccess(FileAccess.ModeFlags modeFlag)
+    private static FileAccess GetFileAccess(string path, FileAccess.ModeFlags modeFlag)
     {
-        return FileAccess.Open(GameSavePath, modeFlag);
+        return FileAccess.Open(path, modeFlag);
     }
 
     /// <summary>
@@ -70,7 +72,8 @@ internal class GameSave
         if (file != null)
             return false;
 
-        GD.PrintErr(FileAccess.GetOpenError());
+        GD.PushError(FileAccess.GetOpenError());
+
         return true;
     }
 
@@ -79,53 +82,8 @@ internal class GameSave
     /// </summary>
     /// <param name="data">The dictionary containing the data to be saved.</param>
     /// <param name="file">The file access object used to store the data.</param>
-    private static void SaveStringifiedDataToFile(Dictionary<string, Variant> data, FileAccess file)
+    private static void SaveDataToFile(FileAccess file, Godot.Collections.Dictionary<string, Variant> data)
     {
         file.StoreString(Json.Stringify(data));
-    }
-
-    /// <summary>
-    /// Gets file access and loads data from the file.
-    /// </summary>
-    private static void GetFileAccessAndLoadDataFromFile()
-    {
-        using var file = GetFileAccess(FileAccess.ModeFlags.Read);
-
-        if (IsThereFileOpenError(file))
-            return;
-
-        LoadStringifiedDataFromFile(file);
-    }
-
-    /// <summary>
-    /// Loads stringified data from a file and sets the data.
-    /// </summary>
-    /// <param name="file">The file access object.</param>
-    private static void LoadStringifiedDataFromFile(FileAccess file)
-    {
-        var data = GetDataFromFile(file);
-
-        SetData(data);
-    }
-
-    /// <summary>
-    /// Retrieves data from a file and returns it as a dictionary.
-    /// </summary>
-    /// <param name="file">The file to retrieve data from.</param>
-    /// <returns>A dictionary containing the retrieved data.</returns>
-    private static Dictionary<string, Variant> GetDataFromFile(FileAccess file)
-    {
-        var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
-
-        return data;
-    }
-
-    /// <summary>
-    /// Sets the data for the game save.
-    /// </summary>
-    /// <param name="data">The dictionary containing the data to be set.</param>
-    private static void SetData(Dictionary<string, Variant> data)
-    {
-        Data = data;
     }
 }
