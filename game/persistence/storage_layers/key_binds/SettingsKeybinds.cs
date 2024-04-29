@@ -27,6 +27,8 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
         AddInputActionsForPlayerColor(playerColors, playerInputActionsMovements, playerInputActionsPlaceBomb);
     }
 
+    #region InterfaceMethods
+
     public bool SaveKeyBinds()
     {
         return _settingsDataAccessLayer.SaveData(InputActionsForPlayerColors);
@@ -36,6 +38,8 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
     {
         return _settingsDataAccessLayer.LoadData(InputActionsForPlayerColors);
     }
+
+    #endregion
 
     private void AddInputActionsForPlayerColor(IEnumerable<PlayerColor> playerColors,
         Movement[] playerInputActionsMovements,
