@@ -6,7 +6,7 @@ namespace Bombino.game.persistence.storage_layers.game_state;
 /// <summary>
 /// Represents a game save file.
 /// </summary>
-internal class GameSave : IGameSave<Godot.Collections.Dictionary<string, Variant>>
+internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Variant>>
 {
     #region Fields
 
@@ -21,7 +21,7 @@ internal class GameSave : IGameSave<Godot.Collections.Dictionary<string, Variant
     /// </summary>
     public (bool, FileAccess) LoadFile(string path, FileAccess.ModeFlags modeFlags)
     {
-        using var file = GetFileAccess(path, modeFlags);
+        var file = GetFileAccess(path, modeFlags);
 
         return (IsThereFileOpenError(file), file);
     }
@@ -48,6 +48,8 @@ internal class GameSave : IGameSave<Godot.Collections.Dictionary<string, Variant
     public Godot.Collections.Dictionary<string, Variant> GetDataFromFile(FileAccess file)
     {
         var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
+
+        file.Close();
 
         return data;
     }
@@ -85,5 +87,7 @@ internal class GameSave : IGameSave<Godot.Collections.Dictionary<string, Variant
     private static void SaveDataToFile(FileAccess file, Godot.Collections.Dictionary<string, Variant> data)
     {
         file.StoreString(Json.Stringify(data));
+
+        file.Close();
     }
 }
