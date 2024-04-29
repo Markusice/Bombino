@@ -21,6 +21,7 @@ internal partial class PausedGameUi : CanvasLayer
     private AnimationPlayer AnimationPlayer { get; set; }
 
     private bool IsResumed { get; set; }
+    private bool IsSaveClicked { get; set; }
 
     #endregion
 
@@ -119,9 +120,13 @@ internal partial class PausedGameUi : CanvasLayer
 
     private void SaveGame()
     {
+        if (IsSaveClicked) return;
+        
         var gameSaver = new GameSaver();
         var gameSaveHandler = new GameSaveHandler(gameSaver);
 
         gameSaveHandler.SaveGame();
+
+        IsSaveClicked = true;
     }
 }
