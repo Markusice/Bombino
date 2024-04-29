@@ -36,7 +36,11 @@ internal class SettingsDataAccessLayer : ISettingsDataAccessLayer<Dictionary<str
             return SaveData(dataForConfigFile);
 
         if (error != Error.Ok)
+        {
+            GD.PushError(error);
+
             return false;
+        }
 
         LoadPlayersKeyBinds(dataForConfigFile);
 
