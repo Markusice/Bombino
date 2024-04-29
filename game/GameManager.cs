@@ -1,7 +1,6 @@
 using Bombino.enemy;
 using Bombino.events;
 using Bombino.game.persistence.state_storage;
-using Bombino.game.persistence.storage_layers.game_state;
 using Bombino.map;
 using Bombino.player;
 using Bombino.ui.main_ui;
@@ -382,7 +381,6 @@ internal partial class GameManager : WorldEnvironment
             var player = playerScene.Instantiate<Player>();
 
             var playerData = playerScenePathAndData.Value;
-
             player.PlayerData = playerData;
 
             PlayersData.Add(playerData);
@@ -398,7 +396,9 @@ internal partial class GameManager : WorldEnvironment
         foreach (var enemyData in _enemiesData.Values)
         {
             var enemy = _enemyScene.Instantiate<Enemy>();
+
             enemy.EnemyData = enemyData;
+            EnemiesData.Add(enemyData);
 
             AddChild(enemy);
         }
@@ -489,8 +489,9 @@ internal partial class GameManager : WorldEnvironment
         var playerScenePath =
             $"res://player/player_{playerColor.ToString().ToLower()}/player_{playerColor.ToString().ToLower()}.tscn";
 
-        var _playerData = new PlayerData(position, playerColor);
-        _playerScenesPathAndData.Add(playerScenePath, _playerData);
+        var playerData = new PlayerData(position, playerColor);
+
+        _playerScenesPathAndData.Add(playerScenePath, playerData);
         _playerScenesPathAndLoadStatus.Add(playerScenePath, ResourceLoader.ThreadLoadStatus.InProgress);
 
         ResourceLoader.LoadThreadedRequest(playerScenePath);
