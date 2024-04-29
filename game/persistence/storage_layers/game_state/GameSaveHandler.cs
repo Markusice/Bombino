@@ -3,85 +3,71 @@ using Godot;
 
 namespace Bombino.game.persistence.storage_layers.game_state;
 
-internal class GameSaveHandler
+internal class GameSaveHandler : IGameSaveHandler
 {
     #region Fields
 
-    private readonly IGameSave<Godot.Collections.Dictionary<string, Variant>> _gameSave;
+    private readonly IGameSaver<Godot.Collections.Dictionary<string, Variant>> _gameSaver;
 
     #endregion
 
-    public GameSaveHandler(IGameSave<Godot.Collections.Dictionary<string, Variant>> gameSave)
+    public GameSaveHandler(IGameSaver<Godot.Collections.Dictionary<string, Variant>> gameSaver)
     {
-        _gameSave = gameSave;
+        _gameSaver = gameSaver;
     }
+
+    #region InterfaceMethods
 
     /// <summary>
     /// Saves the game data.
     /// </summary>
     /// <remarks>
-    /// This method creates a dictionary of game data and writes it to a save file using the <see cref="game_state.GameSave.SaveData"/> method.
+    /// This method creates a dictionary of game data and writes it to a save file using the <see cref="GameSaver.SaveData"/> method.
     /// </remarks>
     public void SaveGame()
     {
         var data = new Godot.Collections.Dictionary<string, Variant>();
 
-        var playersDataRows = CreatePlayersDataRows();
+        var playersDataObject = CreatePlayersDataObject();
+        AddNewObjectToData(data, "PlayersData", playersDataObject);
 
-        AddNewRowToData(data, "PlayersData", playersDataRows);
+        var enemiesDataObject = CreateEnemiesDataObject();
+        AddNewObjectToData(data, "EnemiesData", enemiesDataObject);
 
-        _gameSave.SaveData(data);
+        _gameSaver.SaveData(data);
     }
 
-    // /// <summary>
-    // /// Checks if there is saved data and retrieves it.
-    // /// </summary>
-    // /// <param name="outputData">The dictionary containing the saved game data.</param>
-    // /// <returns><c>true</c> if saved data exists, <c>false</c> otherwise.</returns>
-    // public static bool IsThereSavedData(out Dictionary<string, Variant> outputData)
-    // {
-    //     if (GameSave.IsSaveExits())
-    //     {
-    //         GameSave.LoadSave();
-    //         outputData = GameSave.Data;
-    //
-    //         return true;
-    //     }
-    //
-    //     outputData = GameSave.Data;
-    //
-    //     return false;
-    // }
+    #endregion
 
     /// <summary>
     /// Adds a new row to the data dictionary.
     /// </summary>
     /// <param name="data">The dictionary to add the row to.</param>
-    /// <param name="rowName">The name of the row.</param>
-    /// <param name="row">The dictionary representing the row.</param>
-    private static void AddNewRowToData(IDictionary<string, Variant> data,
-        string rowName, Godot.Collections.Dictionary<string, Variant> row
+    /// <param name="objectName">The name of the row.</param>
+    /// <param name="objectData">The dictionary representing the row.</param>
+    private static void AddNewObjectToData(IDictionary<string, Variant> data,
+        string objectName, Godot.Collections.Dictionary<string, Variant> objectData
     )
     {
-        data.Add(rowName, row);
+        data.Add(objectName, objectData);
     }
 
     /// <summary>
     /// Creates a dictionary of players' data rows.
     /// </summary>
     /// <returns>A dictionary containing players' data rows.</returns>
-    private static Godot.Collections.Dictionary<string, Variant> CreatePlayersDataRows()
+    private static Godot.Collections.Dictionary<string, Variant> CreatePlayersDataObject()
     {
-        var playersDataRows = new Godot.Collections.Dictionary<string, Variant>();
+        var playersDataObject = new Godot.Collections.Dictionary<string, Variant>();
 
         foreach (var playerData in GameManager.PlayersData)
         {
-            var playerDataToStore = CreatePlayerDataToStore(playerData);
+            var playerDataObject = CreatePlayerDataObject(playerData);
 
-            AddNewRowToData(playersDataRows, playerData.Color.ToString(), playerDataToStore);
+            AddNewObjectToData(playersDataObject, playerData.Color.ToString(), playerDataObject);
         }
 
-        return playersDataRows;
+        return playersDataObject;
     }
 
     /// <summary>
@@ -89,11 +75,38 @@ internal class GameSaveHandler
     /// </summary>
     /// <param name="playerData">The player data to be stored.</param>
     /// <returns>A dictionary containing the player data.</returns>
-    private static Godot.Collections.Dictionary<string, Variant> CreatePlayerDataToStore(PlayerData playerData)
+    private static Godot.Collections.Dictionary<string, Variant> CreatePlayerDataObject(PlayerData playerData)
     {
         return new Godot.Collections.Dictionary<string, Variant>()
         {
+            { "Position", playerData.Position },
             { "BombRange", playerData.BombRange },
+            { "NumberOfPlacedBombs", playerData.NumberOfPlacedBombs },
+            { "MaxNumberOfAvailableBombs", playerData.MaxNumberOfAvailableBombs },
+            { "IsDead", playerData.IsDead },
+            { "Wins", playerData.Wins },
+        };
+    }
+
+    private static Godot.Collections.Dictionary<string, Variant> CreateEnemiesDataObject()
+    {
+        var enemiesDataObject = new Godot.Collections.Dictionary<string, Variant>();
+
+        foreach (var enemyData in GameManager.EnemiesData)
+        {
+            var playerDataObject = CreateEnemyDataObject(enemyData);
+
+            AddNewObjectToData(enemiesDataObject, enemyData.GetInstanceId().ToString(), playerDataObject);
+        }
+
+        return enemiesDataObject;
+    }
+
+    private static Godot.Collections.Dictionary<string, Variant> CreateEnemyDataObject(EnemyData enemyData)
+    {
+        return new Godot.Collections.Dictionary<string, Variant>()
+        {
+            { "Position", enemyData.Position },
         };
     }
 }
