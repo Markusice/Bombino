@@ -45,7 +45,7 @@ internal class GameSave : IGameSave<Godot.Collections.Dictionary<string, Variant
     /// Retrieves data from a file and returns it as a dictionary.
     /// </summary>
     /// <returns>A dictionary containing the retrieved data.</returns>
-    public Godot.Collections.Dictionary<string, Variant> GetData(FileAccess file)
+    public Godot.Collections.Dictionary<string, Variant> GetDataFromFile(FileAccess file)
     {
         var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
 

@@ -8,5 +8,5 @@ internal interface IGameSave<T>
 
     bool SaveData(T data);
 
-    T GetData(FileAccess file);
+    T GetDataFromFile(FileAccess file);
 }
