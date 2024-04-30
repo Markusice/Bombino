@@ -143,8 +143,21 @@ internal partial class Bomb : Area3D
         if (body != Player)
             return;
 
-        if (!GetNode<StaticBody3D>("%BombObject").GetCollisionLayerValue(6))
-            GetNode<StaticBody3D>("%BombObject").SetCollisionLayerValue(6, true);
+        var playerCollisionObject = Player as CollisionObject3D;
+        
+        int maskValue = GetMaskValueFromPlayerName(Player);
+        playerCollisionObject.SetCollisionMaskValue(maskValue, true);
+    }
+
+    public static int GetMaskValueFromPlayerName(Player player)
+    {
+        return player.PlayerData.Color switch
+        {
+            PlayerColor.Blue => 8,
+            PlayerColor.Red => 9,
+            PlayerColor.Yellow => 10,
+            _ => 0
+        };
     }
 
     /// <summary>
