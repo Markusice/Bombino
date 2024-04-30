@@ -149,6 +149,11 @@ internal partial class Bomb : Area3D
         playerCollisionObject.SetCollisionMaskValue(maskValue, true);
     }
 
+    /// <summary>
+    /// Gets the mask value from the player's name.
+    /// </summary>
+    /// <param name="player">The player to get the mask value from.</param>
+    /// <returns>The mask value from the player's name.</returns>
     public static int GetMaskValueFromPlayerName(Player player)
     {
         return player.PlayerData.Color switch
