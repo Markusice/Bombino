@@ -10,7 +10,7 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
 {
     #region Fields
 
-    private string GameSavePath = $"user://save_{Time.GetDatetimeStringFromSystem()}.json";
+    private string GameSavePath = $"user://save_{Time.GetDatetimeStringFromSystem(utc: true)}.json";
 
     #endregion
 
