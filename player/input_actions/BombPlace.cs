@@ -27,7 +27,10 @@ internal class BombPlace
             return;
 
         var playerCollisionObject = player as CollisionObject3D;
-        playerCollisionObject.SetCollisionMaskValue(5, false);
+        
+        int maskValue = Bomb.GetMaskValueFromPlayerName(player);
+        if (playerCollisionObject.GetCollisionMaskValue(maskValue))
+            playerCollisionObject.SetCollisionMaskValue(maskValue, false);
 
         var bombTilePosition = GameManager.GameMap.MapToLocal(player.MapPosition);
         var bombToPlacePosition = new Vector3(
@@ -50,7 +53,7 @@ internal class BombPlace
         var bombToPlace = CreateBomb(player, bombToPlacePosition);
 
         var bombCollisionObject = bombToPlace.GetNode<StaticBody3D>("%BombObject");
-        bombCollisionObject.SetCollisionLayerValue(6, false);
+        bombCollisionObject.SetCollisionLayerValue(maskValue, true);
 
         var timer = bombToPlace.GetNode<Timer>("BombTimer");
         timer.Timeout += () =>

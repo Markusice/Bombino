@@ -121,3 +121,6 @@ place_bomb_yellow={
 3d_physics/layer_5="bomb_object"
 3d_physics/layer_6="bomb_collision"
 3d_physics/layer_7="power_up"
+3d_physics/layer_8="blue_bomb"
+3d_physics/layer_9="red_bomb"
+3d_physics/layer_10="yellow_bomb"

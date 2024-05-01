@@ -149,7 +149,7 @@ size = Vector3(0.6, 0.6, 0.6)
 [node name="Bomb" type="Area3D" groups=["bombs"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.75, 2.08165e-12)
 collision_layer = 8
-collision_mask = 39
+collision_mask = 7
 script = ExtResource("1_1hr57")
 _effectScene = ExtResource("2_hirdy")
 _powerUpScenePath = "res://power_up/power_up.tscn"
@@ -172,7 +172,7 @@ skeleton = NodePath("")
 [node name="BombObject" type="StaticBody3D" parent="Bomb"]
 unique_name_in_owner = true
 collision_layer = 16
-collision_mask = 6
+collision_mask = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bomb/BombObject"]
 shape = SubResource("BoxShape3D_asqrh")
