@@ -20,24 +20,29 @@ internal class SettingsDataAccessLayer : ISettingsDataAccessLayer<Dictionary<str
         SavePlayersKeyBinds(dataForConfigFile);
 
         var error = Config.Save(KeyBindsPath);
+        if (error != Error.Ok)
+        {
+            GD.PushError(
+                $"An error occurred when trying to load the config file ({KeyBindsPath}): {error}"
+            );
 
-        if (error == Error.Ok) return true;
+            return false;
+        }
 
-        GD.PushError(error);
-
-        return false;
+        return true;
     }
 
     public bool LoadData(Dictionary<string, PlayerColor> dataForConfigFile)
     {
         var error = Config.Load(KeyBindsPath);
-
         if (error == Error.FileNotFound)
             return SaveData(dataForConfigFile);
 
         if (error != Error.Ok)
         {
-            GD.PushError(error);
+            GD.PushError(
+                $"An error occurred when trying to load the config file ({KeyBindsPath}): {error}"
+            );
 
             return false;
         }
@@ -53,8 +58,11 @@ internal class SettingsDataAccessLayer : ISettingsDataAccessLayer<Dictionary<str
     {
         foreach (var (inputAction, playerColor) in data)
         {
-            Config.SetValue(playerColor.ToString(), inputAction,
-                GetKeyBindForInputAction(inputAction));
+            Config.SetValue(
+                playerColor.ToString(),
+                inputAction,
+                GetKeyBindForInputAction(inputAction)
+            );
         }
     }
 
@@ -71,8 +79,10 @@ internal class SettingsDataAccessLayer : ISettingsDataAccessLayer<Dictionary<str
 
             InputMap.ActionEraseEvents(inputAction);
 
-            InputMap.ActionAddEvent(inputAction,
-                new InputEventKey { Keycode = OS.FindKeycodeFromString(playerKeyBind) });
+            InputMap.ActionAddEvent(
+                inputAction,
+                new InputEventKey { Keycode = OS.FindKeycodeFromString(playerKeyBind) }
+            );
         }
     }
 }
