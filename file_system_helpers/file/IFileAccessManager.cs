@@ -14,11 +14,11 @@ public interface IFileAccessManager
     public (Error, FileAccess) LoadFile(string path, FileAccess.ModeFlags modeFlags);
 
     /// <summary>
-    /// Retrieves the content of a file.
+    /// Retrieves the JSON data from the specified file.
     /// </summary>
-    /// <param name="file">The file to retrieve the content from.</param>
-    /// <returns>The content of the file as a string.</returns>
-    public string GetFileContent(FileAccess file);
+    /// <param name="file">The file to retrieve the JSON data from.</param>
+    /// <returns>The JSON data as a string.</returns>
+    public Godot.Collections.Dictionary<string, Variant> GetJSONData(FileAccess file);
 
     /// <summary>
     /// Stores JSON data in the specified file.

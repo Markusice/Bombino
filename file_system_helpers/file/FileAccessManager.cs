@@ -21,11 +21,11 @@ internal class FileAccessManager : IFileAccessManager
         return (Error.Ok, file);
     }
 
-    public string GetFileContent(FileAccess file)
+    public Godot.Collections.Dictionary<string, Variant> GetJSONData(FileAccess file)
     {
-        var content = file.GetAsText();
+        var JSONData = Json.ParseString(GetFileContent(file)).AsGodotDictionary<string, Variant>();
 
-        return content;
+        return JSONData;
     }
 
     public void StoreJSONData(FileAccess file, Godot.Collections.Dictionary<string, Variant> data)
@@ -67,5 +67,17 @@ internal class FileAccessManager : IFileAccessManager
         GD.PushError(
             $"An error occurred when trying to access the path ({path}): {FileAccess.GetOpenError()}"
         );
+    }
+
+    /// <summary>
+    /// Retrieves the content of a file.
+    /// </summary>
+    /// <param name="file">The file to retrieve the content from.</param>
+    /// <returns>The content of the file as a string.</returns>
+    private static string GetFileContent(FileAccess file)
+    {
+        var content = file.GetAsText();
+
+        return content;
     }
 }
