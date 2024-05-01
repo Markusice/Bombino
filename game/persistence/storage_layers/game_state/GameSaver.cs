@@ -1,3 +1,5 @@
+using Bombino.file_system_helpers.directory;
+using Bombino.file_system_helpers.file;
 using Godot;
 using FileAccess = Godot.FileAccess;
 
@@ -10,21 +12,21 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
 {
     #region Fields
 
-    private string GameSavePath = $"user://save_{Time.GetDatetimeStringFromSystem(utc: true)}.json";
+    private readonly IDirAccessManager _dirAccessManager = new DirAccessManager();
+    private readonly IFileAccessManager _fileAccessManager = new FileAccessManager();
+
+    private readonly string _fileName = $"save-{Time.GetDatetimeStringFromSystem(utc: true)}";
+    private const string SaveDirectory = "saves";
+    private readonly string _gameSavePath;
 
     #endregion
 
-    #region InterfaceMethods
-
-    /// <summary>
-    /// Loads the game save data from the file.
-    /// </summary>
-    public (bool, FileAccess) LoadFile(string path, FileAccess.ModeFlags modeFlags)
+    public GameSaver()
     {
-        var file = GetFileAccess(path, modeFlags);
-
-        return (IsThereFileOpenError(file), file);
+        _gameSavePath = $"user://{SaveDirectory}/{_fileName}.json";
     }
+
+    #region InterfaceMethods
 
     /// <summary>
     /// Writes the game save data to the file.
@@ -32,11 +34,22 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
     /// <param name="data">The game save data to write.</param>
     public bool SaveData(Godot.Collections.Dictionary<string, Variant> data)
     {
-        var (error, file) = LoadFile(GameSavePath, FileAccess.ModeFlags.Write);
+        var dirError = _dirAccessManager.MakeDirectory("user://", SaveDirectory);
+        if (dirError is not (Error.Ok or Error.AlreadyExists))
+        {
+            return false;
+        }
 
-        if (error) return false;
+        var loadFile = _fileAccessManager.LoadFile(_gameSavePath, FileAccess.ModeFlags.Write);
+        var fileError = loadFile.Item1;
+        if (fileError != Error.Ok)
+        {
+            return false;
+        }
 
-        SaveDataToFile(file, data);
+        using var file = loadFile.Item2;
+
+        _fileAccessManager.StoreJSONData(file, data);
 
         return true;
     }
@@ -47,47 +60,11 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
     /// <returns>A dictionary containing the retrieved data.</returns>
     public Godot.Collections.Dictionary<string, Variant> GetDataFromFile(FileAccess file)
     {
-        var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
+        var fileContent = _fileAccessManager.GetFileContent(file);
+        var fileData = Json.ParseString(fileContent).AsGodotDictionary<string, Variant>();
 
-        file.Close();
-
-        return data;
+        return fileData;
     }
 
     #endregion
-
-    /// <summary>
-    /// Provides access to a file.
-    /// </summary>
-    private static FileAccess GetFileAccess(string path, FileAccess.ModeFlags modeFlag)
-    {
-        return FileAccess.Open(path, modeFlag);
-    }
-
-    /// <summary>
-    /// Checks if there is a file open error.
-    /// </summary>
-    /// <param name="file">The file to check.</param>
-    /// <returns>True if there is a file open error, false otherwise.</returns>
-    private static bool IsThereFileOpenError(FileAccess file)
-    {
-        if (file != null)
-            return false;
-
-        GD.PushError(FileAccess.GetOpenError());
-
-        return true;
-    }
-
-    /// <summary>
-    /// Saves the stringified data to a file.
-    /// </summary>
-    /// <param name="data">The dictionary containing the data to be saved.</param>
-    /// <param name="file">The file access object used to store the data.</param>
-    private static void SaveDataToFile(FileAccess file, Godot.Collections.Dictionary<string, Variant> data)
-    {
-        file.StoreString(Json.Stringify(data));
-
-        file.Close();
-    }
 }
