@@ -7,6 +7,7 @@ using GodotTestDriver.Drivers;
 using NUnit.Framework;
 using Shouldly;
 using Bombino.game;
+using Bombino;
 
 namespace Bombino.test;
 
