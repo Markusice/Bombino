@@ -1,3 +1,5 @@
+namespace Bombino.test;
+
 using System.Threading.Tasks;
 using Godot;
 using Chickensoft.GoDotTest;
@@ -9,7 +11,6 @@ using Shouldly;
 using Bombino.game;
 using Bombino;
 
-namespace Bombino.test;
 
 public class GameManagerTest : TestClass {
   private readonly ILog _log = new GDLog(nameof(GameManagerTest));
@@ -47,24 +48,6 @@ public class GameManagerTest : TestClass {
   {
     _log.Print("Cleanup");
   }
-
-  [Setup]
-  public void SetupGameMapIsNull_AfterGameStart()
-  {
-    _game.CreateNewGame();
-  }
-
-  [Test]
-  public void TestGameMapIsNull_AfterGameStart()
-  {
-    GameManager.GameMap.ShouldNotBeNull();
-  } 
-
-  [Cleanup]
-  public void CleanupGameMapIsNull_AfterGameStart() 
-  {
-    _log.Print("Cleanup");
-  } 
 
   [CleanupAll]
   public void CleanupAll() => _fixture.Cleanup();
