@@ -16,7 +16,7 @@ using LightMock.Generator;
 using Bombino.game.persistence.state_storage;
 using Bombino.map;
 
-public class GameManagerTest : TestClass {
+public class PlayerTest : TestClass {
     private GameManager _game = default!;
     private BombinoMap _map = default!;
     private Player _player1 = default!;
@@ -25,7 +25,7 @@ public class GameManagerTest : TestClass {
     private PlayerData _playerData2 = default!;
     private Fixture _fixture = default!;
 
-    public GameManagerTest(Node testScene) : base(testScene) { }
+    public PlayerTest(Node testScene) : base(testScene) { }
 
 
     [SetupAll]
@@ -62,29 +62,42 @@ public class GameManagerTest : TestClass {
         await _fixture.AddToRoot(_game);
     }
 
-    [Cleanup]
+    [CleanupAll]
     public async Task Cleanup()
     {
         await _fixture.Cleanup();
     }
 
     [Test]
-    public void TestGameManagerIsNotNull()
+    public void Player_Ready_PositionIsSet()
     {
-        _game.ShouldNotBeNull();
+        _player1._Ready();
+
+        _player1.Position.ShouldBe(_playerData1.Position);
     }
 
     [Test]
-    public void TestGameManagerHasTwoPlayers()
+    public void Player_Ready_PlayerInputActionsIsNotNull()
     {
-        GameManager.PlayersData.Count.ShouldBe(2);
+        _player1._Ready();
 
+        _player1.PlayerInputActions.ShouldNotBeNull();
     }
 
     [Test]
-    public void TestGameManagerHasMap()
+    public void Player_Ready_PlayerDataIsSet()
     {
-        GameManager.GameMap.ShouldNotBeNull();
+        _player1._Ready();
+
+        _player1.PlayerData.ShouldBe(_playerData1);
+    }
+
+    [Test]
+    public void Player_Die_HitEventIsEmitted()
+    {
+        _player1.OnHit();
+
+        _player1.PlayerData.IsDead.ShouldBeTrue();
 
     }
 
