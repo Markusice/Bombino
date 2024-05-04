@@ -62,12 +62,6 @@ public class GameManagerTest : TestClass {
         await _fixture.AddToRoot(_game);
     }
 
-    [Cleanup]
-    public async Task Cleanup()
-    {
-        await _fixture.Cleanup();
-    }
-
     [Test]
     public void TestGameManagerIsNotNull()
     {

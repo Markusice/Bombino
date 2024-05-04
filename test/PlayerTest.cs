@@ -62,12 +62,6 @@ public class PlayerTest : TestClass {
         await _fixture.AddToRoot(_game);
     }
 
-    [CleanupAll]
-    public async Task Cleanup()
-    {
-        await _fixture.Cleanup();
-    }
-
     [Test]
     public void Player_Ready_PositionIsSet()
     {
