@@ -2,8 +2,6 @@
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bombino", "Bombino.csproj", "{B5FCEBBE-702F-40CE-A130-9CC69584F06B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombinoTest", "BombinoTest\BombinoTest.csproj", "{94A111A7-CC68-4BDC-B6E0-4D612AB12E10}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 	Debug|Any CPU = Debug|Any CPU

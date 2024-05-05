@@ -109,9 +109,9 @@ internal partial class Player : CharacterBody3D
     #region MethodsForSignals
 
     /// <summary>
-    /// Called when the player enters the area.
+    /// Called when the player is hit.
     /// </summary>
-    private void OnHit()
+    public void OnHit()
     {
         PlayerData.IsDead = true;
         SetStateMachine("Die");

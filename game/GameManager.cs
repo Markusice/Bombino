@@ -55,7 +55,7 @@ internal partial class GameManager : WorldEnvironment
     private MainUi MainUi { get; set; }
 
     public static WorldEnvironment WorldEnvironment { get; private set; }
-    public static BombinoMap GameMap { get; private set; }
+    public static BombinoMap GameMap { get; set; }
 
     public static int NumberOfPlayers { get; set; } = 3;
     private int _alivePlayers = NumberOfPlayers;
@@ -86,7 +86,7 @@ internal partial class GameManager : WorldEnvironment
     private Array _enemySceneLoadProgress = new();
 
     private double _loadProgress;
-    private bool _isEverythingLoaded;
+    public bool IsEverythingLoaded;
 
     private bool _isRoundOver;
 
@@ -124,7 +124,7 @@ internal partial class GameManager : WorldEnvironment
 
     public override void _Process(double delta)
     {
-        if (_isEverythingLoaded)
+        if (IsEverythingLoaded)
             return;
 
         // default initialized value is InvalidResource
@@ -407,7 +407,7 @@ internal partial class GameManager : WorldEnvironment
     private void EmitAndSetEverythingLoaded_And_EnableInputProcess()
     {
         EmitSignal(SignalName.EverythingLoaded);
-        _isEverythingLoaded = true;
+        IsEverythingLoaded = true;
 
         AddMainUi();
 

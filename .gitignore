@@ -12,8 +12,9 @@
 Folder.DotSettings.user
 
 # VSCode-specific ignores
-.vs
-.vscode
+.vscode/settings.json
+.vscode/c_cpp_properties.json
+
 
 # Dotnet-tools specific ignores
 .config
