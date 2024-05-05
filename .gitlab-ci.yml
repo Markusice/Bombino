@@ -41,6 +41,7 @@ tests:
     - apt-get install -y software-properties-common
     - add-apt-repository -n ppa:kisak/kisak-mesa
     - apt-get install -y mesa-vulkan-drivers binutils
+    - apt-get install -y xvfb
     - godot --headless --build-solutions --quit || exit 0
     - xvfb-run godot --audio-driver Dummy --run-tests --quit-on-finish --coverage
 linux:
