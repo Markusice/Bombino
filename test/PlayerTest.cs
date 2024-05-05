@@ -15,6 +15,7 @@ using Bombino.player;
 using LightMock.Generator;
 using Bombino.game.persistence.state_storage;
 using Bombino.map;
+using GodotTestDriver.Input;
 
 public class PlayerTest : TestClass {
     private GameManager _game = default!;
@@ -28,7 +29,7 @@ public class PlayerTest : TestClass {
     public PlayerTest(Node testScene) : base(testScene) { }
 
 
-    [SetupAll]
+    [Setup]
     public async Task Setup()
     {
         _fixture = new(TestScene.GetTree());
@@ -62,6 +63,12 @@ public class PlayerTest : TestClass {
         await _fixture.AddToRoot(_game);
     }
 
+    [Cleanup]
+    public async Task Cleanup()
+    {
+        await _fixture.Cleanup();
+    }
+
     [Test]
     public void Player_Ready_PositionIsSet()
     {
@@ -87,6 +94,56 @@ public class PlayerTest : TestClass {
     }
 
     [Test]
+    public async Task Player_MovesLeft()
+    {
+        _player1._Ready();
+        Vector3 initialPosition = _player1.Position;
+        await _player1.HoldKeyFor(0.2f, Key.A);
+
+
+        _player1.Position.X.ShouldBeLessThan(initialPosition.X);
+    }
+
+    [Test]
+    public async Task Player_MovesRight()
+    {
+        _player1._Ready();
+        Vector3 initialPosition = _player1.Position;
+        await _player1.HoldKeyFor(0.2f, Key.D);
+
+        _player1.Position.X.ShouldBeGreaterThan(initialPosition.X);
+    }
+
+    [Test]
+    public async Task Player_MovesUp()
+    {
+        _player1._Ready();
+        Vector3 initialPosition = _player1.Position;
+        await _player1.HoldKeyFor(0.2f, Key.W);
+
+        _player1.Position.Z.ShouldBeLessThan(initialPosition.Z);
+    }
+
+    [Test]
+    public async Task Player_MovesDown()
+    {
+        _player1._Ready();
+        Vector3 initialPosition = _player1.Position;
+        await _player1.HoldKeyFor(0.2f, Key.S);
+
+        _player1.Position.Z.ShouldBeGreaterThan(initialPosition.Z);
+    }
+
+    [Test]
+    public async Task Player_PlacesBomb()
+    {
+        _player1._Ready();
+        await _player1.TypeKey(Key.F);
+
+        _player1.PlayerData.NumberOfPlacedBombs.ShouldBe(1);
+    }
+
+    [Test]
     public void Player_Die_HitEventIsEmitted()
     {
         _player1.OnHit();
@@ -94,5 +151,6 @@ public class PlayerTest : TestClass {
         _player1.PlayerData.IsDead.ShouldBeTrue();
 
     }
+
 
 }

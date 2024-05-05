@@ -15,6 +15,7 @@ using Bombino.player;
 using LightMock.Generator;
 using Bombino.game.persistence.state_storage;
 using Bombino.map;
+using GodotTestDriver.Input;
 
 public class GameManagerTest : TestClass {
     private GameManager _game = default!;
@@ -28,7 +29,7 @@ public class GameManagerTest : TestClass {
     public GameManagerTest(Node testScene) : base(testScene) { }
 
 
-    [SetupAll]
+    [Setup]
     public async Task Setup()
     {
         _fixture = new(TestScene.GetTree());
@@ -62,21 +63,27 @@ public class GameManagerTest : TestClass {
         await _fixture.AddToRoot(_game);
     }
 
+    [Cleanup]
+    public async Task Cleanup()
+    {
+        await _fixture.Cleanup();
+    }
+
     [Test]
-    public void TestGameManagerIsNotNull()
+    public void GameManager_IsNotNull()
     {
         _game.ShouldNotBeNull();
     }
 
     [Test]
-    public void TestGameManagerHasTwoPlayers()
+    public void GameManager_HasTwoPlayers()
     {
         GameManager.PlayersData.Count.ShouldBe(2);
 
     }
 
     [Test]
-    public void TestGameManagerHasMap()
+    public void GameManager_HasMap()
     {
         GameManager.GameMap.ShouldNotBeNull();
 
