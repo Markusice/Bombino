@@ -68,6 +68,7 @@ public class EnemyTest : TestClass {
 
         _enemy1 = await _fixture.LoadScene<Enemy>("res://enemy/enemy.tscn");
         _enemyData1 = new EnemyData(_map.EnemyPositions[0]);
+        _enemy1.EnemyData = _enemyData1;
         //_enemy2 = await _fixture.LoadScene<Enemy>("res://enemy/enemy.tscn");
         
         _game.AddChild(_enemy1);
