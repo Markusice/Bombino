@@ -37,7 +37,6 @@ public class PlayerTest : TestClass {
         Node mainNode = await _fixture.LoadScene<Node>("res://game/game.tscn");
         _game = mainNode.GetChild<GameManager>(0);
         mainNode.RemoveChild(_game);
-        mainNode.QueueFree();
         GameManager.NumberOfPlayers = 2;
 
         _map = await _fixture.LoadScene<BombinoMap>("res://map/map.tscn");
