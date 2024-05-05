@@ -35,26 +35,13 @@ tests:
   script:
     - dotnet --version
     - godot --version
-    - apt-get update
-    - apt-get install -y git-lfs
-    - git lfs install
-    - git submodule update --init --recursive
-    - wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-    - dpkg -i packages-microsoft-prod.deb
-    - apt-get update
-    - apt-get install -y apt-transport-https
-    - apt-get update
-    - apt-get install -y dotnet-sdk-7.0
     - dotnet restore
     - rm -f /etc/apt/sources.list.d/microsoft-prod.list
     - add-apt-repository -n ppa:kisak/kisak-mesa
     - apt-get update
     - apt-get install -y mesa-vulkan-drivers binutils
-    - wget https://downloads.tuxfamily.org/godotengine/4.2.1/Godot_v4.2.1-stable_linux.x86_64.zip
-    - unzip Godot_v4.2.1-stable_linux.x86_64.zip
-    - chmod +x Godot_v4.2.1-stable_linux.x86_64/Godot_v4.2.1-stable_linux.x86_64
-    - Godot_v4.2.1-stable_linux.x86_64/Godot_v4.2.1-stable_linux.x86_64 --headless --build-solutions --quit || exit 0
-    - xvfb-run Godot_v4.2.1-stable_linux.x86_64/Godot_v4.2.1-stable_linux.x86_64 --audio-driver Dummy --run-tests --quit-on-finish --coverage
+    - godot --headless --build-solutions --quit || exit 0
+    - xvfb-run godot --audio-driver Dummy --run-tests --quit-on-finish --coverage
 linux:
   stage: export
   script:
