@@ -38,7 +38,7 @@ tests:
     - dotnet restore
     - rm -f /etc/apt/sources.list.d/microsoft-prod.list
     - apt-get update
-    - apt-get install software-properties-common
+    - apt-get install -y software-properties-common
     - add-apt-repository -n ppa:kisak/kisak-mesa
     - apt-get install -y mesa-vulkan-drivers binutils
     - godot --headless --build-solutions --quit || exit 0
