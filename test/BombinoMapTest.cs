@@ -70,7 +70,7 @@ public class BombinoMapTest : TestClass {
     }
 
     [Test]
-    public void Test_SetUpMapFromTextFile()
+    public void Map_IsNotNull()
     {
         _map.ShouldNotBeNull();
     }
