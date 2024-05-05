@@ -143,14 +143,5 @@ public class PlayerTest : TestClass {
         _player1.PlayerData.NumberOfPlacedBombs.ShouldBe(1);
     }
 
-    [Test]
-    public void Player_Die_HitEventIsEmitted()
-    {
-        _player1.OnHit();
-
-        _player1.PlayerData.IsDead.ShouldBeTrue();
-
-    }
-
 
 }

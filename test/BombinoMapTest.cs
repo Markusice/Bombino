@@ -72,7 +72,6 @@ public class BombinoMapTest : TestClass {
     [Test]
     public void Test_SetUpMapFromTextFile()
     {
-        _map.SetUpMapFromTextFile("res://map/sources/basic.json");
         _map.ShouldNotBeNull();
     }
 

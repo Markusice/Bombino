@@ -72,6 +72,11 @@ public class EnemyTest : TestClass {
         //_enemy2 = await _fixture.LoadScene<Enemy>("res://enemy/enemy.tscn");
         
         _game.AddChild(_enemy1);
+
+        GameManager.EnemiesData = new Array<EnemyData>
+        {
+            _enemyData1
+        };
         //_game.AddChild(_enemy2);
 
         await _fixture.AddToRoot(_game);
