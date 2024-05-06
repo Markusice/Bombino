@@ -1,3 +1,4 @@
+using Bombino.file_system_helpers.file;
 using Godot;
 using Godot.Collections;
 using FileAccess = Godot.FileAccess;
@@ -9,18 +10,31 @@ namespace Bombino.map;
 /// </summary>
 internal partial class BombinoMap : GridMap
 {
+    #region Fields
+    private readonly IFileAccessManager _fileAccessManager = new FileAccessManager();
+
     public Vector3 BluePlayerPosition { get; private set; }
     public Vector3 RedPlayerPosition { get; private set; }
     public Vector3 YellowPlayerPosition { get; private set; }
     public Array<Vector3> EnemyPositions { get; private set; } = new();
+
+    #endregion
 
     /// <summary>
     /// Sets up the map from a json file.
     /// </summary>
     public void SetUpMapFromTextFile(string filePath)
     {
-        var file = FileAccess.Open(filePath, FileAccess.ModeFlags.Read);
-        var data = Json.ParseString(file.GetAsText()).AsGodotDictionary<string, Variant>();
+        var loadFile = _fileAccessManager.LoadFile(filePath, FileAccess.ModeFlags.Read);
+        var error = loadFile.Item1;
+        if (error != Error.Ok)
+        {
+            return;
+        }
+
+        var file = loadFile.Item2;
+        var data = _fileAccessManager.GetJSONData(file);
+
         var lines = data["structure"].AsStringArray();
         var rowOffset = (lines.Length / 2) + 1;
         var columnOffset = (lines[0].Length / 2) + 1;
@@ -34,41 +48,71 @@ internal partial class BombinoMap : GridMap
                 var positionAt0 = new Vector3I(x - columnOffset, 0, z - rowOffset);
                 var positionAt1 = new Vector3I(x - columnOffset, 1, z - rowOffset);
 
-                var character = line[x];
+                var cellCharacter = line[x];
+                var mapCellCharacter = (MapCellCharacter)cellCharacter;
 
-                switch (character)
+                switch (mapCellCharacter)
                 {
-                    case '0':
+                    case MapCellCharacter.Empty:
                         break;
-                    case 'W':
+                    case MapCellCharacter.Wall:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
                         SetCellItem(positionAt1, (int)GridElement.WallElement);
+
                         break;
-                    case 'F':
+                    case MapCellCharacter.Floor:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
+
                         break;
-                    case 'C':
+                    case MapCellCharacter.Crate:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
                         SetCellItem(positionAt1, (int)GridElement.CrateElement);
+
                         break;
-                    case 'B':
+                    case MapCellCharacter.BluePlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-                        BluePlayerPosition = MapToLocal(positionAt1);
+
+                        BluePlayerPosition = SetCharacterPosition(positionAt1);
+
                         break;
-                    case 'R':
+                    case MapCellCharacter.RedPlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-                        RedPlayerPosition = MapToLocal(positionAt1);
+
+                        RedPlayerPosition = SetCharacterPosition(positionAt1);
+
                         break;
-                    case 'Y':
+                    case MapCellCharacter.YellowPlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-                        YellowPlayerPosition = MapToLocal(positionAt1);
+
+                        YellowPlayerPosition = SetCharacterPosition(positionAt1);
+
                         break;
-                    case 'E':
+                    case MapCellCharacter.Enemy:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-                        EnemyPositions.Add(MapToLocal(positionAt1));
+
+                        EnemyPositions.Add(SetCharacterPosition(positionAt1));
+
+                        break;
+                    default:
+                        GD.PushError(
+                            $"Unknown character '{cellCharacter}' in map source file: {filePath}"
+                        );
                         break;
                 }
             }
         }
+    }
+
+    private Vector3 SetCharacterPosition(Vector3I position)
+    {
+        var characterMapPosition = MapToLocal(position);
+        characterMapPosition = FixCharacterYPosition(characterMapPosition);
+
+        return characterMapPosition;
+    }
+
+    private static Vector3 FixCharacterYPosition(Vector3 position)
+    {
+        return new Vector3(position.X, position.Y - 1, position.Z);
     }
 }
