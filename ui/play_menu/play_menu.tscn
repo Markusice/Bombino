@@ -62,7 +62,7 @@ theme_type_variation = &"ButtonMirrored"
 theme_override_font_sizes/font_size = 80
 text = "Load Game"
 script = ExtResource("1_agsqa")
-LoadGameScenePath = "res://ui/load_game/LoadGame.tscn"
+LoadGameScenePath = "res://ui/load_game/load_game.tscn"
 
 [connection signal="pressed" from="MainActionsContainer/HBoxContainer/NewGameButton" to="MainActionsContainer/HBoxContainer/NewGameButton" method="OnPressed"]
 [connection signal="pressed" from="MainActionsContainer/HBoxContainer/LoadGameButton" to="MainActionsContainer/HBoxContainer/LoadGameButton" method="OnPressed"]
