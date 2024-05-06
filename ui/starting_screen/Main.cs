@@ -23,7 +23,7 @@ public partial class Main : Node3D {
     }
 #endif
     // If we don't need to run tests, we can just switch to the game scene.
-    GetTree().ChangeSceneToFile("res://ui/starting_screen/starting_screen.tscn");
+    GetTree().CallDeferred("change_scene_to_file", "res://ui/starting_screen/starting_screen.tscn");
   }
 
 #if DEBUG
