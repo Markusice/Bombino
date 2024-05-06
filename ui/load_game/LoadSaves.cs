@@ -13,6 +13,7 @@ internal partial class LoadSaves : GridContainer
     #endregion
 
     #region Overrides
+
     public override void _Ready()
     {
         CreateRowsForSaves();
@@ -22,17 +23,15 @@ internal partial class LoadSaves : GridContainer
 
     private void CreateRowsForSaves()
     {
-        var fileNames = _dirAccessManager.GetFileNames($"user://{SaveDirectory.Path}");
-        var error = fileNames.Item1;
+        var (error, fileNames) = _dirAccessManager.GetFileNames($"user://{SaveDirectory.Path}");
         if (error != Error.Ok)
         {
             return;
         }
 
-        var saveFileNames = fileNames.Item2;
-        SortFileNames(saveFileNames);
+        SortFileNames(fileNames);
 
-        AddSaveRows(saveFileNames);
+        AddSaveRows(fileNames);
     }
 
     private static void SortFileNames(string[] fileNames)
@@ -40,7 +39,7 @@ internal partial class LoadSaves : GridContainer
         Array.Reverse(fileNames);
     }
 
-    private void AddSaveRows(string[] fileNames)
+    private void AddSaveRows(IEnumerable<string> fileNames)
     {
         foreach (var fileName in fileNames)
         {
