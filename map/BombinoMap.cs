@@ -32,7 +32,7 @@ internal partial class BombinoMap : GridMap
             return;
         }
 
-        var file = loadFile.Item2;
+        using var file = loadFile.Item2;
         var data = _fileAccessManager.GetJSONData(file);
 
         var lines = data["structure"].AsStringArray();
