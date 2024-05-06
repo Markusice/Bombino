@@ -12,7 +12,8 @@ internal partial class PausedGameUi : CanvasLayer
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private string StartingScreenScenePath { get; set; }
+    [Export(PropertyHint.File, "*.tscn")]
+    private string MainMenuScenePath { get; set; }
 
     #endregion
 
@@ -58,6 +59,8 @@ internal partial class PausedGameUi : CanvasLayer
     private void OnSaveAndExitButtonPressed()
     {
         SaveGame();
+
+        GetTree().ChangeSceneToFile(MainMenuScenePath);
     }
 
     #endregion
@@ -67,7 +70,8 @@ internal partial class PausedGameUi : CanvasLayer
     /// </summary>
     private async Task StartCountDownAndResume()
     {
-        if (IsResumed) return;
+        if (IsResumed)
+            return;
 
         IsResumed = true;
 
@@ -120,8 +124,9 @@ internal partial class PausedGameUi : CanvasLayer
 
     private void SaveGame()
     {
-        if (IsSaveClicked) return;
-        
+        if (IsSaveClicked)
+            return;
+
         var gameSaver = new GameSaver();
         var gameSaveHandler = new GameSaveHandler(gameSaver);
 
