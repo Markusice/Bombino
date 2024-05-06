@@ -1,5 +1,7 @@
 using Godot;
 
+namespace Bombino.ui.play_menu;
+
 internal partial class NewGameButton : Button
 {
     #region Fields

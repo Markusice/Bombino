@@ -1,5 +1,7 @@
 using Godot;
 
+namespace Bombino.ui.load_game;
+
 internal partial class BackButton : Button
 {
     #region Fields
