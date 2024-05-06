@@ -16,14 +16,13 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
     private readonly IFileAccessManager _fileAccessManager = new FileAccessManager();
 
     private readonly string _fileName = $"save-{Time.GetDatetimeStringFromSystem(utc: true)}";
-    private const string SaveDirectory = "saves";
     private readonly string _gameSavePath;
 
     #endregion
 
     public GameSaver()
     {
-        _gameSavePath = $"user://{SaveDirectory}/{_fileName}.json";
+        _gameSavePath = $"user://{SaveDirectory.Path}/{_fileName}.json";
     }
 
     #region InterfaceMethods
@@ -34,7 +33,7 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
     /// <param name="data">The game save data to write.</param>
     public bool SaveData(Godot.Collections.Dictionary<string, Variant> data)
     {
-        var dirError = _dirAccessManager.MakeDirectory("user://", SaveDirectory);
+        var dirError = _dirAccessManager.MakeDirectory("user://", SaveDirectory.Path);
         if (dirError is not (Error.Ok or Error.AlreadyExists))
         {
             return false;

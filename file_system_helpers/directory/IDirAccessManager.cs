@@ -22,4 +22,12 @@ internal interface IDirAccessManager
     /// An error code which indicates whether the operation was successful or not.
     /// </returns>
     Error MakeDirectory(string path, string name);
+
+    /// <summary>
+    /// Removes the file at the specified absolute path.
+    /// </summary>
+    /// <returns>
+    /// An error code which indicates whether the operation was successful or not.
+    /// </returns>
+    Error RemoveFileAbsolute(string path);
 }

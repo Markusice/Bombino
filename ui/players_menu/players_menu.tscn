@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://mwftlefv7r0j"]
+
+[ext_resource type="Script" path="res://ui/players_menu/Players2Button.cs" id="1_3jhk4"]
+[ext_resource type="Script" path="res://ui/players_menu/Players3Button.cs" id="3_t0xty"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TitleContainer" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -524.0
+offset_top = 80.0
+offset_right = -81.0
+offset_bottom = 196.0
+grow_horizontal = 2
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Players"
+horizontal_alignment = 1
+
+[node name="MainActionsContainer" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -563.0
+offset_top = -163.0
+offset_right = 563.0
+offset_bottom = 163.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainActionsContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Players2Button" type="Button" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 95
+text = "2 Players"
+script = ExtResource("1_3jhk4")
+MapsMenuPath = "res://ui/maps_menu/maps_menu.tscn"
+
+[node name="TextureRect" type="TextureRect" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Players3Button" type="Button" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"ButtonMirrored"
+theme_override_font_sizes/font_size = 95
+text = "3 Players"
+script = ExtResource("3_t0xty")
+MapsMenuPath = "res://ui/maps_menu/maps_menu.tscn"
+
+[connection signal="pressed" from="MainActionsContainer/HBoxContainer/Players2Button" to="MainActionsContainer/HBoxContainer/Players2Button" method="OnPressed"]
+[connection signal="pressed" from="MainActionsContainer/HBoxContainer/Players3Button" to="MainActionsContainer/HBoxContainer/Players3Button" method="OnPressed"]
