@@ -45,6 +45,17 @@ internal class DirAccessManager : IDirAccessManager
         return error;
     }
 
+    public Error RemoveFileAbsolute(string path)
+    {
+        var error = DirAccess.RemoveAbsolute(path);
+        if (error != Error.Ok)
+        {
+            GD.PushError($"An error occurred when trying to remove the file ({path}): {error}");
+        }
+
+        return error;
+    }
+
     #endregion
 
     /// <summary>
