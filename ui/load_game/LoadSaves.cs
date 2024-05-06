@@ -1,4 +1,5 @@
 using Bombino.file_system_helpers.directory;
+using Bombino.game.persistence.storage_layers.game_state;
 using Godot;
 
 namespace Bombino.ui.load_game;
@@ -11,14 +12,17 @@ internal partial class LoadSaves : GridContainer
 
     #endregion
 
+    #region Overrides
     public override void _Ready()
     {
         CreateRowsForSaves();
     }
 
+    #endregion
+
     private void CreateRowsForSaves()
     {
-        var fileNames = _dirAccessManager.GetFileNames("user://saves");
+        var fileNames = _dirAccessManager.GetFileNames($"user://{SaveDirectory.Path}");
         var error = fileNames.Item1;
         if (error != Error.Ok)
         {
@@ -36,20 +40,12 @@ internal partial class LoadSaves : GridContainer
         Array.Reverse(fileNames);
     }
 
-    private void AddSaveRows(string[] saveFileNames)
+    private void AddSaveRows(string[] fileNames)
     {
-        foreach (var saveFileName in saveFileNames)
+        foreach (var fileName in fileNames)
         {
-            var saveRow = CreateSaveRow(saveFileName);
+            var saveRow = new SaveRow(fileName);
             AddChild(saveRow);
         }
-    }
-
-    private static SaveRow CreateSaveRow(string saveFileName)
-    {
-        var baseFileName = saveFileName.GetBaseName();
-        var saveRow = new SaveRow(baseFileName);
-
-        return saveRow;
     }
 }
