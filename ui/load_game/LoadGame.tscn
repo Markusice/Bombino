@@ -19,9 +19,12 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TitleContainer" type="PanelContainer" parent="."]
-offset_left = 316.0
+anchors_preset = -1
+anchor_left = 0.537
+anchor_right = 0.537
+offset_left = -586.16
 offset_top = 80.0
-offset_right = 759.0
+offset_right = -143.16
 offset_bottom = 196.0
 
 [node name="Title" type="Label" parent="TitleContainer"]
