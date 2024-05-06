@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://mwftlefv7r0j"]
 
-[ext_resource type="Script" path="res://ui/play_menu/Players2Button.cs" id="1_3jhk4"]
-[ext_resource type="Script" path="res://ui/play_menu/Players3Button.cs" id="3_t0xty"]
+[ext_resource type="Script" path="res://ui/players_menu/Players2Button.cs" id="1_3jhk4"]
+[ext_resource type="Script" path="res://ui/players_menu/Players3Button.cs" id="3_t0xty"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
