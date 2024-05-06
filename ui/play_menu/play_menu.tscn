@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqi5dmtq3nghc"]
+
+[ext_resource type="Script" path="res://ui/play_menu/NewGameButton.cs" id="1_3l6wp"]
+[ext_resource type="Script" path="res://ui/play_menu/LoadGameButton.cs" id="1_agsqa"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Background" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleContainer" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -524.0
+offset_top = 80.0
+offset_right = -81.0
+offset_bottom = 196.0
+grow_horizontal = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Play"
+horizontal_alignment = 1
+
+[node name="MainActionsContainer" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -563.0
+offset_top = -163.0
+offset_right = 563.0
+offset_bottom = 163.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainActionsContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="NewGameButton" type="Button" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 85
+text = "New Game"
+script = ExtResource("1_3l6wp")
+NewGameScenePath = "res://ui/players_menu/players_menu.tscn"
+
+[node name="TextureRect" type="TextureRect" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="LoadGameButton" type="Button" parent="MainActionsContainer/HBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"ButtonMirrored"
+theme_override_font_sizes/font_size = 80
+text = "Load Game"
+script = ExtResource("1_agsqa")
+LoadGameScenePath = "res://ui/load_game/LoadGame.tscn"
+
+[connection signal="pressed" from="MainActionsContainer/HBoxContainer/NewGameButton" to="MainActionsContainer/HBoxContainer/NewGameButton" method="OnPressed"]
+[connection signal="pressed" from="MainActionsContainer/HBoxContainer/LoadGameButton" to="MainActionsContainer/HBoxContainer/LoadGameButton" method="OnPressed"]
