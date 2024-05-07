@@ -43,6 +43,9 @@ internal partial class GameManager : WorldEnvironment
     public delegate void ResumeGameEventHandler();
 
     [Signal]
+    public delegate void GameEndedEventHandler();
+
+    [Signal]
     public delegate void SceneLoadEventHandler(double progress);
 
     [Signal]
@@ -120,6 +123,7 @@ internal partial class GameManager : WorldEnvironment
         _alivePlayers = NumberOfPlayers;
 
         Events.Instance.PlayerDied += CheckPlayersAndOpenRoundStats;
+        GameEnded += GameOver;
     }
 
     public override void _Process(double delta)

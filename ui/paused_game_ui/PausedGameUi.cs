@@ -59,6 +59,7 @@ internal partial class PausedGameUi : CanvasLayer
     private void OnSaveAndExitButtonPressed()
     {
         SaveGame();
+        GameManager.WorldEnvironment.EmitSignal(GameManager.SignalName.GameEnded);
 
         GetTree().ChangeSceneToFile(MainMenuScenePath);
     }
