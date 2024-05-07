@@ -281,18 +281,13 @@ internal partial class GameManager : WorldEnvironment
     {
         foreach (var node in GetChildren())
         {
-            switch (node)
+            if (node is BombinoMap map)
             {
-                case Player player:
-                    player.QueueFree();
-                    break;
-                case Enemy enemy:
-                    enemy.QueueFree();
-                    break;
-                case BombinoMap map:
-                    map.Clear();
-                    break;
+                map.Clear();
+                continue;
             }
+
+            node.QueueFree();
         }
     }
 
