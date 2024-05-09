@@ -479,7 +479,7 @@ internal partial class Bomb : Area3D
         var powerUp = powerUpInstance.Instantiate<PowerUp>();
         powerUp.Position = position;
 
-        GameManager.WorldEnvironment.AddChild(powerUp);
+        GameManager.GameMap.AddChild(powerUp);
     }
 
     /// <summary>
