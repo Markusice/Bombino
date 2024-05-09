@@ -126,6 +126,13 @@ internal partial class GameManager : WorldEnvironment
         GameEnded += GameOver;
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        Events.Instance.PlayerDied -= CheckPlayersAndOpenRoundStats;
+
+        base.Dispose(disposing);
+    }
+
     public override void _Process(double delta)
     {
         if (IsEverythingLoaded)
@@ -266,7 +273,7 @@ internal partial class GameManager : WorldEnvironment
         PlayersData = new Array<PlayerData>();
         EnemiesData = new Array<EnemyData>();
 
-        foreach (var node in GetChildren())
+        foreach (var node in GameMap.GetChildren())
         {
             node.QueueFree();
         }
@@ -279,7 +286,7 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void DestroyCurrentGameState()
     {
-        foreach (var node in GetChildren())
+        foreach (var node in GameMap.GetChildren())
         {
             if (node is BombinoMap map)
             {
@@ -306,7 +313,7 @@ internal partial class GameManager : WorldEnvironment
             var tempPlayerData = playerData;
             PlayerData.ResetToNewRound(ref tempPlayerData);
             player.PlayerData = tempPlayerData;
-            AddChild(player);
+            GameMap.AddChild(player);
         }
     }
 
@@ -320,7 +327,7 @@ internal partial class GameManager : WorldEnvironment
             var enemy = _enemyScene.Instantiate<Enemy>();
             enemy.EnemyData = enemyData;
 
-            AddChild(enemy);
+            GameMap.AddChild(enemy);
         }
     }
 
@@ -384,7 +391,7 @@ internal partial class GameManager : WorldEnvironment
 
             PlayersData.Add(playerData);
 
-            AddChild(player);
+            GameMap.AddChild(player);
         }
     }
 
@@ -399,7 +406,7 @@ internal partial class GameManager : WorldEnvironment
             enemy.EnemyData = enemyData;
             EnemiesData.Add(enemyData);
 
-            AddChild(enemy);
+            GameMap.AddChild(enemy);
         }
     }
 
