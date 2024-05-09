@@ -68,7 +68,7 @@ internal class BombPlace
             );
         };
 
-        GameManager.WorldEnvironment.AddChild(bombToPlace);
+        GameManager.GameMap.AddChild(bombToPlace);
     };
 
     /// <summary>
