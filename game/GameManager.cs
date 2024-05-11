@@ -312,6 +312,18 @@ internal partial class GameManager : WorldEnvironment
             var player = playerScene.Instantiate<Player>();
             var tempPlayerData = playerData;
             PlayerData.ResetToNewRound(ref tempPlayerData);
+            switch (playerData.Color)
+            {
+                case PlayerColor.Blue:
+                    tempPlayerData.Position = GameMap.BluePlayerPosition;
+                    break;
+                case PlayerColor.Red:
+                    tempPlayerData.Position = GameMap.RedPlayerPosition;
+                    break;
+                case PlayerColor.Yellow:
+                    tempPlayerData.Position = GameMap.YellowPlayerPosition;
+                    break;
+            }
             player.PlayerData = tempPlayerData;
             GameMap.AddChild(player);
         }
