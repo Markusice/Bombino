@@ -27,6 +27,7 @@ internal partial class Enemy : CharacterBody3D
     private Vector3 _targetVelocity = Vector3.Zero;
     private AnimationTree _animTree;
     private AnimationNodeStateMachinePlayback _stateMachine;
+    private bool _canKillPlayer = false;
 
     private static readonly Vector3[] _directions =
     {
@@ -44,7 +45,7 @@ internal partial class Enemy : CharacterBody3D
     /// <summary>
     /// Called when the node is added to the scene.
     /// </summary>
-    public override void _Ready()
+    public override async void _Ready()
     {
         Position = EnemyData.Position;
 
@@ -69,6 +70,9 @@ internal partial class Enemy : CharacterBody3D
         Velocity = _targetVelocity;
 
         MoveAndSlide();
+
+        await ToSignal(GetTree().CreateTimer(0.1f), SceneTreeTimer.SignalName.Timeout);
+        _canKillPlayer = true;
     }
 
     /// <summary>
@@ -129,11 +133,20 @@ internal partial class Enemy : CharacterBody3D
     /// <summary>
     /// Handler for the Hit event.
     /// </summary>
-    private void OnHit()
+    private async void OnHit()
     {
         _isDead = true;
         SetStateMachine("Die");
-        Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => QueueFree());
+        await ToSignal(GetTree().CreateTimer(0.1f), SceneTreeTimer.SignalName.Timeout);
+        Die();
+    }
+    
+    /// <summary>
+    /// Kills the enemy.
+    /// </summary>
+    private void Die()
+    {
+        QueueFree();
     }
 
     #endregion
@@ -245,7 +258,7 @@ internal partial class Enemy : CharacterBody3D
     /// <param name="body">The body that entered the area.</param>
     private void OnAreaEntered(Node3D body)
     {
-        if (_isDead)
+        if (_isDead || !_canKillPlayer)
             return;
 
         if (body.IsInGroup("players"))

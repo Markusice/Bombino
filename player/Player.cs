@@ -111,13 +111,14 @@ internal partial class Player : CharacterBody3D
     /// <summary>
     /// Called when the player is hit.
     /// </summary>
-    public void OnHit()
+    public async void OnHit()
     {
         PlayerData.IsDead = true;
         SetStateMachine("Die");
         Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
 
-        Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => Die());
+        await ToSignal(GetTree().CreateTimer(Mathf.Pi), SceneTreeTimer.SignalName.Timeout);
+        Die();
     }
 
     #endregion
