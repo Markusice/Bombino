@@ -28,7 +28,7 @@ internal class BombPlace
 
         var playerCollisionObject = player as CollisionObject3D;
         
-        int maskValue = Bomb.GetMaskValueFromPlayerName(player);
+        int maskValue = Bomb.GetMaskValueFromPlayerColor(player.PlayerData.Color);
         if (playerCollisionObject.GetCollisionMaskValue(maskValue))
             playerCollisionObject.SetCollisionMaskValue(maskValue, false);
 
