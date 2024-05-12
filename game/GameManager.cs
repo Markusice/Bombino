@@ -56,43 +56,31 @@ internal partial class GameManager : WorldEnvironment
     #region Fields
 
     private MainUi MainUi { get; set; }
-
     public static WorldEnvironment WorldEnvironment { get; private set; }
     public static BombinoMap GameMap { get; set; }
-
     public static int NumberOfPlayers { get; set; } = 3;
     private int _alivePlayers = NumberOfPlayers;
-
     public static MapType SelectedMap { get; set; } = MapType.Basic;
     public static int NumberOfRounds { get; set; }
     public static int CurrentRound { get; set; } = 1;
-
     public static Array<PlayerData> PlayersData { get; set; } = new();
     public static Array<EnemyData> EnemiesData { get; set; } = new();
-
     private readonly string _mapTextFilePath = $"res://map/sources/{SelectedMap.ToString().ToLower()}.json";
     private ResourceLoader.ThreadLoadStatus _mapSceneLoadStatus;
     private Array _mapSceneLoadProgress = new();
-
     private Godot.Collections.Dictionary<string, PlayerData> _playerScenesPathAndData = new();
-
     private Godot.Collections.Dictionary<string, ResourceLoader.ThreadLoadStatus>
         _playerScenesPathAndLoadStatus = new();
-
     private Array _playerSceneLoadProgress = new();
     private double _playerScenesLoadProgressSum;
-
     private Godot.Collections.Dictionary<ulong, EnemyData> _enemiesData = new();
     private PackedScene _enemyScene;
     private PackedScene _gameMapScene;
     private ResourceLoader.ThreadLoadStatus _enemySceneLoadStatus;
     private Array _enemySceneLoadProgress = new();
-
     private double _loadProgress;
     public bool IsEverythingLoaded;
-
     private bool _isRoundOver;
-
     public static PlayerColor? CurrentWinner { get; private set; }
 
     #endregion
@@ -126,6 +114,10 @@ internal partial class GameManager : WorldEnvironment
         GameEnded += GameOver;
     }
 
+    /// <summary>
+    /// Called when the node is removed from the scene tree.
+    /// </summary>
+    /// <param name="disposing">True if the node is being disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
         Events.Instance.PlayerDied -= CheckPlayersAndOpenRoundStats;
@@ -133,6 +125,10 @@ internal partial class GameManager : WorldEnvironment
         base.Dispose(disposing);
     }
 
+    /// <summary>
+    /// A method that is called every frame.
+    /// </summary>
+    /// <param name="delta">The time since the previous frame.</param>
     public override void _Process(double delta)
     {
         if (IsEverythingLoaded)
@@ -195,6 +191,7 @@ internal partial class GameManager : WorldEnvironment
     /// <summary>
     /// Checks the players and opens the round stats.
     /// </summary>
+    /// <param name="color">The color of the player.</param>
     private async void CheckPlayersAndOpenRoundStats(string color)
     {
         _alivePlayers--;
@@ -212,6 +209,9 @@ internal partial class GameManager : WorldEnvironment
         EndRound();
     }
 
+    /// <summary>
+    /// Checks for the winner of the round.
+    /// </summary>
     private void CheckForWinner()
     {
         foreach (var playerData in PlayersData)
@@ -343,6 +343,9 @@ internal partial class GameManager : WorldEnvironment
         }
     }
 
+    /// <summary>
+    /// Emits the loaded progress and adds the game map if it is not added.
+    /// </summary>
     private void EmitLoadedProgressAndAddGameMap_IfGameMapNotAdded()
     {
         _gameMapScene = (PackedScene)ResourceLoader.LoadThreadedGet(MapScenePath);
@@ -358,6 +361,9 @@ internal partial class GameManager : WorldEnvironment
         CreateEnemies();
     }
 
+    /// <summary>
+    /// Sets the player scenes status and gets the load progress sum.
+    /// </summary>
     private double SetPlayerScenesStatus_And_GetLoadProgressSum()
     {
         var playerSceneLoadProgressSum = 0.0;
@@ -373,17 +379,29 @@ internal partial class GameManager : WorldEnvironment
         return playerSceneLoadProgressSum;
     }
 
+    /// <summary>
+    /// Sets the scene load status and progress.
+    /// </summary>
     private static void SetSceneLoadStatus_And_Progress<T>(KeyValuePair<string, T> item,
         IDictionary<string, ResourceLoader.ThreadLoadStatus> dictionary, Array progress)
     {
         dictionary[item.Key] = ResourceLoader.LoadThreadedGetStatus(item.Key, progress);
     }
 
+    /// <summary>
+    /// Emits the scene load signal.
+    /// </summary>
+    /// <returns>True if not every player is loaded; otherwise, false.</returns>
     private bool IsNotEveryPlayerLoaded()
     {
         return _playerScenesPathAndLoadStatus.Any(item => item.Value == ResourceLoader.ThreadLoadStatus.InProgress);
     }
 
+    /// <summary>
+    /// Emits the scene load signal.
+    /// </summary>
+    /// <param name="sceneLoadProgressSum">The sum of the scene load progress.</param>
+    /// <param name="count">The number of players.</param>
     private void EmitAverageLoadProgress(double sceneLoadProgressSum, int count)
     {
         var sceneLoadProgressAverage = sceneLoadProgressSum / count;
@@ -391,6 +409,9 @@ internal partial class GameManager : WorldEnvironment
         EmitSignal(SignalName.SceneLoad, sceneLoadProgressAverage);
     }
 
+    /// <summary>
+    /// Creates the players from the saved data.
+    /// </summary>
     private void CreatePlayersFromSavedData()
     {
         foreach (var playerScenePathAndData in _playerScenesPathAndData)
@@ -407,6 +428,9 @@ internal partial class GameManager : WorldEnvironment
         }
     }
 
+    /// <summary>
+    /// Creates the enemies from the saved data.
+    /// </summary>
     private void CreateEnemiesFromSavedData()
     {
         _enemyScene ??= (PackedScene)ResourceLoader.LoadThreadedGet(EnemyScenePath);
@@ -422,6 +446,9 @@ internal partial class GameManager : WorldEnvironment
         }
     }
 
+    /// <summary>
+    /// Emits the everything loaded signal and enables the input process.
+    /// </summary>
     private void EmitAndSetEverythingLoaded_And_EnableInputProcess()
     {
         EmitSignal(SignalName.EverythingLoaded);
@@ -432,6 +459,9 @@ internal partial class GameManager : WorldEnvironment
         SetProcessInput(true);
     }
 
+    /// <summary>
+    /// Adds the main UI.
+    /// </summary>
     private void AddMainUi()
     {
         var mainUiScene = ResourceLoader.Load<PackedScene>(MainUiScenePath);
