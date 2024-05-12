@@ -1,3 +1,4 @@
+using Bombino.game.persistence.storage_layers.key_binds;
 using Godot;
 
 namespace Bombino.ui.starting_screen;
@@ -14,5 +15,16 @@ internal partial class StartingScreen : CanvasLayer
         {
             GetTree().Paused = false;
         }
+    }
+
+    public override void _Ready()
+    {
+        var settingsDataAccessLayer = new SettingsDataAccessLayer();
+        var settingsKeyBinds = new SettingsKeyBinds(settingsDataAccessLayer);
+
+        if (settingsKeyBinds.IsLoaded())
+            return;
+
+        settingsKeyBinds.LoadKeyBinds();
     }
 }
