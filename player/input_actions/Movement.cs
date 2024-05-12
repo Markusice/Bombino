@@ -72,35 +72,4 @@ internal class Movement
         Name = name;
         Action = action;
     }
-    
-    /// <summary>
-    /// Determines whether the specified object is equal to the current object.
-    /// </summary>
-    /// <param name="other">The other object to compare with the current object.</param>
-    /// <returns>True if the specified object is equal to the current object; otherwise, false.</returns>
-    protected bool Equals(Movement other)
-    {
-        return Name == other.Name && Equals(Action, other.Action);
-    }
-
-    /// <summary>
-    /// Determines whether the specified object is equal to the current object.
-    /// </summary>
-    /// <param name="obj">The other object to compare with the current object.</param>
-    /// <returns>True if the specified object is equal to the current object; otherwise, false.</returns>
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((Movement)obj);
-    }
-
-    /// <summary>
-    /// Serves as the default hash function.
-    /// </summary>
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, Action);
-    }
 }
