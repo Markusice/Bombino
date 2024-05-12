@@ -143,20 +143,38 @@ internal partial class Bomb : Area3D
         if (body != Player)
             return;
 
-        var playerCollisionObject = Player as CollisionObject3D;
-        
-        int maskValue = GetMaskValueFromPlayerName(Player);
-        playerCollisionObject.SetCollisionMaskValue(maskValue, true);
+        var bombObject = GetNode<StaticBody3D>("%BombObject");
+        var layerValue = GetNextLayerValueFromPlayerName(Player); 
+
+        if (!bombObject.GetCollisionLayerValue(layerValue))
+            bombObject.SetCollisionLayerValue(layerValue, true);
+
     }
 
     /// <summary>
-    /// Gets the mask value from the player's name.
+    /// Gets the next layer value from the player's actual bomb layer.
     /// </summary>
-    /// <param name="player">The player to get the mask value from.</param>
-    /// <returns>The mask value from the player's name.</returns>
-    public static int GetMaskValueFromPlayerName(Player player)
+    /// <param name="player">The player to get the layer value from.</param>
+    /// <returns>The next layer value from the player's actual bomb layer.</returns>
+    private static int GetNextLayerValueFromPlayerName(Player player)
     {
         return player.PlayerData.Color switch
+        {
+            PlayerColor.Blue => GetMaskValueFromPlayerColor(PlayerColor.Red),
+            PlayerColor.Red => GetMaskValueFromPlayerColor(PlayerColor.Yellow),
+            PlayerColor.Yellow => GetMaskValueFromPlayerColor(PlayerColor.Blue),
+            _ => 0
+        };
+    }
+
+    /// <summary>
+    /// Gets the mask value from the player's color.
+    /// </summary>
+    /// <param name="color">The player's color.</param>
+    /// <returns>The mask value from the player's color.</returns>
+    public static int GetMaskValueFromPlayerColor(PlayerColor color)
+    {
+        return color switch
         {
             PlayerColor.Blue => 8,
             PlayerColor.Red => 9,
