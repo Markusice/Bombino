@@ -13,8 +13,6 @@ internal partial class ActionKeysContainer : GridContainer
         var settingsDataAccessLayer = new SettingsDataAccessLayer();
         var settingsKeyBinds = new SettingsKeyBinds(settingsDataAccessLayer);
 
-        settingsKeyBinds.LoadKeyBinds();
-
         ActionKeysMapper.CreateActionKeys(this, settingsKeyBinds.InputActionsForPlayerColors);
     }
 }
