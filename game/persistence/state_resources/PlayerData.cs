@@ -17,30 +17,42 @@ internal partial class PlayerData : Resource
     /// <summary>
     /// Gets or sets the color of the player.
     /// </summary>
+    /// <returns>The color of the player.</returns>
     [Export]
     public PlayerColor Color { get; set; }
 
     /// <summary>
     /// Gets or sets the range of the player's bombs.
     /// </summary>
+    /// <returns> The range of the player's bombs.</returns> 
     [Export]
     public int BombRange { get; set; } = 2;
 
     /// <summary>
     /// Gets or sets the number of placed bombs for the player.
     /// </summary>
+    /// <returns>The number of placed bombs for the player.</returns>
     [Export]
     public int NumberOfPlacedBombs { get; set; } = 0;
 
     /// <summary>
     /// Gets or sets the maximum number of available bombs for the player.
     /// </summary>
+    /// <returns>The maximum number of available bombs for the player.</returns>
     [Export]
     public int MaxNumberOfAvailableBombs { get; set; } = 1;
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the player is dead.
+    /// </summary>
+    /// <returns>True if the player is dead; otherwise, false.</returns>
     [Export]
     public bool IsDead { get; set; } = false;
 
+    /// <summary>
+    /// Gets or sets the number of wins for the player.
+    /// </summary>
+    /// <returns>The number of wins for the player.</returns>
     [Export]
     public int Wins { get; set; } = 0;
 
