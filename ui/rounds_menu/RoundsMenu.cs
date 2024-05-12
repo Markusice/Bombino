@@ -10,7 +10,8 @@ internal partial class RoundsMenu : CanvasLayer
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private string LoadingScenePath { get; set; }
+    [Export(PropertyHint.File, "*.tscn")]
+    private string LoadingScenePath { get; set; }
 
     #endregion
 
@@ -70,9 +71,9 @@ internal partial class RoundsMenu : CanvasLayer
     /// <param name="text">The text to check.</param>
     /// <param name="number">The parsed integer if the text is valid.</param>
     /// <returns>True if the text is a valid integer, false otherwise.</returns>
-    private static bool IsTextValidInteger(string text, out int number)
+    private static bool IsTextValidInteger(string text, out ushort number)
     {
-        return int.TryParse(text, out number);
+        return ushort.TryParse(text, out number);
     }
 
     /// <summary>
