@@ -3,6 +3,9 @@ using Bombino.player.input_actions;
 
 namespace Bombino.game.persistence.storage_layers.key_binds;
 
+/// <summary>
+/// Represents a key binds settings data access layer.
+/// </summary>
 internal class SettingsKeyBinds : ISettingsKeyBinds
 {
     #region Fields
@@ -13,6 +16,10 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
 
     #endregion
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SettingsKeyBinds"/> class.
+    /// </summary>
+    /// <param name="settingsDataAccessLayer">The settings data access layer to use for saving and loading key binds.</param>
     public SettingsKeyBinds(ISettingsDataAccessLayer<Dictionary<string, PlayerColor>> settingsDataAccessLayer)
     {
         _settingsDataAccessLayer = settingsDataAccessLayer;
@@ -29,11 +36,19 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
 
     #region InterfaceMethods
 
+    /// <summary>
+    /// Saves the key binds data.
+    /// </summary>
+    /// <returns>True if the data was successfully saved; otherwise, false.</returns>
     public bool SaveKeyBinds()
     {
         return _settingsDataAccessLayer.SaveData(InputActionsForPlayerColors);
     }
 
+    /// <summary>
+    /// Loads the key binds data.
+    /// </summary>
+    /// <returns>True if the data was successfully loaded; otherwise, false.</returns>
     public bool LoadKeyBinds()
     {
         return _settingsDataAccessLayer.LoadData(InputActionsForPlayerColors);
@@ -41,6 +56,10 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
 
     #endregion
 
+    /// <summary>
+    /// Adds input actions for the player color.
+    /// </summary>
+    /// <param name="playerColors">The player colors to add input actions for.</param>
     private void AddInputActionsForPlayerColor(IEnumerable<PlayerColor> playerColors,
         Movement[] playerInputActionsMovements,
         BombPlace playerInputActionsPlaceBomb)
@@ -55,6 +74,12 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
         }
     }
 
+    /// <summary>
+    /// Adds movement input actions for the player color.
+    /// </summary>
+    /// <param name="playerInputActionsMovements">The player input actions movements to add.</param>
+    /// <param name="playerColorLowerCase">The player color in lowercase.</param>
+    /// <param name="playerColor">The player color.</param>
     private void AddMovementInputActions(IEnumerable<Movement> playerInputActionsMovements, string playerColorLowerCase,
         PlayerColor playerColor)
     {
@@ -64,6 +89,12 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
         }
     }
 
+    /// <summary>
+    /// Adds place bomb input actions for the player color.
+    /// </summary>
+    /// <param name="playerInputActionsPlaceBomb">The player input actions place bomb to add.</param>
+    /// <param name="playerColorLowerCase">The player color in lowercase.</param>
+    /// <param name="playerColor">The player color.</param>
     private void AddPlaceBombInputAction(BombPlace playerInputActionsPlaceBomb, string playerColorLowerCase,
         PlayerColor playerColor)
     {
