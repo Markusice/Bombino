@@ -23,6 +23,7 @@ internal partial class BombinoMap : GridMap
     /// <summary>
     /// Sets up the map from a json file.
     /// </summary>
+    /// <param name="filePath">The path to the JSON file.</param>
     public void SetUpMapFromTextFile(string filePath)
     {
         var loadFile = _fileAccessManager.LoadFile(filePath, FileAccess.ModeFlags.Read);
@@ -103,6 +104,11 @@ internal partial class BombinoMap : GridMap
         }
     }
 
+    /// <summary>
+    /// Sets the cell item at the specified position.
+    /// </summary>
+    /// <param name="position">The position to set the cell item at.</param>
+    /// <returns>True if the cell item was successfully set; otherwise, false.</returns>
     private Vector3 SetCharacterPosition(Vector3I position)
     {
         var characterMapPosition = MapToLocal(position);
@@ -111,6 +117,11 @@ internal partial class BombinoMap : GridMap
         return characterMapPosition;
     }
 
+    /// <summary>
+    /// Fixes the character's Y position.
+    /// </summary>
+    /// <param name="position">The position to fix.</param>
+    /// <returns>The fixed position.</returns>
     private static Vector3 FixCharacterYPosition(Vector3 position)
     {
         return new Vector3(position.X, position.Y - 1, position.Z);

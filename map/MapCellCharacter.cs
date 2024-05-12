@@ -1,5 +1,8 @@
 ﻿namespace Bombino.map;
 
+/// <summary>
+/// Represents a map cell as a character.
+/// </summary>
 internal enum MapCellCharacter
 {
     Empty = '0',
