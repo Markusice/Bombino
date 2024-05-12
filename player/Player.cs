@@ -37,9 +37,7 @@ internal partial class Player : CharacterBody3D
     private AnimationTree _animTree;
     private AnimationNodeStateMachinePlayback _stateMachine;
     public Vector3I MapPosition;
-
     public PlayerInputActions PlayerInputActions { get; } = new();
-
     public PlayerData PlayerData { get; set; }
 
     #endregion
@@ -58,7 +56,7 @@ internal partial class Player : CharacterBody3D
     }
 
     /// <summary>
-    /// Called every frame. 'delta' is the elapsed time since the previous frame.
+    /// Called every frame.
     /// </summary>
     /// <param name="delta"> The time passed since the last frame. </param>
     public override void _PhysicsProcess(double delta)
