@@ -3,6 +3,9 @@ using Godot;
 
 namespace Bombino.game.persistence.storage_layers.game_state;
 
+/// <summary>
+/// Handles saving the game state.
+/// </summary>
 internal class GameSaveHandler : IGameSaveHandler
 {
     #region Fields
@@ -11,6 +14,10 @@ internal class GameSaveHandler : IGameSaveHandler
 
     #endregion
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GameSaveHandler"/> class.
+    /// </summary>
+    /// <param name="gameSaver">The game saver to use for saving the game state.</param>
     public GameSaveHandler(IGameSaver<Godot.Collections.Dictionary<string, Variant>> gameSaver)
     {
         _gameSaver = gameSaver;
@@ -88,6 +95,10 @@ internal class GameSaveHandler : IGameSaveHandler
         };
     }
 
+    /// <summary>
+    /// Creates a dictionary of enemies' data rows.
+    /// </summary>
+    /// <returns>A dictionary containing enemies' data rows.</returns>
     private static Godot.Collections.Dictionary<string, Variant> CreateEnemiesDataObject()
     {
         var enemiesDataObject = new Godot.Collections.Dictionary<string, Variant>();
@@ -102,6 +113,11 @@ internal class GameSaveHandler : IGameSaveHandler
         return enemiesDataObject;
     }
 
+    /// <summary>
+    /// Creates a dictionary of enemy data to store.
+    /// </summary>
+    /// <param name="enemyData">The enemy data to be stored.</param>
+    /// <returns>A dictionary containing the enemy data.</returns>
     private static Godot.Collections.Dictionary<string, Variant> CreateEnemyDataObject(EnemyData enemyData)
     {
         return new Godot.Collections.Dictionary<string, Variant>()

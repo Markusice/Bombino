@@ -20,6 +20,12 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
 
     #endregion
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GameSaver"/> class.
+    /// </summary>
+    /// <remarks>
+    /// The game save path is set to the user directory with the save directory path and the file name.
+    /// </remarks>
     public GameSaver()
     {
         _gameSavePath = $"user://{SaveDirectory.Path}/{_fileName}.json";
@@ -31,6 +37,7 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
     /// Writes the game save data to the file.
     /// </summary>
     /// <param name="data">The game save data to write.</param>
+    /// <returns>True if the data was successfully saved; otherwise, false.</returns>
     public bool SaveData(Godot.Collections.Dictionary<string, Variant> data)
     {
         var dirError = _dirAccessManager.MakeDirectory("user://", SaveDirectory.Path);
