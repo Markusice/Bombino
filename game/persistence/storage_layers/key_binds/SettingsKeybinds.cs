@@ -60,17 +60,16 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
     /// Adds input actions for the player color.
     /// </summary>
     /// <param name="playerColors">The player colors to add input actions for.</param>
+    /// <param name="playerInputActionsMovements">The player input actions movements to add.</param>
+    /// <param name="playerInputActionsPlaceBomb">The player input actions place bomb to add.</param>
     private void AddInputActionsForPlayerColor(IEnumerable<PlayerColor> playerColors,
         Movement[] playerInputActionsMovements,
         BombPlace playerInputActionsPlaceBomb)
     {
         foreach (var playerColor in playerColors)
         {
-            var playerColorLowerCase = playerColor.ToString().ToLower();
-
-            AddMovementInputActions(playerInputActionsMovements, playerColorLowerCase, playerColor);
-
-            AddPlaceBombInputAction(playerInputActionsPlaceBomb, playerColorLowerCase, playerColor);
+            AddMovementInputActions(playerInputActionsMovements, playerColor);
+            AddPlaceBombInputAction(playerInputActionsPlaceBomb, playerColor);
         }
     }
 
@@ -78,14 +77,13 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
     /// Adds movement input actions for the player color.
     /// </summary>
     /// <param name="playerInputActionsMovements">The player input actions movements to add.</param>
-    /// <param name="playerColorLowerCase">The player color in lowercase.</param>
     /// <param name="playerColor">The player color.</param>
-    private void AddMovementInputActions(IEnumerable<Movement> playerInputActionsMovements, string playerColorLowerCase,
+    private void AddMovementInputActions(IEnumerable<Movement> playerInputActionsMovements,
         PlayerColor playerColor)
     {
         foreach (var movement in playerInputActionsMovements)
         {
-            InputActionsForPlayerColors.Add($"{movement.Name}_{playerColorLowerCase}", playerColor);
+            InputActionsForPlayerColors.Add($"{movement.Name}_{playerColor.ToString().ToLower()}", playerColor);
         }
     }
 
@@ -93,11 +91,11 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
     /// Adds place bomb input actions for the player color.
     /// </summary>
     /// <param name="playerInputActionsPlaceBomb">The player input actions place bomb to add.</param>
-    /// <param name="playerColorLowerCase">The player color in lowercase.</param>
     /// <param name="playerColor">The player color.</param>
-    private void AddPlaceBombInputAction(BombPlace playerInputActionsPlaceBomb, string playerColorLowerCase,
+    private void AddPlaceBombInputAction(BombPlace playerInputActionsPlaceBomb,
         PlayerColor playerColor)
     {
-        InputActionsForPlayerColors.Add($"{playerInputActionsPlaceBomb.Name}_{playerColorLowerCase}", playerColor);
+        InputActionsForPlayerColors.Add($"{playerInputActionsPlaceBomb.Name}_{playerColor.ToString().ToLower()}",
+            playerColor);
     }
 }
