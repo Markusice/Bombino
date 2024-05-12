@@ -44,22 +44,19 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
 
     #region InterfaceMethods
 
-    /// <summary>
-    /// Saves the key binds data.
-    /// </summary>
-    /// <returns>True if the data was successfully saved; otherwise, false.</returns>
     public bool SaveKeyBinds()
     {
         return _settingsDataAccessLayer.SaveData(InputActionsForPlayerColors);
     }
 
-    /// <summary>
-    /// Loads the key binds data.
-    /// </summary>
-    /// <returns>True if the data was successfully loaded; otherwise, false.</returns>
     public bool LoadKeyBinds()
     {
         return _settingsDataAccessLayer.LoadData(InputActionsForPlayerColors);
+    }
+
+    public bool IsLoaded()
+    {
+        return InputActionsForPlayerColors.Count != 0;
     }
 
     #endregion
