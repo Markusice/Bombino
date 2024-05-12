@@ -68,8 +68,8 @@ internal partial class Bomb : Area3D
 
     /// <summary>
     /// Called when the bomb explodes sooner.
-    /// <param name="newTimerWaitTime"></param>
     /// </summary>
+    /// <param name="newTimerWaitTime"></param>
     private void OnExplodeSooner(float newTimerWaitTime)
     {
         var bombTimer = GetNode<Timer>("BombTimer");
@@ -106,8 +106,8 @@ internal partial class Bomb : Area3D
 
     /// <summary>
     /// Called when the bomb enters an area
-    /// <param name="area">The area that the bomb entered.</param>
     /// </summary>
+    /// <param name="area">The area that the bomb entered.</param>
     private void OnAreaEntered(Area3D area)
     {
         if (!area.IsInGroup("collisionareas"))
@@ -121,8 +121,8 @@ internal partial class Bomb : Area3D
 
     /// <summary>
     /// Called when the bomb exits an area.
-    /// <param name="area">The area that the bomb exited.</param>
     /// </summary>
+    /// <param name="area">The area that the bomb exited.</param>
     private void OnAreaExited(Area3D area)
     {
         if (!area.IsInGroup("collisionareas"))
