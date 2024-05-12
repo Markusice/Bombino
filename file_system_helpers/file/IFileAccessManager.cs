@@ -3,6 +3,9 @@ using FileAccess = Godot.FileAccess;
 
 namespace Bombino.file_system_helpers.file;
 
+/// <summary>
+/// Interface for managing file access.
+/// </summary>
 public interface IFileAccessManager
 {
     /// <summary>

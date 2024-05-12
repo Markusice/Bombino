@@ -2,6 +2,9 @@
 
 namespace Bombino.file_system_helpers.directory;
 
+/// <summary>
+/// Interface for accessing directories.
+/// </summary>
 internal interface IDirAccessManager
 {
     /// <summary>
@@ -18,6 +21,8 @@ internal interface IDirAccessManager
     /// <summary>
     /// Creates a directory at the specified path with the specified name.
     /// </summary>
+    /// <param name="path">The path of the directory.</param>
+    /// <param name="name">The name of the directory to create.</param>
     /// <returns>
     /// An error code which indicates whether the operation was successful or not.
     /// </returns>
@@ -26,6 +31,7 @@ internal interface IDirAccessManager
     /// <summary>
     /// Removes the file at the specified absolute path.
     /// </summary>
+    /// <param name="path">The absolute path of the file to remove.</param>
     /// <returns>
     /// An error code which indicates whether the operation was successful or not.
     /// </returns>
