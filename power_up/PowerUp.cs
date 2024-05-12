@@ -4,6 +4,9 @@ using Godot;
 
 namespace Bombino.power_up;
 
+/// <summary>
+/// Represents a power-up in the game.
+/// </summary>
 internal partial class PowerUp : Area3D
 {
     [Export(PropertyHint.File, ".tres")] private Material _hologramPink;
@@ -13,6 +16,9 @@ internal partial class PowerUp : Area3D
     private PowerUpType _type;
     private MeshInstance3D _meshInstance3D;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PowerUp"/> class.
+    /// </summary>
     public override void _Ready()
     {
         _meshInstance3D = GetNode<MeshInstance3D>("%MeshInstance3D");
@@ -21,6 +27,10 @@ internal partial class PowerUp : Area3D
         SetMaterialBasedOnType();
     }
 
+    /// <summary>
+    /// Gets a random a power-up type.
+    /// </summary>
+    /// <returns>A random power-up type.</returns>
     private static PowerUpType GetRandomPowerUpType()
     {
         var values = Enum.GetValues(typeof(PowerUpType)).Cast<PowerUpType>().ToArray();
@@ -28,6 +38,9 @@ internal partial class PowerUp : Area3D
         return values[new Random().Next(values.Length)];
     }
 
+    /// <summary>
+    /// Sets the material based on the power-up type.
+    /// </summary>
     private void SetMaterialBasedOnType()
     {
         var material = _type == PowerUpType.IncreaseBombRange ? _hologramBlue : _hologramPink;
@@ -35,6 +48,11 @@ internal partial class PowerUp : Area3D
         _meshInstance3D.SetSurfaceOverrideMaterial(0, material);
     }
 
+    /// <summary>
+    /// Called when the body enters the area.
+    /// Increases the player's bomb range or the maximum number of available bombs according to the given power-up.
+    /// </summary>
+    /// <param name="body">The body that entered the area.</param>
     private void OnBodyEntered(Node3D body)
     {
         if (!body.IsInGroup("players"))
