@@ -52,8 +52,10 @@ internal class GameSaveHandler : IGameSaveHandler
     /// <param name="data">The dictionary to add the row to.</param>
     /// <param name="objectName">The name of the row.</param>
     /// <param name="objectData">The dictionary representing the row.</param>
-    private static void AddNewObjectToData(IDictionary<string, Variant> data,
-        string objectName, Godot.Collections.Dictionary<string, Variant> objectData
+    private static void AddNewObjectToData(
+        IDictionary<string, Variant> data,
+        string objectName,
+        Godot.Collections.Dictionary<string, Variant> objectData
     )
     {
         data.Add(objectName, objectData);
@@ -82,7 +84,9 @@ internal class GameSaveHandler : IGameSaveHandler
     /// </summary>
     /// <param name="playerData">The player data to be stored.</param>
     /// <returns>A dictionary containing the player data.</returns>
-    private static Godot.Collections.Dictionary<string, Variant> CreatePlayerDataObject(PlayerData playerData)
+    private static Godot.Collections.Dictionary<string, Variant> CreatePlayerDataObject(
+        PlayerData playerData
+    )
     {
         return new Godot.Collections.Dictionary<string, Variant>()
         {
@@ -107,7 +111,11 @@ internal class GameSaveHandler : IGameSaveHandler
         {
             var playerDataObject = CreateEnemyDataObject(enemyData);
 
-            AddNewObjectToData(enemiesDataObject, enemyData.GetInstanceId().ToString(), playerDataObject);
+            AddNewObjectToData(
+                enemiesDataObject,
+                enemyData.GetInstanceId().ToString(),
+                playerDataObject
+            );
         }
 
         return enemiesDataObject;
@@ -118,7 +126,9 @@ internal class GameSaveHandler : IGameSaveHandler
     /// </summary>
     /// <param name="enemyData">The enemy data to be stored.</param>
     /// <returns>A dictionary containing the enemy data.</returns>
-    private static Godot.Collections.Dictionary<string, Variant> CreateEnemyDataObject(EnemyData enemyData)
+    private static Godot.Collections.Dictionary<string, Variant> CreateEnemyDataObject(
+        EnemyData enemyData
+    )
     {
         return new Godot.Collections.Dictionary<string, Variant>()
         {
