@@ -13,29 +13,36 @@ internal sealed partial class Events : Node
 
     /// <summary>
     /// Emitted when a player dies.
-    /// <param name="playerColor">to identify player's player_name and bomb_status container</param>
     /// </summary>
+    /// <param name="playerColor">to identify player's player_name and bomb_status container</param>
     [Signal]
     public delegate void PlayerDiedEventHandler(string playerColor);
 
     /// <summary>
     /// Emitted when the number of available bombs for a player is incremented.
-    /// <param name="playerColor">to identify player's player_name and bomb_status container</param>
-    /// <paramref name="numberOfAvailableBombs"/>
     /// </summary>
+    /// <param name="playerColor">to identify player's player_name and bomb_status container</param>
+    /// <param name="numberOfAvailableBombs">the number of available bombs</param>
     [Signal]
     public delegate void PlayerBombNumberIncrementedEventHandler(string playerColor, int numberOfAvailableBombs);
 
     /// <summary>
     /// Emitted when the number of available bombs for a player is decreased.
-    /// <param name="playerColor">to identify player's player_name and bomb_status container</param>
     /// </summary>
+    /// <param name="playerColor">to identify player's player_name and bomb_status container</param>
+    /// <param name="numberOfAvailableBombs">the number of available bombs</param>
     [Signal]
     public delegate void PlayerBombNumberDecreasedEventHandler(string playerColor, int numberOfAvailableBombs);
 
     #endregion
 
+    /// <summary>
+    /// Singleton instance of the event bus.
+    /// </summary>
     public static Events Instance { get; private set; }
 
+    /// <summary>
+    /// Called when the node enters the scene tree for the first time.
+    /// </summary>
     public override void _EnterTree() => Instance = this;
 }
