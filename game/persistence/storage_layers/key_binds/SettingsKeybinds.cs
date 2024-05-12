@@ -16,6 +16,8 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
 
     public Dictionary<string, PlayerColor> InputActionsForPlayerColors { get; } = new();
 
+    private bool _isLoaded;
+
     #endregion
 
     /// <summary>
@@ -51,12 +53,18 @@ internal class SettingsKeyBinds : ISettingsKeyBinds
 
     public bool LoadKeyBinds()
     {
-        return _settingsDataAccessLayer.LoadData(InputActionsForPlayerColors);
+        var isLoadSuccessful = _settingsDataAccessLayer.LoadData(InputActionsForPlayerColors);
+        if (isLoadSuccessful)
+        {
+            _isLoaded = true;
+        }
+
+        return isLoadSuccessful;
     }
 
     public bool IsLoaded()
     {
-        return InputActionsForPlayerColors.Count != 0;
+        return _isLoaded;
     }
 
     #endregion
