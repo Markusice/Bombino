@@ -88,9 +88,25 @@ public class EnemyTest : TestClass {
     }
 
     [Test]
-    public void Enemy_IsNotNull()
+    public void Enemy_Ready_IsNotNull()
     {
         _enemy1.ShouldNotBeNull();
+    }
+
+    [Test]
+    public void Enemy_Ready_EnemyDataIsSet()
+    {
+        _enemy1._Ready();
+
+        _enemy1.EnemyData.ShouldBe(_enemyData1);
+    }
+
+    [Test]
+    public void OnHit_EnemyHit_EnemyIsDead()
+    {
+        _enemy1.OnHit();
+
+        _enemy1.EnemyData.IsDead.ShouldBeTrue();
     }
 
 }
