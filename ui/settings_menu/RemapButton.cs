@@ -65,11 +65,14 @@ internal partial class RemapButton : Button
         if (!@event.IsPressed())
             return;
 
-        if (@event is not InputEventKey)
+        if (@event is not InputEventKey key)
+            return;
+
+        if (key.Keycode == Key.Enter)
             return;
 
         InputMap.ActionEraseEvents(Action);
-        InputMap.ActionAddEvent(Action, @event);
+        InputMap.ActionAddEvent(Action, key);
 
         ButtonPressed = false;
     }
