@@ -210,4 +210,70 @@ public class BombinoMapTest : TestClass {
         }
     }
 
+    [Test]
+    public void SetUpMapFromTextFile_BasicMapLoaded_MapCellsAreCorrect()
+    {
+        var block1 = _map.GetCellItem(new Vector3I(-7, 0, -7));
+        var block2 = _map.GetCellItem(new Vector3I(-6, 0, -7));
+        var block3 = _map.GetCellItem(new Vector3I(-5, 0, -7));
+        var wall = _map.GetCellItem(new Vector3I(-7, 1, -7));
+        var wall2 = _map.GetCellItem(new Vector3I(-6, 1, -7));
+        var crate = _map.GetCellItem(new Vector3I(-4, 1, -6));
+        var crate2 = _map.GetCellItem(new Vector3I(-3, 1, -6));
+
+        block1.ShouldBe((int)GridElement.BlockElement);
+        block2.ShouldBe((int)GridElement.BlockElement);
+        block3.ShouldBe((int)GridElement.BlockElement);
+        wall.ShouldBe((int)GridElement.WallElement);
+        wall2.ShouldBe((int)GridElement.WallElement);
+        crate.ShouldBe((int)GridElement.CrateElement);
+        crate2.ShouldBe((int)GridElement.CrateElement);
+
+    }
+
+    [Test]
+    public void SetUpMapFromTextFile_WideMapLoaded_MapCellsAreCorrect()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/wide.json");
+        var block1 = _map.GetCellItem(new Vector3I(-13, 0, -7));
+        var block2 = _map.GetCellItem(new Vector3I(-12, 0, -7));
+        var block3 = _map.GetCellItem(new Vector3I(-11, 0, -7));
+        var wall = _map.GetCellItem(new Vector3I(-13, 1, -7));
+        var wall2 = _map.GetCellItem(new Vector3I(-12, 1, -7));
+        var crate = _map.GetCellItem(new Vector3I(-10, 1, -6));
+        var crate2 = _map.GetCellItem(new Vector3I(-9, 1, -6));
+
+        block1.ShouldBe((int)GridElement.BlockElement);
+        block2.ShouldBe((int)GridElement.BlockElement);
+        block3.ShouldBe((int)GridElement.BlockElement);
+        wall.ShouldBe((int)GridElement.WallElement);
+        wall2.ShouldBe((int)GridElement.WallElement);
+        crate.ShouldBe((int)GridElement.CrateElement);
+        crate2.ShouldBe((int)GridElement.CrateElement);
+    }
+
+    [Test]
+    public void SetUpMapFromTextFile_CrossMapLoaded_MapCellsAreCorrect()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/cross.json");
+        var block1 = _map.GetCellItem(new Vector3I(-6, 0, -10));
+        var block2 = _map.GetCellItem(new Vector3I(-5, 0, -10));
+        var block3 = _map.GetCellItem(new Vector3I(-4, 0, -10));
+        var wall = _map.GetCellItem(new Vector3I(-6, 1, -10));
+        var wall2 = _map.GetCellItem(new Vector3I(-5, 1, -10));
+        var crate = _map.GetCellItem(new Vector3I(-3, 1, -9));
+        var crate2 = _map.GetCellItem(new Vector3I(-2, 1, -9));
+
+        block1.ShouldBe((int)GridElement.BlockElement);
+        block2.ShouldBe((int)GridElement.BlockElement);
+        block3.ShouldBe((int)GridElement.BlockElement);
+        wall.ShouldBe((int)GridElement.WallElement);
+        wall2.ShouldBe((int)GridElement.WallElement);
+        crate.ShouldBe((int)GridElement.CrateElement);
+        crate2.ShouldBe((int)GridElement.CrateElement);
+    }
+
+        
 }
