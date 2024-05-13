@@ -23,11 +23,9 @@ internal partial class Enemy : CharacterBody3D
     #region Fields
 
     private const int Speed = 5;
-    private bool _isDead;
     private Vector3 _targetVelocity = Vector3.Zero;
     private AnimationTree _animTree;
     private AnimationNodeStateMachinePlayback _stateMachine;
-    private bool _canKillPlayer = false;
 
     private static readonly Vector3[] _directions =
     {
@@ -72,7 +70,7 @@ internal partial class Enemy : CharacterBody3D
         MoveAndSlide();
 
         await ToSignal(GetTree().CreateTimer(0.1f), SceneTreeTimer.SignalName.Timeout);
-        _canKillPlayer = true;
+        EnemyData.CanKillPlayer = true;
     }
 
     /// <summary>
@@ -81,7 +79,7 @@ internal partial class Enemy : CharacterBody3D
     /// <param name="delta">The time elapsed since the previous frame.</param>
     public override void _PhysicsProcess(double delta)
     {
-        if (_isDead)
+        if (EnemyData.IsDead)
             return;
 
         // Vertical velocity
@@ -133,9 +131,9 @@ internal partial class Enemy : CharacterBody3D
     /// <summary>
     /// Handler for the Hit event.
     /// </summary>
-    private async void OnHit()
+    public async void OnHit()
     {
-        _isDead = true;
+        EnemyData.IsDead = true;
         SetStateMachine("Die");
         await ToSignal(GetTree().CreateTimer(0.1f), SceneTreeTimer.SignalName.Timeout);
         Die();
@@ -258,7 +256,7 @@ internal partial class Enemy : CharacterBody3D
     /// <param name="body">The body that entered the area.</param>
     private void OnAreaEntered(Node3D body)
     {
-        if (_isDead || !_canKillPlayer)
+        if (EnemyData.IsDead || !EnemyData.CanKillPlayer)
             return;
 
         if (body.IsInGroup("players"))
