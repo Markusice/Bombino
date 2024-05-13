@@ -118,7 +118,7 @@ internal class BombPlace
         var bombToPlace = player.BombScene.Instantiate<Bomb>();
 
         bombToPlace.Position = bombToPlacePosition;
-        bombToPlace.Range = player.PlayerData.BombRange;
+        bombToPlace.BombData.Range = player.PlayerData.BombRange;
         bombToPlace.Player = player;
 
         var collisionShapeX = bombToPlace.GetNode<CollisionShape3D>("CollisionShapeX");
@@ -130,7 +130,7 @@ internal class BombPlace
         collisionShapeX.Shape = new BoxShape3D
         {
             Size = new Vector3(
-                bombInstanceCollisionLength + bombToPlace.Range * collisionShapeOneTileLengthInBothDirection,
+                bombInstanceCollisionLength + bombToPlace.BombData.Range * collisionShapeOneTileLengthInBothDirection,
                 ((BoxShape3D)collisionShapeX.Shape).Size.Y,
                 ((BoxShape3D)collisionShapeX.Shape).Size.Z)
         };
@@ -139,7 +139,7 @@ internal class BombPlace
         {
             Size = new Vector3(((BoxShape3D)collisionShapeZ.Shape).Size.X,
                 ((BoxShape3D)collisionShapeZ.Shape).Size.Y,
-                bombInstanceCollisionLength + bombToPlace.Range * collisionShapeOneTileLengthInBothDirection)
+                bombInstanceCollisionLength + bombToPlace.BombData.Range * collisionShapeOneTileLengthInBothDirection)
         };
 
         return bombToPlace;

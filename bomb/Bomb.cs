@@ -1,6 +1,7 @@
 using Bombino.bomb.explosion_effect;
 using Bombino.enemy;
 using Bombino.game;
+using Bombino.game.persistence.state_storage;
 using Bombino.player;
 using Bombino.power_up;
 using Godot;
@@ -37,6 +38,8 @@ internal partial class Bomb : Area3D
 
     #region Fields
 
+    public BombData BombData { get; set; } = new BombData();
+
     private readonly Array<Node3D> _bodiesToExplode = new();
     private readonly Array<Area3D> _bombsInRange = new();
 
@@ -46,8 +49,6 @@ internal partial class Bomb : Area3D
 
     public Player Player { get; set; }
 
-    public int Range { get; set; }
-
     #endregion
 
     /// <summary>
@@ -56,6 +57,8 @@ internal partial class Bomb : Area3D
     public override void _Ready()
     {
         GD.Print($"bomb pos: {Position}");
+        BombData.Position = Position;
+        BombData.PlayerData = Player.PlayerData;
         _bombCollisionArea = GetNode<Area3D>("%CollisionArea");
 
         var timer = GetNode<Timer>("BombTimer");
@@ -274,7 +277,7 @@ internal partial class Bomb : Area3D
         foreach (var rayDirection in rayDirections)
         {
             var origin = GlobalPosition;
-            var end = origin + rayDirection * (Range * 2);
+            var end = origin + rayDirection * (BombData.Range * 2);
             var rayMask = GameManager.GameMap.CollisionMask;
 
             var result = CastRayAndGetResult(origin, end, rayMask);
@@ -427,7 +430,7 @@ internal partial class Bomb : Area3D
     {
         for (var axis = -1; axis < 1; axis++)
         {
-            for (var nthTile = 1; nthTile <= Range; nthTile++)
+            for (var nthTile = 1; nthTile <= BombData.Range; nthTile++)
             {
                 var positionOnNthTile = GetEffectPositionOnAxisOnNthTile(
                     explosionAxis,
@@ -534,7 +537,7 @@ internal partial class Bomb : Area3D
     private void CreateExplosionsOnTilesOnAxis(ExplosionAxis explosionAxis)
     {
         for (var axis = -1; axis < 1; axis++)
-        for (var nthTile = 1; nthTile <= Range; nthTile++)
+        for (var nthTile = 1; nthTile <= BombData.Range; nthTile++)
         {
             var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(
                 explosionAxis,
