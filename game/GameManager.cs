@@ -515,7 +515,7 @@ internal partial class GameManager : WorldEnvironment
     }
 
     /// <summary>
-    /// Checks the map type and creates it.
+    /// Requests the map load.
     /// </summary>
     private void RequestMapLoad()
     {
@@ -564,7 +564,7 @@ internal partial class GameManager : WorldEnvironment
     }
 
     /// <summary>
-    /// Creates a player.
+    /// Saves the player data and requests the load.
     /// </summary>
     /// <param name="playerColor"></param>
     /// <param name="position"></param>
@@ -585,7 +585,7 @@ internal partial class GameManager : WorldEnvironment
     }
 
     /// <summary>
-    /// Creates an enemy.
+    /// Saves the enemy data and requests the load.
     /// </summary>
     /// <param name="position"></param>
     private void SaveEnemyDataAndRequestLoad(Vector3 position)
@@ -609,7 +609,7 @@ internal partial class GameManager : WorldEnvironment
     }
 
     /// <summary>
-    /// Sets and adds the paused game.
+    /// Adds the paused screen.
     /// </summary>
     private void AddPausedScreen()
     {
