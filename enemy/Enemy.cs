@@ -102,6 +102,20 @@ internal partial class Enemy : CharacterBody3D
             LookAt(targetPosition, Vector3.Up);
         }
 
+        // Randomly change direction without any reason
+        if (new Random().NextDouble() < 0.005) // 0.5% chance to change direction
+        {   
+            GD.Print("Changing direction randomly");
+            var direction = Vector3.Zero;
+            ChangeDirection(ref direction);
+
+            _targetVelocity.X = direction.X * Speed;
+            _targetVelocity.Z = direction.Z * Speed;
+
+            var targetPosition = Position - direction;
+            LookAt(targetPosition, Vector3.Up);
+        }
+
         EnemyData.Position = Position;
 
         BlendMovementAnimation();
