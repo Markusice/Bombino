@@ -69,20 +69,20 @@ public class GameManagerTest : TestClass {
     }
 
     [Test]
-    public void GameManager_IsNotNull()
+    public void GameManager_OnGameLoad_IsNotNull()
     {
         _game.ShouldNotBeNull();
     }
 
     [Test]
-    public void GameManager_HasTwoPlayers()
+    public void GameManager_OnGameLoad_HasTwoPlayers()
     {
         GameManager.PlayersData.Count.ShouldBe(2);
 
     }
 
     [Test]
-    public void GameManager_HasMap()
+    public void GameManager_OnGameLoad_HasMap()
     {
         GameManager.GameMap.ShouldNotBeNull();
 

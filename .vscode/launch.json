@@ -24,7 +24,8 @@
       "args": [
         // These command line flags are used by GoDotTest to run tests.
         "--run-tests",
-        "--quit-on-finish"
+        "--quit-on-finish",
+        "--coverage"
       ],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
