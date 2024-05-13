@@ -14,8 +14,10 @@ internal static class ActionKeysMapper
     /// </summary>
     /// <param name="actionKeysContainer">The action keys container to create action keys for.</param>
     /// <param name="inputActionsData"></param>
-    public static void CreateActionKeys(ActionKeysContainer actionKeysContainer,
-        Dictionary<string, PlayerColor> inputActionsData)
+    public static void CreateActionKeys(
+        ActionKeysContainer actionKeysContainer,
+        Dictionary<string, PlayerColor> inputActionsData
+    )
     {
         foreach (var (inputAction, _) in inputActionsData)
         {
