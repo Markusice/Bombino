@@ -28,6 +28,9 @@ internal partial class PausedGameUi : CanvasLayer
 
     #region Overrides
 
+    /// <summary>
+    /// Called when the node enters the scene tree for the first time.
+    /// </summary>
     public override void _Ready()
     {
         AnimationPlayer = GetNode<AnimationPlayer>("BlurAnimation");
@@ -51,11 +54,17 @@ internal partial class PausedGameUi : CanvasLayer
 
     #region MethodsForSignals
 
+    /// <summary>
+    /// Called when the resume button is pressed.
+    /// </summary>
     private async void OnResumeButtonPressed()
     {
         await StartCountDownAndResume();
     }
 
+    /// <summary>
+    /// Called when the save and exit button is pressed.
+    /// </summary>
     private void OnSaveAndExitButtonPressed()
     {
         SaveGame();
@@ -69,6 +78,7 @@ internal partial class PausedGameUi : CanvasLayer
     /// <summary>
     /// Starts the countdown and after that emits ResumeGame signal to GameManager.
     /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task StartCountDownAndResume()
     {
         if (IsResumed)
@@ -87,6 +97,7 @@ internal partial class PausedGameUi : CanvasLayer
     /// <summary>
     /// Starts the countdown from 3 to 1.
     /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private async Task StartCountDown()
     {
         GetNode<PanelContainer>("ButtonsContainer").QueueFree();
@@ -123,6 +134,9 @@ internal partial class PausedGameUi : CanvasLayer
         AnimationPlayer.Play("start_pause");
     }
 
+    /// <summary>
+    /// Saves the game.
+    /// </summary>
     private void SaveGame()
     {
         if (IsSaveClicked)
