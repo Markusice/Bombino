@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://tvlak70hpojg"]
+[gd_scene load_steps=4 format=3 uid="uid://tvlak70hpojg"]
 
 [ext_resource type="Script" path="res://ui/rounds_menu/RoundsMenu.cs" id="1_easd3"]
+[ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="2_oolvm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2bk4"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -97,4 +98,23 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
+[node name="Container" type="PanelContainer" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 29.0
+offset_top = -96.0
+offset_right = 190.0
+offset_bottom = -16.0
+grow_vertical = 0
+
+[node name="BackButton" type="Button" parent="Container"]
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+theme_override_font_sizes/font_size = 38
+text = "Back"
+script = ExtResource("2_oolvm")
+PreviousScenePath = "res://ui/maps_menu/maps_menu.tscn"
+
 [connection signal="text_submitted" from="RoundsContainer/MarginContainer/GridContainer/NumberInput" to="." method="OnNumberInputSubmitted"]
+[connection signal="pressed" from="Container/BackButton" to="Container/BackButton" method="OnPressed"]
