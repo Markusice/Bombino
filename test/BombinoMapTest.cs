@@ -69,10 +69,145 @@ public class BombinoMapTest : TestClass {
     }
 
     [Test]
-    public void Map_IsNotNull()
+    public void Map_OnGameLoad_IsNotNull()
     {
         _map.ShouldNotBeNull();
     }
 
+    [Test]
+    public void BluePlayerPosition_BasicMapLoaded_SetToCorrectValue()
+    {
+        var expected = _map.MapToLocal(new Vector3I(-6, 1, -6));
+        expected.Y--;
+        _map.BluePlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void RedPlayerPosition_BasicMapLoaded_SetToCorrectValue()
+    {
+        var expected = _map.MapToLocal(new Vector3I(-6, 1, 4));
+        expected.Y--;
+        _map.RedPlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void YellowPlayerPosition_BasicMapLoaded_SetToCorrectValue()
+    {
+        var expected = _map.MapToLocal(new Vector3I(4, 1, 4));
+        expected.Y--;
+        _map.YellowPlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void EnemyPositions_BasicMapLoaded_SetToCorrectValue()
+    {
+        var expected = _map.MapToLocal(new Vector3I(4, 1, -6));
+        expected.Y--;
+        _map.EnemyPositions[0].ShouldBe(expected);
+    }
+
+    [Test]
+    public void BluePlayerPosition_WideMapLoaded_SetToCorrectValue()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/wide.json");
+        var expected = _map.MapToLocal(new Vector3I(-12, 1, -6));
+        expected.Y--;
+        _map.BluePlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void RedPlayerPosition_WideMapLoaded_SetToCorrectValue()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/wide.json");
+        var expected = _map.MapToLocal(new Vector3I(-12, 1, 4));
+        expected.Y--;
+        _map.RedPlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void YellowPlayerPosition_WideMapLoaded_SetToCorrectValue()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/wide.json");
+        var expected = _map.MapToLocal(new Vector3I(10, 1, 4));
+        expected.Y--;
+        _map.YellowPlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void EnemyPositions_WideMapLoaded_SetToCorrectValue()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/wide.json");
+        var enemyPosition1 = _map.MapToLocal(new Vector3I(10, 1, -6));
+        enemyPosition1.Y--;
+        var enemyPosition2 = _map.MapToLocal(new Vector3I(0, 1, -2));
+        enemyPosition2.Y--;
+        var expected = new Array<Vector3>
+        {
+            enemyPosition1,
+            enemyPosition2
+        };
+
+        foreach (var position in expected)
+        {
+            _map.EnemyPositions.Contains(position).ShouldBeTrue();
+        }
+    }
+
+    [Test]
+    public void BluePlayerPosition_CrossMapLoaded_SetToCorrectValue()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/cross.json");
+        var expected = _map.MapToLocal(new Vector3I(-5, 1, -9));
+        expected.Y--;
+        _map.BluePlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void RedPlayerPosition_CrossMapLoaded_SetToCorrectValue()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/cross.json");
+        var expected = _map.MapToLocal(new Vector3I(-5, 1, 7));
+        expected.Y--;
+        _map.RedPlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void YellowPlayerPosition_CrossMapLoaded_SetToCorrectValue()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/cross.json");
+        var expected = _map.MapToLocal(new Vector3I(3, 1, 7));
+        expected.Y--;
+        _map.YellowPlayerPosition.ShouldBe(expected);
+    }
+
+    [Test]
+    public void EnemyPositions_CrossMapLoaded_SetToCorrectValue()
+    {
+        _map.Clear();
+        _map.SetUpMapFromTextFile("res://map/sources/cross.json");
+        var enemyPosition1 = _map.MapToLocal(new Vector3I(3, 1, -9));
+        enemyPosition1.Y--;
+        var enemyPosition2 = _map.MapToLocal(new Vector3I(-1, 1, -4));
+        enemyPosition2.Y--;
+        var enemyPosition3 = _map.MapToLocal(new Vector3I(2, 1, -1));
+        enemyPosition3.Y--;
+        var expected = new Array<Vector3>
+        {
+            enemyPosition1,
+            enemyPosition2,
+            enemyPosition3
+        };
+        foreach (var position in expected)
+        {
+            _map.EnemyPositions.Contains(position).ShouldBeTrue();
+        }
+    }
 
 }
