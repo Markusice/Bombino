@@ -13,9 +13,11 @@ internal partial class Player : CharacterBody3D
 {
     #region Exports
 
-    [Export] public int Speed { get; set; } = 10;
+    [Export]
+    public int Speed { get; set; } = 10;
 
-    [Export] public PackedScene BombScene { get; set; }
+    [Export]
+    public PackedScene BombScene { get; set; }
 
     #endregion
 
@@ -33,10 +35,12 @@ internal partial class Player : CharacterBody3D
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+
     private Vector3 _targetVelocity = Vector3.Zero;
     private AnimationTree _animTree;
     private AnimationNodeStateMachinePlayback _stateMachine;
     public Vector3I MapPosition;
+
     public PlayerInputActions PlayerInputActions { get; } = new();
     public PlayerData PlayerData { get; set; }
 
@@ -61,15 +65,17 @@ internal partial class Player : CharacterBody3D
     /// <param name="delta"> The time passed since the last frame. </param>
     public override void _PhysicsProcess(double delta)
     {
-        if (PlayerData.IsDead) return;
+        if (PlayerData.IsDead)
+            return;
+
+        SetMapPosition();
+        PlayerData.Position = Position;
 
         // We create a local variable to store the input direction.
         var direction = Vector3.Zero;
 
         // We check for each move input and update the direction accordingly.
         CheckActionKeysForInput(ref direction);
-
-        // GD.Print($"Player position: {Position}");
 
         if (direction != Vector3.Zero)
         {
@@ -98,10 +104,6 @@ internal partial class Player : CharacterBody3D
         // Moving the character
         Velocity = _targetVelocity;
         MoveAndSlide();
-
-        PlayerData.Position = Position;
-
-        SetMapPosition();
     }
 
     #region MethodsForSignals
@@ -154,8 +156,10 @@ internal partial class Player : CharacterBody3D
     /// <param name="direction"> The direction to be modified. </param>
     private void ModifyDirectionOnMovement(ref Vector3 direction)
     {
-        direction = PlayerInputActions.Movements.Where(movement =>
-                Input.IsActionPressed($"{movement.Name}_{PlayerData.Color.ToString().ToLower()}"))
+        direction = PlayerInputActions
+            .Movements.Where(movement =>
+                Input.IsActionPressed($"{movement.Name}_{PlayerData.Color.ToString().ToLower()}")
+            )
             .Aggregate(direction, (current, movement) => movement.Action.Invoke(current));
     }
 
@@ -164,8 +168,11 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     private void PlaceBombOnInput()
     {
-        if (!Input.IsActionJustPressed
-                ($"{PlayerInputActions.BombPlace.Name}_{PlayerData.Color.ToString().ToLower()}"))
+        if (
+            !Input.IsActionJustPressed(
+                $"{PlayerInputActions.BombPlace.Name}_{PlayerData.Color.ToString().ToLower()}"
+            )
+        )
             return;
 
         PlayerInputActions.BombPlace.Action.Invoke(this);
