@@ -72,25 +72,21 @@ internal partial class BombinoMap : GridMap
                         break;
                     case MapCellCharacter.BluePlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-
                         BluePlayerPosition = SetCharacterPosition(positionAt1);
 
                         break;
                     case MapCellCharacter.RedPlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-
                         RedPlayerPosition = SetCharacterPosition(positionAt1);
 
                         break;
                     case MapCellCharacter.YellowPlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-
                         YellowPlayerPosition = SetCharacterPosition(positionAt1);
 
                         break;
                     case MapCellCharacter.Enemy:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-
                         EnemyPositions.Add(SetCharacterPosition(positionAt1));
 
                         break;
