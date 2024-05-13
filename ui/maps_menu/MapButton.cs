@@ -5,6 +5,9 @@ using Godot;
 
 namespace Bombino.ui.maps_menu;
 
+/// <summary>
+/// Represents the map button component.
+/// </summary>
 internal abstract partial class MapButton : Button, IUiButton
 {
     #region Exports
@@ -44,6 +47,9 @@ internal abstract partial class MapButton : Button, IUiButton
         GetTree().ChangeSceneToFile(_roundsMenuScenePath);
     }
 
+    /// <summary>
+    /// Called when the mouse enters the button.
+    /// </summary>
     private void OnMouseEntered()
     {
         if (Material is ShaderMaterial shaderMaterial)
@@ -52,6 +58,9 @@ internal abstract partial class MapButton : Button, IUiButton
         }
     }
 
+    /// <summary>
+    /// Called when the mouse exits the button.
+    /// </summary>
     private void OnMouseExited()
     {
         if (Material is ShaderMaterial shaderMaterial)
