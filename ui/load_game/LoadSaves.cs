@@ -4,6 +4,9 @@ using Godot;
 
 namespace Bombino.ui.load_game;
 
+/// <summary>
+/// Represents the load saves scene.
+/// </summary>
 internal partial class LoadSaves : GridContainer
 {
     #region Fields
@@ -14,6 +17,9 @@ internal partial class LoadSaves : GridContainer
 
     #region Overrides
 
+    /// <summary>
+    /// Called when the node enters the scene tree for the first time.
+    /// </summary>
     public override void _Ready()
     {
         CreateRowsForSaves();
@@ -21,6 +27,9 @@ internal partial class LoadSaves : GridContainer
 
     #endregion
 
+    /// <summary>
+    /// Creates rows for the saves.
+    /// </summary>
     private void CreateRowsForSaves()
     {
         var (error, fileNames) = _dirAccessManager.GetFileNames($"user://{SaveDirectory.Path}");
@@ -34,11 +43,17 @@ internal partial class LoadSaves : GridContainer
         AddSaveRows(fileNames);
     }
 
+    /// <summary>
+    /// Sorts the file names in reverse order.
+    /// </summary>
     private static void SortFileNames(string[] fileNames)
     {
         Array.Reverse(fileNames);
     }
 
+    /// <summary>
+    /// Adds save rows to the grid container.
+    /// </summary>
     private void AddSaveRows(IEnumerable<string> fileNames)
     {
         foreach (var fileName in fileNames)
