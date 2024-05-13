@@ -1,14 +1,40 @@
-[gd_scene load_steps=4 format=3 uid="uid://q10o7rmqgthe"]
+[gd_scene load_steps=10 format=3 uid="uid://q10o7rmqgthe"]
 
 [ext_resource type="Script" path="res://ui/settings_menu/ActionKeysContainer.cs" id="1_b871c"]
+[ext_resource type="Shader" path="res://ui/starting_screen/wallpaper_effect.gdshader" id="1_kurlk"]
 [ext_resource type="Script" path="res://ui/settings_menu/SettingsSaveButton.cs" id="2_q3i5o"]
+[ext_resource type="Texture2D" uid="uid://hmwgv8y26mtr" path="res://ui/wallpaper.jpeg" id="2_udvca"]
 [ext_resource type="Script" path="res://ui/settings_menu/SettingsCancelButton.cs" id="3_xaunk"]
+
+[sub_resource type="Gradient" id="Gradient_lyluq"]
+colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_p3vgh"]
+gradient = SubResource("Gradient_lyluq")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uqd5r"]
+shader = ExtResource("1_kurlk")
+shader_parameter/gradient = SubResource("GradientTexture1D_p3vgh")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uuids"]
+bg_color = Color(1, 0.982, 0.96, 0.4)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
 [node name="Background" type="TextureRect" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+material = SubResource("ShaderMaterial_uqd5r")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_udvca")
+expand_mode = 2
+stretch_mode = 6
 
 [node name="TitleContainer" type="PanelContainer" parent="."]
 anchors_preset = 5
@@ -26,20 +52,33 @@ theme_type_variation = &"TitleLabel"
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -400.0
-offset_top = -275.0
+offset_left = -440.0
+offset_top = -317.0
 offset_right = 600.0
-offset_bottom = 375.0
+offset_bottom = 408.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uuids")
 
-[node name="ActionKeysContainer" type="GridContainer" parent="ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+show_behind_parent = true
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer"]
+z_index = 1
+layout_mode = 2
+
+[node name="ActionKeysContainer" type="GridContainer" parent="PanelContainer/MarginContainer/ScrollContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 100
 theme_override_constants/v_separation = 50
@@ -53,9 +92,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -256.0
-offset_top = -120.0
+offset_top = -100.0
 offset_right = 256.0
-offset_bottom = -39.0
+offset_bottom = -19.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 50
