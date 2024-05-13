@@ -1,14 +1,33 @@
-[gd_scene load_steps=4 format=3 uid="uid://mwftlefv7r0j"]
+[gd_scene load_steps=9 format=3 uid="uid://mwftlefv7r0j"]
 
 [ext_resource type="Script" path="res://ui/players_menu/Players2Button.cs" id="1_3jhk4"]
+[ext_resource type="Shader" path="res://ui/starting_screen/wallpaper_effect.gdshader" id="1_vmqcg"]
+[ext_resource type="Texture2D" uid="uid://hmwgv8y26mtr" path="res://ui/wallpaper.jpeg" id="2_jau4s"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="3_8gu2c"]
 [ext_resource type="Script" path="res://ui/players_menu/Players3Button.cs" id="3_t0xty"]
+
+[sub_resource type="Gradient" id="Gradient_b0iep"]
+colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_wtxu6"]
+gradient = SubResource("Gradient_b0iep")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_olror"]
+shader = ExtResource("1_vmqcg")
+shader_parameter/gradient = SubResource("GradientTexture1D_wtxu6")
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
 [node name="Background" type="TextureRect" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+material = SubResource("ShaderMaterial_olror")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_jau4s")
+expand_mode = 2
+stretch_mode = 6
 
 [node name="TitleContainer" type="PanelContainer" parent="."]
 anchors_preset = 5

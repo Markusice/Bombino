@@ -1,13 +1,25 @@
-[gd_scene load_steps=12 format=3 uid="uid://cgka8qcma8qkj"]
+[gd_scene load_steps=17 format=3 uid="uid://cgka8qcma8qkj"]
 
 [ext_resource type="Script" path="res://ui/maps_menu/MapBasicButton.cs" id="1_3pqn3"]
+[ext_resource type="Shader" path="res://ui/starting_screen/wallpaper_effect.gdshader" id="1_ui677"]
 [ext_resource type="Texture2D" uid="uid://wi1n5nle7p6y" path="res://ui/maps_menu/textures/basic.png" id="1_vyrrf"]
+[ext_resource type="Texture2D" uid="uid://hmwgv8y26mtr" path="res://ui/wallpaper.jpeg" id="2_m81p4"]
 [ext_resource type="Script" path="res://ui/maps_menu/MapWideButton.cs" id="2_pj8gt"]
 [ext_resource type="Script" path="res://ui/maps_menu/MapCrossButton.cs" id="3_pl3lb"]
 [ext_resource type="Texture2D" uid="uid://jtv11u6r5dfj" path="res://ui/maps_menu/textures/wide.png" id="3_w53ta"]
 [ext_resource type="Texture2D" uid="uid://dc01t36iximbf" path="res://ui/maps_menu/textures/cross.png" id="5_hcxo2"]
 [ext_resource type="Shader" path="res://ui/maps_menu/shaders/icon.gdshader" id="7_j045f"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="8_8b4pp"]
+
+[sub_resource type="Gradient" id="Gradient_b0uft"]
+colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_23yln"]
+gradient = SubResource("Gradient_b0uft")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ko30q"]
+shader = ExtResource("1_ui677")
+shader_parameter/gradient = SubResource("GradientTexture1D_23yln")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_didoa"]
 shader = ExtResource("7_j045f")
@@ -27,11 +39,13 @@ shader_parameter/tex = ExtResource("5_hcxo2")
 [node name="CanvasLayer" type="CanvasLayer"]
 
 [node name="Background" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_ko30q")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_m81p4")
 expand_mode = 2
 stretch_mode = 6
 

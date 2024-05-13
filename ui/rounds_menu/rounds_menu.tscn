@@ -1,7 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://tvlak70hpojg"]
+[gd_scene load_steps=9 format=3 uid="uid://tvlak70hpojg"]
 
 [ext_resource type="Script" path="res://ui/rounds_menu/RoundsMenu.cs" id="1_easd3"]
+[ext_resource type="Shader" path="res://ui/starting_screen/wallpaper_effect.gdshader" id="2_c3id6"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="2_oolvm"]
+[ext_resource type="Texture2D" uid="uid://hmwgv8y26mtr" path="res://ui/wallpaper.jpeg" id="3_job1x"]
+
+[sub_resource type="Gradient" id="Gradient_at3k6"]
+colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_a1hl8"]
+gradient = SubResource("Gradient_at3k6")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_alsdg"]
+shader = ExtResource("2_c3id6")
+shader_parameter/gradient = SubResource("GradientTexture1D_a1hl8")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2bk4"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -15,9 +27,15 @@ script = ExtResource("1_easd3")
 LoadingScenePath = "res://ui/game_loading_screen/game_loading_scene.tscn"
 
 [node name="Background" type="TextureRect" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
-metadata/_edit_use_anchors_ = true
+material = SubResource("ShaderMaterial_alsdg")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_job1x")
+expand_mode = 2
+stretch_mode = 6
 
 [node name="TitleContainer" type="PanelContainer" parent="."]
 anchors_preset = 5
@@ -78,6 +96,7 @@ alignment = 1
 max_length = 2
 
 [node name="ErrorContainer" type="PanelContainer" parent="."]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

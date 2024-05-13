@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=37 format=3 uid="uid://djmr4s3lma1ss"]
+[gd_resource type="Theme" load_steps=38 format=3 uid="uid://djmr4s3lma1ss"]
 
 [ext_resource type="FontFile" uid="uid://bn4sm0qhcg0jm" path="res://ui/fonts/Spoon-Bold.ttf" id="1_2hswg"]
 [ext_resource type="Texture2D" uid="uid://bwn3gasaptibk" path="res://ui/theme/textures/button-style.png" id="2_b00xl"]
@@ -64,6 +64,15 @@ content_margin_bottom = 90.0
 texture = ExtResource("5_ygea2")
 texture_margin_left = 150.0
 texture_margin_right = 80.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqisc"]
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.780392)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2om1i"]
 bg_color = Color(0.8, 0.678, 0, 0.85)
@@ -177,6 +186,7 @@ ErrorLabel/base_type = &"Label"
 ErrorLabel/colors/font_color = Color(1, 0.580392, 0.580392, 1)
 ErrorLabel/constants/outline_size = 1
 ErrorLabel/font_sizes/font_size = 56
+ErrorLabel/styles/normal = SubResource("StyleBoxFlat_fqisc")
 GameTimerContainer/base_type = &"Panel"
 GameTimerContainer/styles/panel = SubResource("StyleBoxFlat_2om1i")
 InputField/base_type = &"LineEdit"
