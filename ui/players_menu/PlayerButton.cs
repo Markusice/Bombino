@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Bombino.ui.play_menu;
+namespace Bombino.ui.players_menu;
 
 internal abstract partial class PlayerButton : Button
 {

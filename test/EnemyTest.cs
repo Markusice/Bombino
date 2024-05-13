@@ -1,23 +1,15 @@
-namespace Bombino.test;
-
-using System.Threading.Tasks;
+using Bombino.enemy;
+using Bombino.game;
+using Bombino.game.persistence.state_resources;
+using Bombino.map;
+using Bombino.player;
+using Chickensoft.GoDotTest;
 using Godot;
 using Godot.Collections;
-using Chickensoft.GoDotTest;
-using Chickensoft.AutoInject;
 using GodotTestDriver;
-using GodotTestDriver.Drivers;
-using NUnit.Framework;
 using Shouldly;
-using LightMoq;
-using Bombino.game;
-using Bombino.player;
-using Bombino.enemy;
-using LightMock.Generator;
-using Bombino.game.persistence.state_storage;
-using Bombino.map;
-using GodotTestDriver.Input;
-using GodotTestDriver.Util;
+
+namespace Bombino.test;
 
 public class EnemyTest : TestClass {
     private GameManager _game = default!;

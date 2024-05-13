@@ -1,6 +1,6 @@
 using Bombino.game;
 
-namespace Bombino.ui.play_menu;
+namespace Bombino.ui.players_menu;
 
 /// <summary>
 /// Represents a button that allows the user to select the number of players as 2.

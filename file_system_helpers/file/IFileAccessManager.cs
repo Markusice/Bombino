@@ -21,7 +21,7 @@ public interface IFileAccessManager
     /// </summary>
     /// <param name="file">The file to retrieve the JSON data from.</param>
     /// <returns>The JSON data as a string.</returns>
-    public Godot.Collections.Dictionary<string, Variant> GetJSONData(FileAccess file);
+    public Godot.Collections.Dictionary<string, Variant> GetJsonData(FileAccess file);
 
     /// <summary>
     /// Stores JSON data in the specified file.

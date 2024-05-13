@@ -1,5 +1,6 @@
-using Bombino.game.persistence.state_storage;
 using Godot;
+using EnemyData = Bombino.game.persistence.state_resources.EnemyData;
+using PlayerData = Bombino.game.persistence.state_resources.PlayerData;
 
 namespace Bombino.game.persistence.storage_layers.game_state;
 
@@ -54,8 +55,7 @@ internal class GameSaveHandler : IGameSaveHandler
     /// <param name="objectData">The dictionary representing the row.</param>
     private static void AddNewObjectToData(
         IDictionary<string, Variant> data,
-        string objectName,
-        Godot.Collections.Dictionary<string, Variant> objectData
+        string objectName, Godot.Collections.Dictionary<string, Variant> objectData
     )
     {
         data.Add(objectName, objectData);

@@ -1,8 +1,8 @@
 using System.Reflection;
-using Godot;
 using Chickensoft.GoDotTest;
+using Godot;
 
-namespace Bombino;
+namespace Bombino.test;
 
 public partial class Tests : Node3D {
   public override async void _Ready()

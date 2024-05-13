@@ -1,7 +1,7 @@
 using Bombino.game;
 using Bombino.ui.scripts;
 
-namespace Bombino.ui.play_menu;
+namespace Bombino.ui.players_menu;
 
 /// <summary>
 /// Represents a button for selecting 3 players in the UI.

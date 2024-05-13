@@ -1,7 +1,7 @@
 ﻿using Bombino.game;
-using Bombino.game.persistence.state_storage;
 using Bombino.player;
 using Godot;
+using EnemyData = Bombino.game.persistence.state_resources.EnemyData;
 
 namespace Bombino.enemy;
 
@@ -27,7 +27,7 @@ internal partial class Enemy : CharacterBody3D
     private AnimationTree _animTree;
     private AnimationNodeStateMachinePlayback _stateMachine;
 
-    private static readonly Vector3[] _directions =
+    private static readonly Vector3[] Directions =
     {
         Vector3.Right,
         Vector3.Left,
@@ -102,7 +102,7 @@ internal partial class Enemy : CharacterBody3D
 
         // Randomly change direction without any reason
         if (new Random().NextDouble() < 0.005) // 0.5% chance to change direction
-        {   
+        {
             GD.Print("Changing direction randomly");
             var direction = Vector3.Zero;
             ChangeDirection(ref direction);
@@ -152,7 +152,7 @@ internal partial class Enemy : CharacterBody3D
         await ToSignal(GetTree().CreateTimer(0.1f), SceneTreeTimer.SignalName.Timeout);
         Die();
     }
-    
+
     /// <summary>
     /// Kills the enemy.
     /// </summary>
@@ -197,12 +197,13 @@ internal partial class Enemy : CharacterBody3D
     /// </summary>
     private Vector3 SelectDirection()
     {
-        var randomDirections = GetRandomDirectionsArray(_directions);
+        var randomDirections = GetRandomDirectionsArray(Directions);
         Vector3 selectedDirection = Vector3.Zero;
 
         foreach (var randomDirection in randomDirections)
         {
-            if (!CanMoveToTile(randomDirection)) continue;
+            if (!CanMoveToTile(randomDirection))
+                continue;
 
             selectedDirection = randomDirection;
             break;

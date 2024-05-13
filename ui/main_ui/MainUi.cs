@@ -1,7 +1,6 @@
-using Bombino.events;
 using Bombino.game;
-using Bombino.game.persistence.state_storage;
 using Godot;
+using PlayerData = Bombino.game.persistence.state_resources.PlayerData;
 
 namespace Bombino.ui.main_ui;
 

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Bombino.game.persistence.state_storage;
+namespace Bombino.game.persistence.state_resources;
 
 /// <summary>
 /// Represents the data for an enemy.

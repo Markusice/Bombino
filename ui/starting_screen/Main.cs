@@ -1,10 +1,10 @@
-namespace Bombino;
-
+using Chickensoft.GoDotTest;
 using Godot;
+
+namespace Bombino.ui.starting_screen;
 
 #if DEBUG
 using System.Reflection;
-using Chickensoft.GoDotTest;
 #endif
 
 public partial class Main : Node3D {

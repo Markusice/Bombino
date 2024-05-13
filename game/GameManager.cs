@@ -1,6 +1,5 @@
 using Bombino.enemy;
 using Bombino.events;
-using Bombino.game.persistence.state_storage;
 using Bombino.map;
 using Bombino.player;
 using Bombino.ui.main_ui;
@@ -9,6 +8,8 @@ using Bombino.ui.scripts;
 using Godot;
 using Godot.Collections;
 using Array = Godot.Collections.Array;
+using EnemyData = Bombino.game.persistence.state_resources.EnemyData;
+using PlayerData = Bombino.game.persistence.state_resources.PlayerData;
 
 namespace Bombino.game;
 

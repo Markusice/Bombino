@@ -1,7 +1,7 @@
 using Bombino.player;
 using Godot;
 
-namespace Bombino.game.persistence.state_storage;
+namespace Bombino.game.persistence.state_resources;
 
 /// <summary>
 /// Represents the data of a player in the game.
@@ -54,7 +54,7 @@ internal partial class PlayerData : Resource
     /// </summary>
     /// <returns>The number of wins for the player.</returns>
     [Export]
-    public int Wins { get; set; } = 0;
+    public ushort Wins { get; set; } = 0;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PlayerData"/> class with default values.

@@ -34,7 +34,7 @@ internal partial class BombinoMap : GridMap
         }
 
         using var file = loadFile.Item2;
-        var data = _fileAccessManager.GetJSONData(file);
+        var data = _fileAccessManager.GetJsonData(file);
 
         var lines = data["structure"].AsStringArray();
         var rowOffset = (lines.Length / 2) + 1;
