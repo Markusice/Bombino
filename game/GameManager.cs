@@ -227,7 +227,7 @@ internal partial class GameManager : WorldEnvironment
     {
         _alivePlayers--;
 
-        await ToSignal(GetTree().CreateTimer(Mathf.Pi), SceneTreeTimer.SignalName.Timeout);
+        await ToSignal(GetTree().CreateTimer(Mathf.Pi, false), SceneTreeTimer.SignalName.Timeout);
 
         if (_alivePlayers > 1 || _isRoundOver)
             return;
