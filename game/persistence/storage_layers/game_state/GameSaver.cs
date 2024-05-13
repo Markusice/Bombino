@@ -55,7 +55,7 @@ internal class GameSaver : IGameSaver<Godot.Collections.Dictionary<string, Varia
 
         using var file = loadFile.Item2;
 
-        _fileAccessManager.StoreJSONData(file, data);
+        _fileAccessManager.StoreJsonData(file, data);
 
         return true;
     }

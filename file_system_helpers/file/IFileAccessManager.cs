@@ -28,5 +28,5 @@ public interface IFileAccessManager
     /// </summary>
     /// <param name="file">The file access object.</param>
     /// <param name="data">The JSON data to store.</param>
-    public void StoreJSONData(FileAccess file, Godot.Collections.Dictionary<string, Variant> data);
+    public void StoreJsonData(FileAccess file, Godot.Collections.Dictionary<string, Variant> data);
 }
