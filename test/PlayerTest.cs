@@ -15,6 +15,7 @@ using Bombino.player;
 using LightMock.Generator;
 using Bombino.game.persistence.state_storage;
 using Bombino.map;
+using Bombino.bomb;
 using GodotTestDriver.Input;
 
 public class PlayerTest : TestClass {
@@ -93,48 +94,48 @@ public class PlayerTest : TestClass {
     }
 
     [Test]
-    public async Task Player_MovesLeft()
+    public async Task ModifyDirectionOnMovement_LeftKeyPressed_MovesLeft()
     {
         _player1._Ready();
         Vector3 initialPosition = _player1.Position;
-        await _player1.HoldKeyFor(0.2f, Key.A);
+        await _player1.HoldKeyFor(0.1f, Key.A);
 
 
         _player1.Position.X.ShouldBeLessThan(initialPosition.X);
     }
 
     [Test]
-    public async Task Player_MovesRight()
+    public async Task ModifyDirectionOnMovement_RightKeyPressed_MovesRight()
     {
         _player1._Ready();
         Vector3 initialPosition = _player1.Position;
-        await _player1.HoldKeyFor(0.2f, Key.D);
+        await _player1.HoldKeyFor(0.1f, Key.D);
 
         _player1.Position.X.ShouldBeGreaterThan(initialPosition.X);
     }
 
     [Test]
-    public async Task Player_MovesUp()
+    public async Task ModifyDirectionOnMovement_UpKeyPressed_MovesUp()
     {
         _player1._Ready();
         Vector3 initialPosition = _player1.Position;
-        await _player1.HoldKeyFor(0.2f, Key.W);
+        await _player1.HoldKeyFor(0.1f, Key.W);
 
         _player1.Position.Z.ShouldBeLessThan(initialPosition.Z);
     }
 
     [Test]
-    public async Task Player_MovesDown()
+    public async Task ModifyDirectionOnMovement_DownKeyPressed_MovesDown()
     {
         _player1._Ready();
         Vector3 initialPosition = _player1.Position;
-        await _player1.HoldKeyFor(0.2f, Key.S);
+        await _player1.HoldKeyFor(0.1f, Key.S);
 
         _player1.Position.Z.ShouldBeGreaterThan(initialPosition.Z);
     }
 
     [Test]
-    public async Task Player_PlacesBomb()
+    public async Task PlaceBombOnInput_BombKeyIsPressed_PlacesBomb()
     {
         _player1._Ready();
         await _player1.TypeKey(Key.F);
@@ -142,5 +143,27 @@ public class PlayerTest : TestClass {
         _player1.PlayerData.NumberOfPlacedBombs.ShouldBe(1);
     }
 
+    [Test]
+    public async Task PlaceBombOnInput_BombKeyIsPressed_BombIsPlacedAtPlayerPosition()
+    {
+        _player1._Ready();
+        await _player1.TypeKey(Key.F);
+
+        var bombPosition = GameManager.GameMap.GetNodeOrNull<Bomb>("Bomb").Position;
+        var bombPositionX = bombPosition.X;
+        var bombPositionZ = bombPosition.Z;
+        bombPositionX.ShouldBe(_player1.Position.X);
+        bombPositionZ.ShouldBe(_player1.Position.Z);
+    }
+
+    [Test]
+    public async Task PlaceBombOnInput_BombKeyIsPressed_BombIsVisible()
+    {
+        _player1._Ready();
+        await _player1.TypeKey(Key.F);
+
+        var bomb = GameManager.GameMap.GetNodeOrNull<Bomb>("Bomb");
+        bomb.Visible.ShouldBeTrue();
+    }
 
 }
