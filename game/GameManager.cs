@@ -345,9 +345,9 @@ internal partial class GameManager : WorldEnvironment
             PlayerData.ResetToNewRound(ref tempPlayerData);
             tempPlayerData.Position = playerData.Color switch
             {
-                PlayerColor.Blue => GameMap.BluePlayerPosition,
-                PlayerColor.Red => GameMap.RedPlayerPosition,
-                PlayerColor.Yellow => GameMap.YellowPlayerPosition,
+                PlayerColor.Blue => GameMap.MapData.BluePlayerPosition,
+                PlayerColor.Red => GameMap.MapData.RedPlayerPosition,
+                PlayerColor.Yellow => GameMap.MapData.YellowPlayerPosition,
                 _ => tempPlayerData.Position
             };
             player.PlayerData = tempPlayerData;
@@ -542,7 +542,7 @@ internal partial class GameManager : WorldEnvironment
     private void CreateThreePlayers()
     {
         CreateTwoPlayers();
-        SavePlayerDataAndRequestLoad(PlayerColor.Yellow, GameMap.YellowPlayerPosition);
+        SavePlayerDataAndRequestLoad(PlayerColor.Yellow, GameMap.MapData.YellowPlayerPosition);
     }
 
     /// <summary>
@@ -550,8 +550,8 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CreateTwoPlayers()
     {
-        SavePlayerDataAndRequestLoad(PlayerColor.Blue, GameMap.BluePlayerPosition);
-        SavePlayerDataAndRequestLoad(PlayerColor.Red, GameMap.RedPlayerPosition);
+        SavePlayerDataAndRequestLoad(PlayerColor.Blue, GameMap.MapData.BluePlayerPosition);
+        SavePlayerDataAndRequestLoad(PlayerColor.Red, GameMap.MapData.RedPlayerPosition);
     }
 
     /// <summary>
@@ -559,7 +559,7 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     private void CreateEnemies()
     {
-        foreach (var enemyPosition in GameMap.EnemyPositions)
+        foreach (var enemyPosition in GameMap.MapData.EnemyPositions)
             SaveEnemyDataAndRequestLoad(enemyPosition);
     }
 

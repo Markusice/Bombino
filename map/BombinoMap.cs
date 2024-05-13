@@ -1,4 +1,5 @@
 using Bombino.file_system_helpers.file;
+using Bombino.game.persistence.state_storage;
 using Godot;
 using Godot.Collections;
 using FileAccess = Godot.FileAccess;
@@ -13,10 +14,7 @@ internal partial class BombinoMap : GridMap
     #region Fields
     private readonly IFileAccessManager _fileAccessManager = new FileAccessManager();
 
-    public Vector3 BluePlayerPosition { get; private set; }
-    public Vector3 RedPlayerPosition { get; private set; }
-    public Vector3 YellowPlayerPosition { get; private set; }
-    public Array<Vector3> EnemyPositions { get; private set; } = new();
+    public MapData MapData { get; set; } = new MapData();
 
     #endregion
 
@@ -39,6 +37,8 @@ internal partial class BombinoMap : GridMap
         var lines = data["structure"].AsStringArray();
         var rowOffset = (lines.Length / 2) + 1;
         var columnOffset = (lines[0].Length / 2) + 1;
+
+        MapData.MapSize = new Tuple<int, int>(lines[0].Length, lines.Length);
 
         for (var z = 0; z < lines.Length; z++)
         {
@@ -72,22 +72,22 @@ internal partial class BombinoMap : GridMap
                         break;
                     case MapCellCharacter.BluePlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-                        BluePlayerPosition = SetCharacterPosition(positionAt1);
+                        MapData.BluePlayerPosition = SetCharacterPosition(positionAt1);
 
                         break;
                     case MapCellCharacter.RedPlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-                        RedPlayerPosition = SetCharacterPosition(positionAt1);
+                        MapData.RedPlayerPosition = SetCharacterPosition(positionAt1);
 
                         break;
                     case MapCellCharacter.YellowPlayer:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-                        YellowPlayerPosition = SetCharacterPosition(positionAt1);
+                        MapData.YellowPlayerPosition = SetCharacterPosition(positionAt1);
 
                         break;
                     case MapCellCharacter.Enemy:
                         SetCellItem(positionAt0, (int)GridElement.BlockElement);
-                        EnemyPositions.Add(SetCharacterPosition(positionAt1));
+                        MapData.EnemyPositions.Add(SetCharacterPosition(positionAt1));
 
                         break;
                     default:
@@ -122,4 +122,51 @@ internal partial class BombinoMap : GridMap
     {
         return new Vector3(position.X, position.Y - 1, position.Z);
     }
+
+    public string[] SaveCurrentGameMapState()
+    {
+        var mapState = new string[MapData.MapSize.Item2];
+
+        for (var z = 0; z < MapData.MapSize.Item2; z++)
+        {
+            for (var x = 0; x < MapData.MapSize.Item1; x++)
+            {
+                var positionAt0 = new Vector3I(x, 0, z);
+                var positionAt1 = new Vector3I(x, 1, z);
+
+                var cellItem = GetCellItem(positionAt1);
+                if (cellItem == InvalidCellItem)
+                {
+                    cellItem = GetCellItem(positionAt0);
+
+                    if (cellItem == InvalidCellItem)
+                    {
+                        mapState[z] += MapCellCharacter.Empty;
+                        continue;
+                    }
+                }
+                var cellItemValue = (GridElement)cellItem;
+
+                switch (cellItemValue)
+                {
+                    case GridElement.BlockElement:
+                        mapState[z] += MapCellCharacter.Floor;
+                        break;
+                    case GridElement.WallElement:
+                        mapState[z] += MapCellCharacter.Wall;
+                        break;
+                    case GridElement.CrateElement:
+                        mapState[z] += MapCellCharacter.Crate;
+                        break;
+                    default:
+                        mapState[z] += MapCellCharacter.Empty;
+                        break;
+                }
+            }
+        }
+
+        return mapState;
+
+    }
+        
 }

@@ -44,11 +44,11 @@ public class BombinoMapTest : TestClass {
         GameManager.GameMap = _map;
 
         _player1 = await _fixture.LoadScene<Player>("res://player/player_blue/player_blue.tscn");
-        _playerData1 = new PlayerData(_map.BluePlayerPosition, PlayerColor.Blue);
+        _playerData1 = new PlayerData(_map.MapData.BluePlayerPosition, PlayerColor.Blue);
         _player1.PlayerData = _playerData1;
 
         _player2 = await _fixture.LoadScene<Player>("res://player/player_red/player_red.tscn");
-        _playerData2 = new PlayerData(_map.RedPlayerPosition, PlayerColor.Red);
+        _playerData2 = new PlayerData(_map.MapData.RedPlayerPosition, PlayerColor.Red);
         _player2.PlayerData = _playerData2;
 
         _game.AddChild(_player1);
@@ -79,7 +79,7 @@ public class BombinoMapTest : TestClass {
     {
         var expected = _map.MapToLocal(new Vector3I(-6, 1, -6));
         expected.Y--;
-        _map.BluePlayerPosition.ShouldBe(expected);
+        _map.MapData.BluePlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -87,7 +87,7 @@ public class BombinoMapTest : TestClass {
     {
         var expected = _map.MapToLocal(new Vector3I(-6, 1, 4));
         expected.Y--;
-        _map.RedPlayerPosition.ShouldBe(expected);
+        _map.MapData.RedPlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -95,7 +95,7 @@ public class BombinoMapTest : TestClass {
     {
         var expected = _map.MapToLocal(new Vector3I(4, 1, 4));
         expected.Y--;
-        _map.YellowPlayerPosition.ShouldBe(expected);
+        _map.MapData.YellowPlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -103,7 +103,7 @@ public class BombinoMapTest : TestClass {
     {
         var expected = _map.MapToLocal(new Vector3I(4, 1, -6));
         expected.Y--;
-        _map.EnemyPositions[0].ShouldBe(expected);
+        _map.MapData.EnemyPositions[0].ShouldBe(expected);
     }
 
     [Test]
@@ -113,7 +113,7 @@ public class BombinoMapTest : TestClass {
         _map.SetUpMapFromTextFile("res://map/sources/wide.json");
         var expected = _map.MapToLocal(new Vector3I(-12, 1, -6));
         expected.Y--;
-        _map.BluePlayerPosition.ShouldBe(expected);
+        _map.MapData.BluePlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -123,7 +123,7 @@ public class BombinoMapTest : TestClass {
         _map.SetUpMapFromTextFile("res://map/sources/wide.json");
         var expected = _map.MapToLocal(new Vector3I(-12, 1, 4));
         expected.Y--;
-        _map.RedPlayerPosition.ShouldBe(expected);
+        _map.MapData.RedPlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -133,7 +133,7 @@ public class BombinoMapTest : TestClass {
         _map.SetUpMapFromTextFile("res://map/sources/wide.json");
         var expected = _map.MapToLocal(new Vector3I(10, 1, 4));
         expected.Y--;
-        _map.YellowPlayerPosition.ShouldBe(expected);
+        _map.MapData.YellowPlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -153,7 +153,7 @@ public class BombinoMapTest : TestClass {
 
         foreach (var position in expected)
         {
-            _map.EnemyPositions.Contains(position).ShouldBeTrue();
+            _map.MapData.EnemyPositions.Contains(position).ShouldBeTrue();
         }
     }
 
@@ -164,7 +164,7 @@ public class BombinoMapTest : TestClass {
         _map.SetUpMapFromTextFile("res://map/sources/cross.json");
         var expected = _map.MapToLocal(new Vector3I(-5, 1, -9));
         expected.Y--;
-        _map.BluePlayerPosition.ShouldBe(expected);
+        _map.MapData.BluePlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -174,7 +174,7 @@ public class BombinoMapTest : TestClass {
         _map.SetUpMapFromTextFile("res://map/sources/cross.json");
         var expected = _map.MapToLocal(new Vector3I(-5, 1, 7));
         expected.Y--;
-        _map.RedPlayerPosition.ShouldBe(expected);
+        _map.MapData.RedPlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -184,7 +184,7 @@ public class BombinoMapTest : TestClass {
         _map.SetUpMapFromTextFile("res://map/sources/cross.json");
         var expected = _map.MapToLocal(new Vector3I(3, 1, 7));
         expected.Y--;
-        _map.YellowPlayerPosition.ShouldBe(expected);
+        _map.MapData.YellowPlayerPosition.ShouldBe(expected);
     }
 
     [Test]
@@ -206,7 +206,7 @@ public class BombinoMapTest : TestClass {
         };
         foreach (var position in expected)
         {
-            _map.EnemyPositions.Contains(position).ShouldBeTrue();
+            _map.MapData.EnemyPositions.Contains(position).ShouldBeTrue();
         }
     }
 
