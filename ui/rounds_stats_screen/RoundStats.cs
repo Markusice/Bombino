@@ -11,7 +11,8 @@ internal partial class RoundStats : CanvasLayer
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private string StartingScreenPath { get; set; }
+    [Export(PropertyHint.File, "*.tscn")]
+    private string StartingScreenPath { get; set; }
 
     #endregion
 
@@ -46,15 +47,21 @@ internal partial class RoundStats : CanvasLayer
 
         _roundLabel = GetNode<Label>("TitleContainer/Title");
 
-        _playerXPosition = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXPosition");
+        _playerXPosition = GetNode<Label>(
+            "PanelContainer/MarginContainer/GridContainer/PlayerXPosition"
+        );
         _playerXName = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXName");
         _playerXWon = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXWon");
 
-        _playerXPosition2 = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXPosition2");
+        _playerXPosition2 = GetNode<Label>(
+            "PanelContainer/MarginContainer/GridContainer/PlayerXPosition2"
+        );
         _playerXName2 = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXName2");
         _playerXWon2 = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXWon2");
 
-        _playerXPosition3 = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXPosition3");
+        _playerXPosition3 = GetNode<Label>(
+            "PanelContainer/MarginContainer/GridContainer/PlayerXPosition3"
+        );
         _playerXName3 = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXName3");
         _playerXWon3 = GetNode<Label>("PanelContainer/MarginContainer/GridContainer/PlayerXWon3");
 
@@ -67,7 +74,8 @@ internal partial class RoundStats : CanvasLayer
     /// <param name="event">The input event received.</param>
     public override void _Input(InputEvent @event)
     {
-        if (!InputEventChecker.IsEnterKeyPressed(@event)) return;
+        if (!InputEventChecker.IsEnterKeyPressed(@event))
+            return;
 
         OnContinuePressed();
     }
@@ -96,9 +104,9 @@ internal partial class RoundStats : CanvasLayer
                 _roundLabel.Text = $"Round {GameManager.CurrentRound} - Draw!";
                 return;
             }
-            _roundLabel.Text = $"Round {GameManager.CurrentRound} - {GameManager.CurrentWinner} won";
+            _roundLabel.Text =
+                $"Round {GameManager.CurrentRound} - {GameManager.CurrentWinner} won";
             return;
-
         }
         var maxWins = GameManager.PlayersData.Max(p => p.Wins);
         var winners = GameManager.PlayersData.Where(p => p.Wins == maxWins).ToList();

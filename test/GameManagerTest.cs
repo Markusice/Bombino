@@ -10,7 +10,8 @@ using Shouldly;
 
 namespace Bombino.test;
 
-public class GameManagerTest : TestClass {
+public class GameManagerTest : TestClass
+{
     private GameManager _game = default!;
     private BombinoMap _map = default!;
     private Player _player1 = default!;
@@ -19,8 +20,8 @@ public class GameManagerTest : TestClass {
     private PlayerData _playerData2 = default!;
     private Fixture _fixture = default!;
 
-    public GameManagerTest(Node testScene) : base(testScene) { }
-
+    public GameManagerTest(Node testScene)
+        : base(testScene) { }
 
     [Setup]
     public async Task Setup()
@@ -46,11 +47,7 @@ public class GameManagerTest : TestClass {
 
         _game.AddChild(_player1);
         _game.AddChild(_player2);
-        GameManager.PlayersData = new Array<PlayerData>
-        {
-            _playerData1,
-            _playerData2
-        };
+        GameManager.PlayersData = new Array<PlayerData> { _playerData1, _playerData2 };
 
         await _fixture.AddToRoot(_game);
     }
@@ -71,14 +68,11 @@ public class GameManagerTest : TestClass {
     public void GameManager_OnGameLoad_HasTwoPlayers()
     {
         GameManager.PlayersData.Count.ShouldBe(2);
-
     }
 
     [Test]
     public void GameManager_OnGameLoad_HasMap()
     {
         GameManager.GameMap.ShouldNotBeNull();
-
     }
-
 }

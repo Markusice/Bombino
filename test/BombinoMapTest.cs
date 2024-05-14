@@ -10,7 +10,8 @@ using Shouldly;
 
 namespace Bombino.test;
 
-public class BombinoMapTest : TestClass {
+public class BombinoMapTest : TestClass
+{
     private GameManager _game = default!;
     private BombinoMap _map = default!;
     private Player _player1 = default!;
@@ -19,8 +20,8 @@ public class BombinoMapTest : TestClass {
     private PlayerData _playerData2 = default!;
     private Fixture _fixture = default!;
 
-    public BombinoMapTest(Node testScene) : base(testScene) { }
-
+    public BombinoMapTest(Node testScene)
+        : base(testScene) { }
 
     [Setup]
     public async Task Setup()
@@ -46,11 +47,7 @@ public class BombinoMapTest : TestClass {
 
         _game.AddChild(_player1);
         _game.AddChild(_player2);
-        GameManager.PlayersData = new Array<PlayerData>
-        {
-            _playerData1,
-            _playerData2
-        };
+        GameManager.PlayersData = new Array<PlayerData> { _playerData1, _playerData2 };
 
         await _fixture.AddToRoot(_game);
     }
@@ -138,11 +135,7 @@ public class BombinoMapTest : TestClass {
         enemyPosition1.Y--;
         var enemyPosition2 = _map.MapToLocal(new Vector3I(0, 1, -2));
         enemyPosition2.Y--;
-        var expected = new Array<Vector3>
-        {
-            enemyPosition1,
-            enemyPosition2
-        };
+        var expected = new Array<Vector3> { enemyPosition1, enemyPosition2 };
 
         foreach (var position in expected)
         {
@@ -191,12 +184,7 @@ public class BombinoMapTest : TestClass {
         enemyPosition2.Y--;
         var enemyPosition3 = _map.MapToLocal(new Vector3I(2, 1, -1));
         enemyPosition3.Y--;
-        var expected = new Array<Vector3>
-        {
-            enemyPosition1,
-            enemyPosition2,
-            enemyPosition3
-        };
+        var expected = new Array<Vector3> { enemyPosition1, enemyPosition2, enemyPosition3 };
         foreach (var position in expected)
         {
             _map.MapData.EnemyPositions.Contains(position).ShouldBeTrue();
@@ -221,7 +209,6 @@ public class BombinoMapTest : TestClass {
         wall2.ShouldBe((int)GridElement.WallElement);
         crate.ShouldBe((int)GridElement.CrateElement);
         crate2.ShouldBe((int)GridElement.CrateElement);
-
     }
 
     [Test]
@@ -267,6 +254,4 @@ public class BombinoMapTest : TestClass {
         crate.ShouldBe((int)GridElement.CrateElement);
         crate2.ShouldBe((int)GridElement.CrateElement);
     }
-
-        
 }

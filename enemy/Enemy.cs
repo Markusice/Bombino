@@ -44,7 +44,7 @@ internal partial class Enemy : CharacterBody3D
     /// Called when the node is added to the scene.
     /// </summary>
     public override async void _Ready()
-    {   
+    {
         EnemyData.IsDead = false;
         EnemyData.CanKillPlayer = false;
         Position = EnemyData.InitialPosition;
@@ -52,10 +52,10 @@ internal partial class Enemy : CharacterBody3D
         _animTree = GetNode<AnimationTree>("AnimationTree");
         _animTree.Active = true;
         _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
-        
+
         var direction = Vector3.Zero;
         ChangeDirection(ref direction);
-        
+
         _targetVelocity.X = direction.X * Speed;
         _targetVelocity.Z = direction.Z * Speed;
 

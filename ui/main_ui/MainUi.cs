@@ -11,9 +11,11 @@ internal partial class MainUi : CanvasLayer
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private PackedScene _bombStatusContainerScene;
+    [Export(PropertyHint.File, "*.tscn")]
+    private PackedScene _bombStatusContainerScene;
 
-    [Export(PropertyHint.File, "*.tscn")] private PackedScene _playerNameContainerScene;
+    [Export(PropertyHint.File, "*.tscn")]
+    private PackedScene _playerNameContainerScene;
 
     #endregion
 
@@ -117,7 +119,8 @@ internal partial class MainUi : CanvasLayer
             .ParseExact(TimerLabel.Text, @"m\:ss", null)
             .TotalSeconds;
 
-        if (!(timerLabelInTotalSeconds > 0)) return;
+        if (!(timerLabelInTotalSeconds > 0))
+            return;
 
         timerLabelInTotalSeconds--;
         SetTimerLabelText((int)timerLabelInTotalSeconds);

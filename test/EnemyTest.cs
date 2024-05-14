@@ -11,7 +11,8 @@ using Shouldly;
 
 namespace Bombino.test;
 
-public class EnemyTest : TestClass {
+public class EnemyTest : TestClass
+{
     private GameManager _game = default!;
     private BombinoMap _map = default!;
     private Player _player1 = default!;
@@ -20,12 +21,13 @@ public class EnemyTest : TestClass {
     private PlayerData _playerData2 = default!;
     private Enemy _enemy1 = default!;
     private EnemyData _enemyData1 = default!;
+
     //private Enemy _enemy2 = default!;
     //private EnemyData _enemyData2 = default!;
     private Fixture _fixture = default!;
 
-    public EnemyTest(Node testScene) : base(testScene) { }
-
+    public EnemyTest(Node testScene)
+        : base(testScene) { }
 
     [Setup]
     public async Task Setup()
@@ -51,23 +53,16 @@ public class EnemyTest : TestClass {
 
         _game.AddChild(_player1);
         _game.AddChild(_player2);
-        GameManager.PlayersData = new Array<PlayerData>
-        {
-            _playerData1,
-            _playerData2
-        };
+        GameManager.PlayersData = new Array<PlayerData> { _playerData1, _playerData2 };
 
         _enemy1 = await _fixture.LoadScene<Enemy>("res://enemy/enemy.tscn");
         _enemyData1 = new EnemyData(_map.MapData.EnemyPositions[0]);
         _enemy1.EnemyData = _enemyData1;
         //_enemy2 = await _fixture.LoadScene<Enemy>("res://enemy/enemy.tscn");
-        
+
         _game.AddChild(_enemy1);
 
-        GameManager.EnemiesData = new Array<EnemyData>
-        {
-            _enemyData1
-        };
+        GameManager.EnemiesData = new Array<EnemyData> { _enemyData1 };
         //_game.AddChild(_enemy2);
 
         await _fixture.AddToRoot(_game);
@@ -100,5 +95,4 @@ public class EnemyTest : TestClass {
 
         _enemy1.EnemyData.IsDead.ShouldBeTrue();
     }
-
 }

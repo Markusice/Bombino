@@ -9,9 +9,11 @@ namespace Bombino.power_up;
 /// </summary>
 internal partial class PowerUp : Area3D
 {
-    [Export(PropertyHint.File, ".tres")] private Material _hologramPink;
+    [Export(PropertyHint.File, ".tres")]
+    private Material _hologramPink;
 
-    [Export(PropertyHint.File, ".tres")] private Material _hologramBlue;
+    [Export(PropertyHint.File, ".tres")]
+    private Material _hologramBlue;
 
     private PowerUpType _type;
     private MeshInstance3D _meshInstance3D;

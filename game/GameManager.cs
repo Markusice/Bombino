@@ -289,7 +289,7 @@ internal partial class GameManager : WorldEnvironment
         _alivePlayers = NumberOfPlayers;
 
         GameMap.SetUpMapFromTextFile(_mapTextFilePath);
-        
+
         RecreatePlayersForNextRound();
         AddMainUi(); // add here to reflect changes happened in the players' data
 
@@ -353,7 +353,7 @@ internal partial class GameManager : WorldEnvironment
                 _ => tempPlayerData.Position
             };
             player.PlayerData = playerData;
-            
+
             GameMap.AddChild(player);
         }
     }

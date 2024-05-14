@@ -10,7 +10,8 @@ internal partial class SettingsButton : Button, IUiButton
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private string _settingsMenuPath;
+    [Export(PropertyHint.File, "*.tscn")]
+    private string _settingsMenuPath;
 
     #endregion
 

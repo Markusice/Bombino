@@ -12,7 +12,8 @@ using Shouldly;
 
 namespace Bombino.test;
 
-public class PlayerTest : TestClass {
+public class PlayerTest : TestClass
+{
     private GameManager _game = default!;
     private BombinoMap _map = default!;
     private Player _player1 = default!;
@@ -21,8 +22,8 @@ public class PlayerTest : TestClass {
     private PlayerData _playerData2 = default!;
     private Fixture _fixture = default!;
 
-    public PlayerTest(Node testScene) : base(testScene) { }
-
+    public PlayerTest(Node testScene)
+        : base(testScene) { }
 
     [Setup]
     public async Task Setup()
@@ -48,11 +49,7 @@ public class PlayerTest : TestClass {
 
         _game.AddChild(_player1);
         _game.AddChild(_player2);
-        GameManager.PlayersData = new Array<PlayerData>
-        {
-            _playerData1,
-            _playerData2
-        };
+        GameManager.PlayersData = new Array<PlayerData> { _playerData1, _playerData2 };
 
         await _fixture.AddToRoot(_game);
     }
@@ -93,7 +90,6 @@ public class PlayerTest : TestClass {
         _player1._Ready();
         Vector3 initialPosition = _player1.Position;
         await _player1.HoldKeyFor(0.1f, Key.A);
-
 
         _player1.Position.X.ShouldBeLessThan(initialPosition.X);
     }
@@ -159,5 +155,4 @@ public class PlayerTest : TestClass {
         var bomb = GameManager.GameMap.GetNodeOrNull<Bomb>("Bomb");
         bomb.Visible.ShouldBeTrue();
     }
-
 }

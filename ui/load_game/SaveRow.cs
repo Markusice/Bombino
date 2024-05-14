@@ -34,9 +34,7 @@ internal partial class SaveRow : HBoxContainer
         AddChild(deleteButton);
     }
 
-    public SaveRow()
-    {
-    }
+    public SaveRow() { }
 
     /// <summary>
     /// Sets the properties of the label.

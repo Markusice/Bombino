@@ -6,7 +6,8 @@ internal abstract partial class PlayerButton : Button
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private string MapsMenuPath { get; set; }
+    [Export(PropertyHint.File, "*.tscn")]
+    private string MapsMenuPath { get; set; }
 
     #endregion
 

@@ -10,7 +10,8 @@ internal partial class PlayButton : Button, IUiButton
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private string _playMenuPath;
+    [Export(PropertyHint.File, "*.tscn")]
+    private string _playMenuPath;
 
     #endregion
 

@@ -12,7 +12,8 @@ internal abstract partial class MapButton : Button, IUiButton
 {
     #region Exports
 
-    [Export(PropertyHint.File, "*.tscn")] private string _roundsMenuScenePath;
+    [Export(PropertyHint.File, "*.tscn")]
+    private string _roundsMenuScenePath;
 
     #endregion
 

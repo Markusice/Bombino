@@ -165,7 +165,5 @@ internal partial class BombinoMap : GridMap
         }
 
         return mapState;
-
     }
-        
 }

@@ -7,7 +7,7 @@ namespace Bombino.ui.settings_menu;
 /// Represents a container for action keys in the user interface.
 /// </summary>
 internal partial class ActionKeysContainer : GridContainer
-{   
+{
     /// <summary>
     /// Called when the node enters the scene tree for the first time.
     /// </summary>
