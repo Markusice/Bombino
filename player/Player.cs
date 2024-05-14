@@ -113,6 +113,9 @@ internal partial class Player : CharacterBody3D
     /// </summary>
     public async void OnHit()
     {
+        if (PlayerData.IsDead)
+            return;
+
         PlayerData.IsDead = true;
         SetStateMachine("Die");
         Events.Instance.EmitSignal(Events.SignalName.PlayerDied, PlayerData.Color.ToString());
