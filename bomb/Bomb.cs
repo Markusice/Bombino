@@ -473,7 +473,7 @@ internal partial class Bomb : Area3D
     private void DestroyCrateAtPosition(Vector3 position)
     {
         var mapCoordinates = GameManager.GameMap.LocalToMap(position);
-        GameManager.GameMap.SetCellItem(mapCoordinates, -1);
+        GameManager.GameMap.SetCellItem(mapCoordinates, (int)GridMap.InvalidCellItem);
 
         if (GetRandomPowerUpSpawnChance() <= 2)
         {
@@ -611,7 +611,7 @@ internal partial class Bomb : Area3D
         var mapCoordinates = GameManager.GameMap.LocalToMap(position);
         var tileId = GameManager.GameMap.GetCellItem(mapCoordinates);
 
-        return tileId == -1;
+        return tileId == GridMap.InvalidCellItem;
     }
 
     /// <summary>
