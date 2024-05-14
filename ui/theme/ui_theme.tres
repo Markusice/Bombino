@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=38 format=3 uid="uid://djmr4s3lma1ss"]
+[gd_resource type="Theme" load_steps=42 format=3 uid="uid://djmr4s3lma1ss"]
 
 [ext_resource type="FontFile" uid="uid://bn4sm0qhcg0jm" path="res://ui/fonts/Spoon-Bold.ttf" id="1_2hswg"]
 [ext_resource type="Texture2D" uid="uid://bwn3gasaptibk" path="res://ui/theme/textures/button-style.png" id="2_b00xl"]
@@ -64,6 +64,41 @@ content_margin_bottom = 90.0
 texture = ExtResource("5_ygea2")
 texture_margin_left = 150.0
 texture_margin_right = 80.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_npy7o"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vg4b5"]
+content_margin_left = 40.0
+content_margin_top = 10.0
+content_margin_right = 40.0
+content_margin_bottom = 10.0
+bg_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_841wy"]
+content_margin_left = 40.0
+content_margin_top = 10.0
+content_margin_right = 40.0
+content_margin_bottom = 10.0
+bg_color = Color(0.501961, 0.501961, 0.501961, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tl5m3"]
+content_margin_left = 40.0
+content_margin_top = 10.0
+content_margin_right = 40.0
+content_margin_bottom = 10.0
+bg_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqisc"]
 content_margin_top = 10.0
@@ -182,6 +217,12 @@ ButtonMirrored/fonts/font = ExtResource("1_2hswg")
 ButtonMirrored/styles/hover = SubResource("StyleBoxTexture_widdd")
 ButtonMirrored/styles/normal = SubResource("StyleBoxTexture_eu0d8")
 ButtonMirrored/styles/pressed = SubResource("StyleBoxTexture_2rc5h")
+DisabledButton/base_type = &"Button"
+DisabledButton/fonts/font = ExtResource("1_2hswg")
+DisabledButton/styles/focus = SubResource("StyleBoxEmpty_npy7o")
+DisabledButton/styles/hover = SubResource("StyleBoxFlat_vg4b5")
+DisabledButton/styles/normal = SubResource("StyleBoxFlat_841wy")
+DisabledButton/styles/pressed = SubResource("StyleBoxFlat_tl5m3")
 ErrorLabel/base_type = &"Label"
 ErrorLabel/colors/font_color = Color(1, 0.580392, 0.580392, 1)
 ErrorLabel/constants/outline_size = 1

@@ -21,9 +21,9 @@ internal partial class SaveRow : HBoxContainer
         var saveNameLabel = new Label { Text = baseFileName, ThemeTypeVariation = "SaveLabel" };
         SetLabelProperties(saveNameLabel);
 
-        var selectButton = new Button { Text = "Select", ThemeTypeVariation = "PrimaryButton" };
+        // disabled select button
+        var selectButton = new Button { Text = "Select", ThemeTypeVariation = "DisabledButton" };
         SetButtonThemeOverrides(selectButton);
-        // TODO: selectButton.Pressed += LoadSave
 
         var deleteButton = new Button { Text = "Delete", ThemeTypeVariation = "SecondaryButton" };
         SetButtonThemeOverrides(deleteButton);
