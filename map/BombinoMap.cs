@@ -1,8 +1,7 @@
 using Bombino.file_system_helpers.file;
-using Bombino.game.persistence.state_storage;
 using Godot;
-using Godot.Collections;
 using FileAccess = Godot.FileAccess;
+using MapData = Bombino.game.persistence.state_resources.MapData;
 
 namespace Bombino.map;
 

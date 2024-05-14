@@ -1,8 +1,6 @@
-using Bombino.game.persistence.state_resources;
-using Bombino.player;
 using Godot;
 
-namespace Bombino.game.persistence.state_storage;
+namespace Bombino.game.persistence.state_resources;
 
 internal partial class BombData : Resource
 {

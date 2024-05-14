@@ -1,9 +1,8 @@
 using Bombino.map;
-using Chickensoft.GoDotCollections;
 using Godot;
 using Godot.Collections;
 
-namespace Bombino.game.persistence.state_storage;
+namespace Bombino.game.persistence.state_resources;
 
 /// <summary>
 /// Represents the data for a map.

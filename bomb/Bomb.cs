@@ -2,11 +2,11 @@ using Bombino.bomb.explosion_effect;
 using Bombino.enemy;
 using Bombino.game;
 using Bombino.map;
-using Bombino.game.persistence.state_storage;
 using Bombino.player;
 using Bombino.power_up;
 using Godot;
 using Godot.Collections;
+using BombData = Bombino.game.persistence.state_resources.BombData;
 using Timer = Godot.Timer;
 
 namespace Bombino.bomb;
