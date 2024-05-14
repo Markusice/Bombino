@@ -1,14 +1,12 @@
 # Bombino, a bomberman játék
 
 
-
 ## Ismertető
 A játék célja egy bomberman típusú játék megvalósítása, ahol a játékosok egymás ellen játszva próbálnak egyedüliként életben maradni a pályán. A játékosok bombákat rakhatnak le, amellyel megölhetik egymást, de a pályán lévő dobozokat és szörnyeket is felrobbanthatják velük. A dobozokból különböző bónuszok kerülhetnek elő, a szörnyek képesek a játékosokat elkapni, megölni. A játék körökre van osztva, az nyer, aki az eléri az előre megadott nyert játszmák számát.
 
 A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren tesztelve.
 
 ## Megvalósított feladatok
-
 - Alapjáték [2 komplexitás]
 - Három játékos [1 komplexitás]
 - Perzisztencia [0.5 komplexitás] - (nem lett teljesen implementálva)
@@ -24,6 +22,7 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 - új játékot kezdhet vagy egy korábbit betölhet
 - megadhatja a játéktérképet a 3 megadott közül
 - megadhatja aj átékkörök (játszmák) számát
+
 
 ## Mit tehet a játékos a játék közben?
 - bombát helyezhet le
@@ -53,14 +52,20 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 ![](https://i.imgur.com/eW8AB3f.png)
 ![](https://i.imgur.com/Fm5HOkC.png)
 
-## Felhasznált anyagok
-
-### Játék modellek
-[Kaykit adventurers](https://kaylousberg.itch.io/kaykit-adventurers)\
-[Kaykit skeletons](https://kaylousberg.itch.io/kaykit-skeleton-pack)
-
-### Szoftver CI teszteléshez
-[Chickensoft GoDotTest](https://github.com/chickensoft-games/GoDotTest)
+## Feljesztés során használt eszközök
+* integrált fejlesztőkörnyezet (JetBrains Rider)
+  * kódszerkesztő (Visual Studio Code)
+  * projektvezető szolgáltatás (Gitlab)
+  * verziókövető rendszer (Git)
+    * használt Git client: https://git-fork.com/
+  * ingyenes és nyílt forráskódú játékmotor (Godot játékmotor)
+  * tervező eszköz (Figma, Visual Paradigm, StarUML)
+  * C# programozási nyelv
+  * Objektumelvű megvalósítás
+  * CI teszteléshez használt szoftver: [Chickensoft GoDotTest](https://github.com/chickensoft-games/GoDotTest)
+  * felhasznált modellek:
+    * [Kaykit adventurers](https://kaylousberg.itch.io/kaykit-adventurers) (játékosok)
+    * [Kaykit skeletons](https://kaylousberg.itch.io/kaykit-skeleton-pack) (ellenségek)
 
 ## Készítette
 * Bugár Ádám
