@@ -7,6 +7,9 @@ namespace Bombino.ui.starting_screen;
 using System.Reflection;
 #endif
 
+/// <summary>
+/// The main scene of the game.
+/// </summary>
 public partial class Main : Node3D {
 #if DEBUG
   public TestEnvironment Environment = default!;

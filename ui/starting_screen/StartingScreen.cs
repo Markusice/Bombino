@@ -17,6 +17,9 @@ internal partial class StartingScreen : CanvasLayer
         }
     }
 
+    /// <summary>
+    /// Called when the node enters the scene tree.
+    /// </summary>
     public override void _Ready()
     {
         var settingsDataAccessLayer = new SettingsDataAccessLayer();
