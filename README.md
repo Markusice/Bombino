@@ -34,6 +34,7 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 - kiléphet a játékból, elmentve az állapotát
 
 ## Videó a játékról
+[Youtube Video](https://youtu.be/5Lj4rnR6-MQ)
 
 ## Felhasználói felület
 ![](https://i.imgur.com/rCC52IX.png)
@@ -51,6 +52,15 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 ![](https://i.imgur.com/7eNay00.png)
 ![](https://i.imgur.com/eW8AB3f.png)
 ![](https://i.imgur.com/Fm5HOkC.png)
+
+## Felhasznált anyagok
+
+### Játék modellek
+[Kaykit adventurers](https://kaylousberg.itch.io/kaykit-adventurers)\
+[Kaykit skeletons](https://kaylousberg.itch.io/kaykit-skeleton-pack)
+
+### Szoftver CI teszteléshez
+[Chickensoft GoDotTest](https://github.com/chickensoft-games/GoDotTest)
 
 ## Készítette
 * Bugár Ádám
