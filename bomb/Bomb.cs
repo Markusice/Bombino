@@ -425,13 +425,17 @@ internal partial class Bomb : Area3D
     /// <param name="explosionAxis">The axis to destroy the crates on.</param>
     private void DestroyCratesOnAxis(ExplosionAxis explosionAxis)
     {
-        for (var axis = -1; axis < 1; axis++)
+        for (
+            var axisDirection = AxisDirection.Negative;
+            axisDirection < AxisDirection.Positive;
+            axisDirection++
+        )
         {
-            for (var nthTile = 1; nthTile <= BombData.Range; nthTile++)
+            for (ushort nthTile = 1; nthTile <= BombData.Range; nthTile++)
             {
-                var positionOnNthTile = GetEffectPositionOnAxisOnNthTile(
+                var positionOnNthTile = GetNthTileLocalPositionOnAxis(
                     explosionAxis,
-                    axis,
+                    axisDirection,
                     nthTile
                 );
 
@@ -532,15 +536,20 @@ internal partial class Bomb : Area3D
     /// <param name="explosionAxis"></param>
     private void CreateExplosionsOnTilesOnAxis(ExplosionAxis explosionAxis)
     {
-        for (var axis = -1; axis < 1; axis++)
+        for (
+            var axisDirection = AxisDirection.Negative;
+            axisDirection < AxisDirection.Positive;
+            axisDirection++
+        )
         {
-            for (var nthTile = 1; nthTile <= BombData.Range; nthTile++)
+            for (ushort nthTile = 1; nthTile <= BombData.Range; nthTile++)
             {
-                var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(
+                var effectPositionOnNthTile = GetNthTileLocalPositionOnAxis(
                     explosionAxis,
-                    axis,
+                    axisDirection,
                     nthTile
                 );
+
                 if (IsTileTypeAtPosition(effectPositionOnNthTile, (int)GridElement.WallElement))
                 {
                     break;
@@ -563,16 +572,16 @@ internal partial class Bomb : Area3D
     /// Gets the effect position on the specified axis.
     /// </summary>
     /// <param name="explosionAxis"> The axis to get the effect position on.</param>
-    /// <param name="axis"> The axis to get the effect position on.</param>
+    /// <param name="axisDirection"> The axis to get the effect position on.</param>
     /// <param name="nthTile"> The nth tile to get the effect position on.</param>
     /// <returns>The effect position on the specified axis.</returns>
-    private Vector3 GetEffectPositionOnAxisOnNthTile(
+    private Vector3 GetNthTileLocalPositionOnAxis(
         ExplosionAxis explosionAxis,
-        int axis,
-        int nthTile
+        AxisDirection axisDirection,
+        ushort nthTile
     )
     {
-        var isAxisDirectionNegative = axis < 0;
+        var isAxisDirectionNegative = axisDirection == AxisDirection.Negative;
 
         if (explosionAxis == ExplosionAxis.X)
             return new Vector3(
