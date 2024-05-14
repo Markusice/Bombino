@@ -2,6 +2,9 @@ using Godot;
 
 namespace Bombino.ui.play_menu;
 
+/// <summary>
+/// A button that loads the game scene.
+/// </summary>
 internal partial class LoadGameButton : Button
 {
     #region Fields
