@@ -225,7 +225,9 @@ internal partial class GameManager : WorldEnvironment
     /// <param name="color">The color of the player.</param>
     private async void CheckPlayersAndOpenRoundStats(string color)
     {
-        _alivePlayers--;
+        if (_alivePlayers != 0) {
+            _alivePlayers--;
+        }
 
         await ToSignal(GetTree().CreateTimer(Mathf.Pi, false), SceneTreeTimer.SignalName.Timeout);
 
