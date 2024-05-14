@@ -18,11 +18,14 @@ internal partial class Bomb : Area3D
 {
     #region Exports
 
-    [Export(PropertyHint.Range, "1,4")] private float _explodeTime = Mathf.Pi;
+    [Export(PropertyHint.Range, "1,4")]
+    private float _explodeTime = Mathf.Pi;
 
-    [Export] private PackedScene _effectScene;
+    [Export]
+    private PackedScene _effectScene;
 
-    [Export(PropertyHint.File, "*.tscn")] private string _powerUpScenePath;
+    [Export(PropertyHint.File, "*.tscn")]
+    private string _powerUpScenePath;
 
     #endregion
 
@@ -57,7 +60,6 @@ internal partial class Bomb : Area3D
     /// </summary>
     public override void _Ready()
     {
-        GD.Print($"bomb pos: {Position}");
         BombData.Position = Position;
         BombData.PlayerData = Player.PlayerData;
         _bombCollisionArea = GetNode<Area3D>("%CollisionArea");
@@ -148,11 +150,10 @@ internal partial class Bomb : Area3D
             return;
 
         var bombObject = GetNode<StaticBody3D>("%BombObject");
-        var layerValue = GetNextLayerValueFromPlayerName(Player); 
+        var layerValue = GetNextLayerValueFromPlayerName(Player);
 
         if (!bombObject.GetCollisionLayerValue(layerValue))
             bombObject.SetCollisionLayerValue(layerValue, true);
-
     }
 
     /// <summary>
@@ -400,15 +401,10 @@ internal partial class Bomb : Area3D
     /// </summary>
     private void SendSignalToBombsInRange()
     {
-        GD.Print($"bombsInRange: {_bombsInRange}");
         foreach (var bomb in _bombsInRange)
         {
             var distanceBetweenTwoBombs = (Position - bomb.Position).Length();
             var bombTimeoutTime = distanceBetweenTwoBombs / ExplosionDistanceDivider;
-
-            GD.Print(
-                $"sent signal to bomb: {bomb} timeout time: {bombTimeoutTime} (distance: {distanceBetweenTwoBombs})"
-            );
 
             bomb.EmitSignal(SignalName.ExplodeSooner, bombTimeoutTime);
         }
@@ -477,7 +473,6 @@ internal partial class Bomb : Area3D
 
         if (GetRandomPowerUpSpawnChance() <= 2)
         {
-            GD.Print($"Spawned power up at position {position}");
             SpawnPowerUp(position);
         }
     }
@@ -538,7 +533,7 @@ internal partial class Bomb : Area3D
     private void CreateExplosionsOnTilesOnAxis(ExplosionAxis explosionAxis)
     {
         for (var axis = -1; axis < 1; axis++)
-        {   
+        {
             for (var nthTile = 1; nthTile <= BombData.Range; nthTile++)
             {
                 var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(

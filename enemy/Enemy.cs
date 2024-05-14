@@ -48,19 +48,14 @@ internal partial class Enemy : CharacterBody3D
         EnemyData.IsDead = false;
         EnemyData.CanKillPlayer = false;
         Position = EnemyData.InitialPosition;
-        GD.Print($"Enemy created at: {Position}");
 
         _animTree = GetNode<AnimationTree>("AnimationTree");
         _animTree.Active = true;
         _stateMachine = (AnimationNodeStateMachinePlayback)_animTree.Get("parameters/playback");
-
-        GD.Print($"Enemy created at: {Position}");
-
+        
         var direction = Vector3.Zero;
         ChangeDirection(ref direction);
-
-        GD.Print($"Enemy direction: {direction}");
-
+        
         _targetVelocity.X = direction.X * Speed;
         _targetVelocity.Z = direction.Z * Speed;
 
@@ -106,7 +101,6 @@ internal partial class Enemy : CharacterBody3D
         // Randomly change direction without any reason
         if (new Random().NextDouble() < 0.005) // 0.5% chance to change direction
         {
-            GD.Print("Changing direction randomly");
             var direction = Vector3.Zero;
             ChangeDirection(ref direction);
 
