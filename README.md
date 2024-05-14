@@ -11,7 +11,7 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 
 - Alapjáték [2 komplexitás]
 - Három játékos [1 komplexitás]
-- Perzisztencia [0.5 komplexitás]
+- Perzisztencia [0.5 komplexitás] - (nem lett teljesen implementálva)
 - Testreszabható vezérlés [0.5 komplexitás]
 - Folyamatos mozgás [0.5 komplexitás]
 - 3D-s grafika [1 komplexitás] (eredetileg 2.5D-s grafika 0.5 komplexitással)
@@ -33,6 +33,8 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 - a játékot megállíthatja
 - kiléphet a játékból, elmentve az állapotát
 
+## Videó a játékról
+
 ## Felhasználói felület
 ![](https://i.imgur.com/rCC52IX.png)
 ![](https://i.imgur.com/CsVtvVA.png)
@@ -50,6 +52,7 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 ![](https://i.imgur.com/eW8AB3f.png)
 ![](https://i.imgur.com/Fm5HOkC.png)
 
-
-
-
+## Készítette
+* Bugár Ádám
+* Burus András
+* Szekeres Márk
