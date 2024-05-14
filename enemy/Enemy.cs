@@ -45,7 +45,7 @@ internal partial class Enemy : CharacterBody3D
     /// </summary>
     public override async void _Ready()
     {
-        Position = EnemyData.Position;
+        Position = EnemyData.InitialPosition;
 
         _animTree = GetNode<AnimationTree>("AnimationTree");
         _animTree.Active = true;
