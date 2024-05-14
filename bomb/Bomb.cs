@@ -1,6 +1,7 @@
 using Bombino.bomb.explosion_effect;
 using Bombino.enemy;
 using Bombino.game;
+using Bombino.map;
 using Bombino.game.persistence.state_storage;
 using Bombino.player;
 using Bombino.power_up;
@@ -438,13 +439,13 @@ internal partial class Bomb : Area3D
                     nthTile
                 );
 
-                if (IsTileTypeAtPosition(positionOnNthTile, 3))
+                if (IsTileTypeAtPosition(positionOnNthTile, (int)GridElement.WallElement))
                     break;
 
-                if (IsTileTypeAtPosition(positionOnNthTile, -1))
+                if (IsTileTypeAtPosition(positionOnNthTile, (int)GridElement.EmptyElement))
                     continue;
 
-                if (IsTileTypeAtPosition(positionOnNthTile, 2))
+                if (IsTileTypeAtPosition(positionOnNthTile, (int)GridElement.CrateElement))
                     DestroyCrateAtPosition(positionOnNthTile);
 
                 break;
@@ -537,18 +538,29 @@ internal partial class Bomb : Area3D
     private void CreateExplosionsOnTilesOnAxis(ExplosionAxis explosionAxis)
     {
         for (var axis = -1; axis < 1; axis++)
-        for (var nthTile = 1; nthTile <= BombData.Range; nthTile++)
-        {
-            var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(
-                explosionAxis,
-                axis,
-                nthTile
-            );
-
-            if (!CanCreateExplosionAtPosition(effectPositionOnNthTile))
+        {   
+            for (var nthTile = 1; nthTile <= BombData.Range; nthTile++)
+            {
+                var effectPositionOnNthTile = GetEffectPositionOnAxisOnNthTile(
+                    explosionAxis,
+                    axis,
+                    nthTile
+                );
+                if (IsTileTypeAtPosition(effectPositionOnNthTile, (int)GridElement.WallElement))
+                {
+                    break;
+                }
+                if (IsTileTypeAtPosition(effectPositionOnNthTile, (int)GridElement.EmptyElement))
+                {
+                    CreateExplosionAtPosition(effectPositionOnNthTile);
+                    continue;
+                }
+                if (IsTileTypeAtPosition(effectPositionOnNthTile, (int)GridElement.CrateElement))
+                {
+                    CreateExplosionAtPosition(effectPositionOnNthTile);
+                }
                 break;
-
-            CreateExplosionAtPosition(effectPositionOnNthTile);
+            }
         }
     }
 
