@@ -25,6 +25,9 @@ internal partial class RoundsMenu : CanvasLayer
 
     #region Overrides
 
+    /// <summary>
+    /// Called when the node enters the scene tree for the first time.
+    /// </summary>
     public override void _Ready()
     {
         _numberInput = GetNode<LineEdit>(

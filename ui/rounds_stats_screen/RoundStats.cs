@@ -4,6 +4,9 @@ using Godot;
 
 namespace Bombino.ui.rounds_stats_screen;
 
+/// <summary>
+/// Represents a user interface component for displaying the stats of a round.
+/// </summary>
 internal partial class RoundStats : CanvasLayer
 {
     #region Exports
@@ -34,6 +37,9 @@ internal partial class RoundStats : CanvasLayer
 
     #region Overrides
 
+    /// <summary>
+    /// Called when the node enters the scene tree for the first time.
+    /// </summary>
     public override void _Ready()
     {
         _gameManager = GetParent().GetNode<GameManager>("WorldEnvironment");
@@ -55,6 +61,10 @@ internal partial class RoundStats : CanvasLayer
         UpdatePlayerStats();
     }
 
+    /// <summary>
+    /// Called when the node receives an input event.
+    /// </summary>
+    /// <param name="event">The input event received.</param>
     public override void _Input(InputEvent @event)
     {
         if (!InputEventChecker.IsEnterKeyPressed(@event)) return;
