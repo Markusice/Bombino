@@ -2,9 +2,9 @@
 
 
 ## Ismertető
-A játék célja egy bomberman típusú játék megvalósítása, ahol a játékosok egymás ellen játszva próbálnak egyedüliként életben maradni a pályán. A játékosok bombákat rakhatnak le, amellyel megölhetik egymást, de a pályán lévő dobozokat és szörnyeket is felrobbanthatják velük. A dobozokból különböző bónuszok kerülhetnek elő, a szörnyek képesek a játékosokat elkapni, megölni. A játék körökre van osztva, az nyer, aki az eléri az előre megadott nyert játszmák számát.
+A játék célja egy bomberman típusú játék megvalósítása, ahol a játékosok egymás ellen játszva próbálnak egyedüliként életben maradni a pályán. A játékosok bombákat rakhatnak le, amellyel megölhetik egymást, de a pályán lévő dobozokat és szörnyeket is felrobbanthatják velük. A dobozokból különböző bónuszok kerülhetnek elő, a szörnyek képesek a játékosokat elkapni, megölni. A játék körökre van osztva, az nyer, aki eléri az előre megadott nyert játszmák számát.
 
-A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren tesztelve.
+A játék Godot-ban lett fejlesztve, és Windows 10/11 operációs rendszeren lett tesztelve.
 
 ## Megvalósított feladatok
 - Alapjáték [2 komplexitás]
@@ -27,24 +27,24 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 * **A játék közben**
   * a játékosok (2 vagy 3) ugyanazon az előre kiválasztott játéktérképen játszanak
   * a játék előre megadott mennyiségű nyert játszmákig tart
-  * a játékos bombát helyezhet le üres mezőkre (maga alá)
-  * a játékos irányíthatja a karakterét a játéktérképen (üres mezőkre)
+  * a játékos bombát helyezhet le az üres mezőkre (maga alá)
+  * a játékos irányítja a karakterét a játéktérképen (üres mezőkre)
   * a szörnyek mozognak, és mozgásuk közben elkaphatnak játékosokat (megölve őket ezáltal)
-    * akadályba ütközéskor véletlenszerűen vált irányt
+    * akadályba ütközéskor véletlenszerűen váltanak irányt
     * néha meglepetésszerűen is változtatnak a haladási irányukon (képkockánként 0,5% eséllyel)
-  * a játékos felrobbanhat a saját vagy egy más játékos bombájától (meghalva ezáltal)
+  * a játékos felrobbanhat a saját vagy egy más játékos bombájától
   * a játékos a játékot megállíthatja (Pause ablak előhozása Escape billentyű lenyomásával)
   * a játékos a játékot futás közben elmentheti (Pause ablakban a Save & Exit)
 * **A játék vége**
   * egy játékos marad csak életben (a többi felrobbant és/vagy egy szörny elkapta)
   * ha egy játékos sem maradt életben
-  * kiírásra kerül a nyertes játékos (vagy a döntetlenség ténye), az eddigi eredmények megjelenítésre kerülnek, utána egy új játszma indul (amennyiben vannak még játszmák hátra)
-    * az utolsó játszma után a végeredmény is megjelenítésre kerül
+  * kiírásra kerül a nyertes játékos (vagy a döntetlenség ténye), az eddigi eredmények megjelenítésre kerülnek, utána egy új játszma indul (amennyiben vannak még nem érte el senki a megadott nyert játszmák számát)
+    * az utolsó játszma után az összesített eredmény is megjelenítésre kerül
     * a döntetlen mindkét játékos szempontjából vereségnek számít
 * **A játéktérkép tulajdonságai**
   * N×M méretű négyzetrácsos (grid) pálya
-  * a pálya átjuthatatlan fallal van körülvéve
-  * minden mező a következő lehet:
+  * a pálya átjuthatatlan és felrobbanthatatlan fallal van körülvéve
+  * minden mező a következő típusú lehet:
     * üres (szabadon járható)
     * fal (nem járható, nem átléphető)
     * doboz (felrobbantható bombával, a bomba hatótávját megállítja)
@@ -52,13 +52,13 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
       * egy bombák számát megnövelő bónusz (1-gyel megnöveli a lerakható bombák számát)
       * egy robbanás hatótávát megnövelő bónusz (mind a 4 irányba 1-1 mezővel megnöveli a bombák hatótávját)
     * szörny (elpusztítható bombával, a játéktérképen mozog, megölheti a játékosokat)
-    * játékos (elpusztítható bombával, a játéktérképen mozog, bombákat rakhat le, bónuszokat vehet fel)
+    * játékos (elpusztítható bombával, a játéktérképen mozoghat, bombákat rakhat le, bónuszokat vehet fel)
     * bomba (felrobban **_π_** idő alatt egy adott hatótávban, amely a pálya mind a 4 irányába terjed, kivéve, ha egy doboz megállítja)
       * bombák egymást is felrobbanthatják az időzítőjük lejárta előtt, és a bomba robbanásának pozíciójától a távolsággal arányos módon (**_e_**-vel osztva) fejtik ki a hatásukat
       * egy bomba alapértelmezett hatótávja 2 egység minden irányban (átlósan nem terjed)
 
 ## Videó a játékról
-![](https://youtu.be/5Lj4rnR6-MQ)
+[![](https://img.youtube.com/vi/5Lj4rnR6-MQ/0.jpg)](https://www.youtube.com/watch?v=5Lj4rnR6-MQ)
 
 
 ## Képernyőfotók a felhasználói felületről
