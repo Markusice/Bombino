@@ -15,6 +15,11 @@ internal partial class EnemyData : Resource
     public Vector3 Position { get; set; }
 
     /// <summary>
+    /// Gets or sets the initial position of the enemy.
+    /// </summary>
+    public Vector3 InitialPosition { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether the enemy is dead.
     /// </summary>
     /// <returns><c>true</c> if the enemy is dead; otherwise, <c>false</c>.</returns>
@@ -35,6 +40,7 @@ internal partial class EnemyData : Resource
     public EnemyData(Vector3 position)
     {
         Position = position;
+        InitialPosition = position;
         IsDead = false;
         CanKillPlayer = false;
     }

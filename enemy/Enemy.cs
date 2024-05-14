@@ -44,8 +44,11 @@ internal partial class Enemy : CharacterBody3D
     /// Called when the node is added to the scene.
     /// </summary>
     public override async void _Ready()
-    {
-        Position = EnemyData.Position;
+    {   
+        EnemyData.IsDead = false;
+        EnemyData.CanKillPlayer = false;
+        Position = EnemyData.InitialPosition;
+        GD.Print($"Enemy created at: {Position}");
 
         _animTree = GetNode<AnimationTree>("AnimationTree");
         _animTree.Active = true;

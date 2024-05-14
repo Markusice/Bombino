@@ -42,11 +42,11 @@ public class EnemyTest : TestClass {
         GameManager.GameMap = _map;
 
         _player1 = await _fixture.LoadScene<Player>("res://player/player_blue/player_blue.tscn");
-        _playerData1 = new PlayerData(_map.BluePlayerPosition, PlayerColor.Blue);
+        _playerData1 = new PlayerData(_map.MapData.BluePlayerPosition, PlayerColor.Blue);
         _player1.PlayerData = _playerData1;
 
         _player2 = await _fixture.LoadScene<Player>("res://player/player_red/player_red.tscn");
-        _playerData2 = new PlayerData(_map.RedPlayerPosition, PlayerColor.Red);
+        _playerData2 = new PlayerData(_map.MapData.RedPlayerPosition, PlayerColor.Red);
         _player2.PlayerData = _playerData2;
 
         _game.AddChild(_player1);
@@ -58,7 +58,7 @@ public class EnemyTest : TestClass {
         };
 
         _enemy1 = await _fixture.LoadScene<Enemy>("res://enemy/enemy.tscn");
-        _enemyData1 = new EnemyData(_map.EnemyPositions[0]);
+        _enemyData1 = new EnemyData(_map.MapData.EnemyPositions[0]);
         _enemy1.EnemyData = _enemyData1;
         //_enemy2 = await _fixture.LoadScene<Enemy>("res://enemy/enemy.tscn");
         
