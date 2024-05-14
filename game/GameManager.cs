@@ -284,14 +284,15 @@ internal partial class GameManager : WorldEnvironment
     /// </summary>
     public void StartNextRound()
     {
-        AddMainUi();
-
         CurrentRound++;
         _isRoundOver = false;
         _alivePlayers = NumberOfPlayers;
 
         GameMap.SetUpMapFromTextFile(_mapTextFilePath);
+        
         RecreatePlayersForNextRound();
+        AddMainUi(); // add here to reflect changes happened in the players' data
+
         RecreateEnemiesForNextRound();
     }
 
@@ -339,19 +340,19 @@ internal partial class GameManager : WorldEnvironment
         {
             var playerScenePath =
                 $"res://player/player_{playerData.Color.ToString().ToLower()}/player_{playerData.Color.ToString().ToLower()}.tscn";
-
             var playerScene = (PackedScene)ResourceLoader.Load(playerScenePath);
             var player = playerScene.Instantiate<Player>();
-            var tempPlayerData = playerData;
-            PlayerData.ResetToNewRound(ref tempPlayerData);
-            tempPlayerData.Position = playerData.Color switch
+
+            playerData.ResetToNewRound();
+            playerData.Position = playerData.Color switch
             {
                 PlayerColor.Blue => GameMap.BluePlayerPosition,
                 PlayerColor.Red => GameMap.RedPlayerPosition,
                 PlayerColor.Yellow => GameMap.YellowPlayerPosition,
-                _ => tempPlayerData.Position
+                _ => playerData.Position
             };
-            player.PlayerData = tempPlayerData;
+            player.PlayerData = playerData;
+            
             GameMap.AddChild(player);
         }
     }
