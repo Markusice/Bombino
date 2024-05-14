@@ -1,10 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://l7nq0oygfj14"]
+[gd_scene load_steps=9 format=3 uid="uid://l7nq0oygfj14"]
 
 [ext_resource type="Script" path="res://ui/load_game/LoadSaves.cs" id="1_cd7iu"]
+[ext_resource type="Shader" path="res://ui/starting_screen/wallpaper_effect.gdshader" id="1_sr2w0"]
+[ext_resource type="Texture2D" uid="uid://hmwgv8y26mtr" path="res://ui/wallpaper.jpeg" id="2_ch8xv"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="2_wx40p"]
 
+[sub_resource type="Gradient" id="Gradient_3y3nx"]
+colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_p3vgh"]
+gradient = SubResource("Gradient_3y3nx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kpmgv"]
+shader = ExtResource("1_sr2w0")
+shader_parameter/gradient = SubResource("GradientTexture1D_p3vgh")
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x64pq"]
-bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
+bg_color = Color(0.0705882, 0.0705882, 0.0705882, 0.941176)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -13,11 +25,15 @@ corner_radius_bottom_left = 10
 [node name="LoadGame" type="CanvasLayer"]
 
 [node name="Background" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_kpmgv")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_ch8xv")
+expand_mode = 2
+stretch_mode = 6
 
 [node name="TitleContainer" type="PanelContainer" parent="."]
 anchors_preset = -1

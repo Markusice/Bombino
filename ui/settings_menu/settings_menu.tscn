@@ -9,15 +9,15 @@
 [sub_resource type="Gradient" id="Gradient_lyluq"]
 colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_p3vgh"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pkloc"]
 gradient = SubResource("Gradient_lyluq")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_uqd5r"]
 shader = ExtResource("1_kurlk")
-shader_parameter/gradient = SubResource("GradientTexture1D_p3vgh")
+shader_parameter/gradient = SubResource("GradientTexture1D_pkloc")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uuids"]
-bg_color = Color(1, 0.982, 0.96, 0.4)
+bg_color = Color(0.141176, 0.137255, 0.133333, 0.831373)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
