@@ -34,9 +34,21 @@ A játék Godot-ban lett fejlesztve, és Windows 10 operációs rendszeren teszt
 - kiléphet a játékból, elmentve az állapotát
 
 ## Felhasználói felület
-
+![](https://i.imgur.com/rCC52IX.png)
+![](https://i.imgur.com/CsVtvVA.png)
+![](https://i.imgur.com/Qfo01gW.png)
+![](https://i.imgur.com/FVCBeSG.png)
+![](https://i.imgur.com/g8JbHzX.png)
+![](https://i.imgur.com/FD8smsR.png)
+![](https://i.imgur.com/6XI7QAe.png)
 
 ## Képernyőfotók a játékról
+![](https://i.imgur.com/oTh41sH.png)
+![](https://i.imgur.com/lVyXFwQ.png)
+![](https://i.imgur.com/ds9pbwT.png)
+![](https://i.imgur.com/7eNay00.png)
+![](https://i.imgur.com/eW8AB3f.png)
+![](https://i.imgur.com/Fm5HOkC.png)
 
 
 
