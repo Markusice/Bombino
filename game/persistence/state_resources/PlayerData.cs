@@ -24,7 +24,7 @@ internal partial class PlayerData : Resource
     /// <summary>
     /// Gets or sets the range of the player's bombs.
     /// </summary>
-    /// <returns> The range of the player's bombs.</returns> 
+    /// <returns> The range of the player's bombs.</returns>
     [Export]
     public int BombRange { get; set; } = 2;
 
@@ -60,9 +60,7 @@ internal partial class PlayerData : Resource
     /// Initializes a new instance of the <see cref="PlayerData"/> class with default values.
     /// </summary>
     public PlayerData()
-        : this(Vector3.Zero, 0)
-    {
-    }
+        : this(Vector3.Zero, 0) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PlayerData"/> class with the specified color and action keys.
@@ -78,11 +76,11 @@ internal partial class PlayerData : Resource
     /// <summary>
     /// Resets the player data to the default values for a new round.
     /// </summary>
-    public static void ResetToNewRound(ref PlayerData playerData)
+    public void ResetToNewRound()
     {
-        playerData.IsDead = false;
-        playerData.MaxNumberOfAvailableBombs = 1;
-        playerData.NumberOfPlacedBombs = 0;
-        playerData.BombRange = 2;
+        BombRange = 2;
+        NumberOfPlacedBombs = 0;
+        MaxNumberOfAvailableBombs = 1;
+        IsDead = false;
     }
 }
