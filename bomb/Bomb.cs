@@ -427,7 +427,7 @@ internal partial class Bomb : Area3D
     {
         for (
             var axisDirection = AxisDirection.Negative;
-            axisDirection < AxisDirection.Positive;
+            axisDirection <= AxisDirection.Positive;
             axisDirection++
         )
         {
@@ -538,7 +538,7 @@ internal partial class Bomb : Area3D
     {
         for (
             var axisDirection = AxisDirection.Negative;
-            axisDirection < AxisDirection.Positive;
+            axisDirection <= AxisDirection.Positive;
             axisDirection++
         )
         {
