@@ -87,32 +87,15 @@ layout_mode = 2
 theme_override_constants/v_separation = 21
 script = ExtResource("1_cd7iu")
 
-[node name="PanelContainer" type="HBoxContainer" parent="Panel/SavesContainer/MarginContainer/GridContainer"]
-visible = false
+[node name="PanelContainer" type="PanelContainer" parent="Panel/SavesContainer/MarginContainer/GridContainer"]
 layout_mode = 2
-theme_override_constants/separation = 26
+size_flags_horizontal = 6
 
 [node name="Label" type="Label" parent="Panel/SavesContainer/MarginContainer/GridContainer/PanelContainer"]
-custom_minimum_size = Vector2(600, 2.08165e-12)
 layout_mode = 2
-theme_type_variation = &"SaveLabel"
-text = "save-2024-05-01T22:15:51.json"
-horizontal_alignment = 1
-clip_text = true
-
-[node name="Button" type="Button" parent="Panel/SavesContainer/MarginContainer/GridContainer/PanelContainer"]
-layout_mode = 2
-theme_type_variation = &"PrimaryButton"
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/font_size = 28
-text = "Select"
-
-[node name="Button2" type="Button" parent="Panel/SavesContainer/MarginContainer/GridContainer/PanelContainer"]
-layout_mode = 2
-theme_type_variation = &"SecondaryButton"
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/font_size = 28
-text = "Delete"
+theme_type_variation = &"ErrorLabel"
+theme_override_font_sizes/font_size = 30
+text = "Loading saved game is not implemented"
 
 [node name="Container" type="PanelContainer" parent="."]
 anchors_preset = 2
