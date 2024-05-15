@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://cttditfqs6cci"]
+
+[ext_resource type="Shader" path="res://ui/wallpaper/wallpaper_effect.gdshader" id="1_kt7js"]
+
+[sub_resource type="Gradient" id="Gradient_gh0tk"]
+colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_qxkic"]
+gradient = SubResource("Gradient_gh0tk")
+
+[resource]
+shader = ExtResource("1_kt7js")
+shader_parameter/gradient = SubResource("GradientTexture1D_qxkic")

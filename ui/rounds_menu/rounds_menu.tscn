@@ -1,19 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://tvlak70hpojg"]
+[gd_scene load_steps=6 format=3 uid="uid://tvlak70hpojg"]
 
 [ext_resource type="Script" path="res://ui/rounds_menu/RoundsMenu.cs" id="1_easd3"]
-[ext_resource type="Shader" path="res://ui/starting_screen/wallpaper_effect.gdshader" id="2_c3id6"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="2_oolvm"]
-[ext_resource type="Texture2D" uid="uid://hmwgv8y26mtr" path="res://ui/wallpaper.jpeg" id="3_job1x"]
-
-[sub_resource type="Gradient" id="Gradient_at3k6"]
-colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_a1hl8"]
-gradient = SubResource("Gradient_at3k6")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_alsdg"]
-shader = ExtResource("2_c3id6")
-shader_parameter/gradient = SubResource("GradientTexture1D_a1hl8")
+[ext_resource type="Material" uid="uid://cttditfqs6cci" path="res://ui/wallpaper/wallpaper_material.tres" id="2_pe3kd"]
+[ext_resource type="Texture2D" uid="uid://c8ueiirqyodml" path="res://ui/wallpaper/wallpaper.jpeg" id="3_job1x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2bk4"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -27,7 +17,7 @@ script = ExtResource("1_easd3")
 LoadingScenePath = "res://ui/game_loading_screen/game_loading_scene.tscn"
 
 [node name="Background" type="TextureRect" parent="."]
-material = SubResource("ShaderMaterial_alsdg")
+material = ExtResource("2_pe3kd")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
