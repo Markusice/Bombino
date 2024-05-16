@@ -195,11 +195,10 @@ internal partial class Bomb : Area3D
     {
         DecreaseNumberOfPlacedBombs();
 
-        DestroyCratesOnXAndZAxis();
-
         PlayExplodeAnimation();
-
         CreateExplosionsOnTilesOnXAndZAxis();
+
+        DestroyCratesOnXAndZAxis();
 
         ExplodeBodies();
 
@@ -446,7 +445,9 @@ internal partial class Bomb : Area3D
                     continue;
 
                 if (IsTileTypeAtPosition(positionOnNthTile, (int)GridElement.CrateElement))
+                {
                     DestroyCrateAtPosition(positionOnNthTile);
+                }
 
                 break;
             }
@@ -459,10 +460,11 @@ internal partial class Bomb : Area3D
     /// <param name="position">The position to check.</param>
     /// <param name="tileType">The tile type to check.</param>
     /// <returns>True if the tile type is at the specified position, false otherwise.</returns>
-    private static bool IsTileTypeAtPosition(Vector3 position, long tileType)
+    private static bool IsTileTypeAtPosition(Vector3 position, int tileType)
     {
         var mapCoordinates = GameManager.GameMap.LocalToMap(position);
         var tileId = GameManager.GameMap.GetCellItem(mapCoordinates);
+
         return tileId == tileType;
     }
 
@@ -554,15 +556,18 @@ internal partial class Bomb : Area3D
                 {
                     break;
                 }
+
                 if (IsTileTypeAtPosition(effectPositionOnNthTile, (int)GridElement.EmptyElement))
                 {
                     CreateExplosionAtPosition(effectPositionOnNthTile);
                     continue;
                 }
+
                 if (IsTileTypeAtPosition(effectPositionOnNthTile, (int)GridElement.CrateElement))
                 {
                     CreateExplosionAtPosition(effectPositionOnNthTile);
                 }
+
                 break;
             }
         }
@@ -584,6 +589,7 @@ internal partial class Bomb : Area3D
         var isAxisDirectionNegative = axisDirection == AxisDirection.Negative;
 
         if (explosionAxis == ExplosionAxis.X)
+        {
             return new Vector3(
                 isAxisDirectionNegative
                     ? Position.X - nthTile * GameManager.GameMap.CellSize.X
@@ -591,6 +597,7 @@ internal partial class Bomb : Area3D
                 Position.Y,
                 Position.Z
             );
+        }
 
         return new Vector3(
             Position.X,
