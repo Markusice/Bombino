@@ -84,14 +84,20 @@ A játék Godot-ban lett fejlesztve, és Windows 10/11 operációs rendszeren le
 * projektvezető szolgáltatás (Gitlab)
 * verziókövető rendszer (Git)
   * használt Git client: https://git-fork.com/
-* ingyenes és nyílt forráskódú játékmotor (Godot 4.2 játékmotor)
+* ingyenes és nyílt forráskódú játékmotor (Godot 4.2.1 játékmotor)
 * tervező eszköz (Figma, Visual Paradigm, StarUML)
 * C# programozási nyelv
 * Objektumelvű megvalósítás
 * CI teszteléshez használt szoftver: [Chickensoft GoDotTest](https://github.com/chickensoft-games/GoDotTest)
-* felhasznált modellek:
-  * [Kaykit adventurers](https://kaylousberg.itch.io/kaykit-adventurers) (játékosok)
-  * [Kaykit skeletons](https://kaylousberg.itch.io/kaykit-skeleton-pack) (ellenségek)
+* felhasznált források:
+    * [Kaykit adventurers](https://kaylousberg.itch.io/kaykit-adventurers) (játékosok)
+    * [Kaykit skeletons](https://kaylousberg.itch.io/kaykit-skeleton-pack) (ellenségek)
+    * [Analogue Buttons Pack I](https://prinbles.itch.io/analogue-buttons-pack-i?fbclid=IwZXh0bgNhZW0CMTAAAR0j0rQiFoxIIadyNnaww961VJgE50F9rKpG9fnOjuOb_GtsV4YGzWgl5lY_aem_ASiA1q0g6QXwSYIROLq_ugPNapExoeU7Sdo9QKuZrpuaTH8D2AuC8FjlZtFiQELosC_Bc7pZQim45iWfrhy4zmAU) (gombok)
+    * [Wenrexa Game Assets: UI Sci-Fi Minimalism ](https://wenrexa.itch.io/nesia01?fbclid=IwZXh0bgNhZW0CMTAAAR3cud7iJxuqhpCjZN0Blq6EA54oEqtKFhtoY7TKKooCJLWiHc_w1IqSzhk_aem_AShpSI2FEtu9UE_Fnh-5ql3OU2Cc5L4LkyjMw_bsqzOy84PRMf-Wu0GvJcvMnlyLHLdtuWg7bF0m4-gZYuWW0j-w) #01 (UI)
+    * [Godot VisualShaders Collection](https://github.com/daniel-ilett/shaders-godot?fbclid=IwZXh0bgNhZW0CMTAAAR3r7_8n2QASz6CfofABPqLDlRGmRX7d8c7OtF0WvyRG0S5dbk3kdOOW1zU_aem_AShernxKMq0xI8k4GtiOyxJTJDR54lhPKeeFK8OAkSlmYOoC1C6x72OAg-Ov83jULfO8Rn1buQpXfyYIWU4qF8tg) (shaderek)
+    * [GODOT VFX - Easy Explosions](https://www.patreon.com/posts/godot-vfx-easy-93683992?fbclid=IwZXh0bgNhZW0CMTAAAR0iNWud4ZBcwBZIHT7Cj48f-ozxxy7WTtFLJDJNRovpe_gofpqbmXtniW8_aem_ASh_5z2PqQkkE1R6RBWW40OHs568gi9d4BzHUzVz3K20d5m3bXwJAgXPQ-nmwH3tso59c0S7SwGTbdfoPq10q9U-) (vfx)
+    * [\[Godot/C#\] Tutorials](https://github.com/MinaPecheux/godot-tutorials?fbclid=IwZXh0bgNhZW0CMTAAAR26ub5lIsz9yXxGe8bmlf9BRZAmCgcP-kJdUyJxbQjE4zoMlvujGe9ZUuo_aem_ASgKi7l8AbHXYnRIpkR6qN7A2B0ccYeU3X_cmW83--4DzY5QCMiAqJ6ifffSocwhUniR7UGTd0DuofPsyiMy2XSg) (tutorialok)
+    * [How to fix corrupt UIDs in a project (workaround inside)](https://github.com/godotengine/godot/issues/68661?fbclid=IwZXh0bgNhZW0CMTAAAR0Blij6nV1wCjQ5TxcTpTvUjssKOOTTar8036Vqwsf0162Ysff5x0vOWJk_aem_ASjY4ch4mvnTwTh2YeSB-YboAjF2CTSW26bQhQM4R2cPXoGgEudnOutmWoUwj6pVWJBHRymp8kjdoCmuvWcSGgp6) (korrupt UID-ra megoldás)
 
 ## Készítette
 * Bugár Ádám
