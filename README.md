@@ -85,7 +85,7 @@ A játék Godot-ban lett fejlesztve, és Windows 10/11 operációs rendszeren le
 * verziókövető rendszer (Git)
   * használt Git client: https://git-fork.com/
 * ingyenes és nyílt forráskódú játékmotor (Godot 4.2.1 játékmotor)
-* tervező eszköz (Figma, Visual Paradigm, StarUML)
+* tervező eszköz (Figma, PlantUML, StarUML)
 * C# programozási nyelv
 * objektumelvű megvalósítás
 * CI teszteléshez használt szoftver: [Chickensoft GoDotTest](https://github.com/chickensoft-games/GoDotTest)
