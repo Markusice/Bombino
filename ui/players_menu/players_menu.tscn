@@ -1,8 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://mwftlefv7r0j"]
+[gd_scene load_steps=6 format=3 uid="uid://daracdyx3be8w"]
 
 [ext_resource type="Script" path="res://ui/players_menu/Players2Button.cs" id="1_3jhk4"]
-[ext_resource type="Material" uid="uid://cttditfqs6cci" path="res://ui/wallpaper/wallpaper_material.tres" id="1_7c4tb"]
-[ext_resource type="Texture2D" uid="uid://c8ueiirqyodml" path="res://ui/wallpaper/wallpaper.jpeg" id="2_jau4s"]
+[ext_resource type="Material" uid="uid://dbqs2g2x4q31" path="res://ui/wallpaper/wallpaper_material.tres" id="1_7c4tb"]
+[ext_resource type="Texture2D" uid="uid://f85vj4rwkrxm" path="res://ui/wallpaper/wallpaper.jpeg" id="2_jau4s"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="3_8gu2c"]
 [ext_resource type="Script" path="res://ui/players_menu/Players3Button.cs" id="3_t0xty"]
 

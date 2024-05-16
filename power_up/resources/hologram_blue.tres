@@ -1,7 +1,7 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bo0cym1j8op57"]
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://ygjcfycvahbw"]
 
-[ext_resource type="Shader" uid="uid://bplbl3633akfb" path="res://power_up/resources/Hologram.tres" id="1_uuu4o"]
-[ext_resource type="Texture2D" uid="uid://ciuj185c15eow" path="res://power_up/textures/HologramLines.png" id="2_rnxvy"]
+[ext_resource type="Shader" uid="uid://sr80lixxlwgy" path="res://power_up/resources/Hologram.tres" id="1_uuu4o"]
+[ext_resource type="Texture2D" uid="uid://dy66vx7p63llk" path="res://power_up/textures/HologramLines.png" id="2_rnxvy"]
 
 [resource]
 render_priority = 0

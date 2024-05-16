@@ -1,8 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://l7nq0oygfj14"]
+[gd_scene load_steps=9 format=3 uid="uid://vug1l5bl31jj"]
 
 [ext_resource type="Script" path="res://ui/load_game/LoadSaves.cs" id="1_cd7iu"]
 [ext_resource type="Shader" path="res://ui/wallpaper/wallpaper_effect.gdshader" id="1_sr2w0"]
-[ext_resource type="Texture2D" uid="uid://b7lbl1bjjrm16" path="res://ui/wallpaper/wallpaper.jpeg" id="2_ch8xv"]
+[ext_resource type="Texture2D" uid="uid://f85vj4rwkrxm" path="res://ui/wallpaper/wallpaper.jpeg" id="2_ch8xv"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="2_wx40p"]
 
 [sub_resource type="Gradient" id="Gradient_3y3nx"]

@@ -1,9 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://tvlak70hpojg"]
+[gd_scene load_steps=6 format=3 uid="uid://cw17rs2jhg238"]
 
 [ext_resource type="Script" path="res://ui/rounds_menu/RoundsMenu.cs" id="1_easd3"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="2_oolvm"]
-[ext_resource type="Material" uid="uid://cttditfqs6cci" path="res://ui/wallpaper/wallpaper_material.tres" id="2_pe3kd"]
-[ext_resource type="Texture2D" uid="uid://c8ueiirqyodml" path="res://ui/wallpaper/wallpaper.jpeg" id="3_job1x"]
+[ext_resource type="Material" uid="uid://dbqs2g2x4q31" path="res://ui/wallpaper/wallpaper_material.tres" id="2_pe3kd"]
+[ext_resource type="Texture2D" uid="uid://f85vj4rwkrxm" path="res://ui/wallpaper/wallpaper.jpeg" id="3_job1x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2bk4"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)

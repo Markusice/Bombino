@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cyr6rf0m5ctu7"]
+[gd_scene load_steps=3 format=3 uid="uid://c2x0oq2vcrbex"]
 
 [ext_resource type="Script" path="res://ui/game_loading_screen/GameLoadingScene.cs" id="1_3hgem"]
-[ext_resource type="PackedScene" uid="uid://bf454a3io0ei3" path="res://game/game.tscn" id="2_q0b07"]
+[ext_resource type="PackedScene" uid="uid://bq4lj4vteg35e" path="res://game/game.tscn" id="2_q0b07"]
 
 [node name="Node" type="Node"]
 

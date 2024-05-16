@@ -1,9 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://ck8dv72n1i3he"]
+[gd_scene load_steps=10 format=3 uid="uid://b1ur2toijm26x"]
 
 [ext_resource type="Script" path="res://power_up/PowerUp.cs" id="1_xui6t"]
-[ext_resource type="Material" uid="uid://dyf10t0br2h38" path="res://power_up/resources/hologram_pink.tres" id="2_mrjik"]
-[ext_resource type="Shader" uid="uid://bplbl3633akfb" path="res://power_up/resources/Hologram.tres" id="3_rgtnj"]
-[ext_resource type="Texture2D" uid="uid://dn1ajgysbe88k" path="res://power_up/textures/HologramLines.png" id="4_vh7cu"]
+[ext_resource type="Material" uid="uid://ct1gmsjkntuhl" path="res://power_up/resources/hologram_pink.tres" id="2_mrjik"]
+[ext_resource type="Shader" uid="uid://sr80lixxlwgy" path="res://power_up/resources/Hologram.tres" id="3_rgtnj"]
+[ext_resource type="Texture2D" uid="uid://dy66vx7p63llk" path="res://power_up/textures/HologramLines.png" id="4_vh7cu"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_3qosn"]
 

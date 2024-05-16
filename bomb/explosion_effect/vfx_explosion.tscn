@@ -1,8 +1,8 @@
-[gd_scene load_steps=27 format=3 uid="uid://d3ldxy0l5gvp"]
+[gd_scene load_steps=27 format=3 uid="uid://x4w84kpqqcot"]
 
 [ext_resource type="Script" path="res://bomb/explosion_effect/VfxExplosion.cs" id="1_bs1wf"]
-[ext_resource type="Texture2D" uid="uid://bx76yvworn11d" path="res://bomb/explosion_effect/textures/Flare00.PNG" id="1_ie1fp"]
-[ext_resource type="Material" uid="uid://c0sytdro3fiho" path="res://bomb/explosion_effect/resources/Mat_Flare00.tres" id="2_f1hed"]
+[ext_resource type="Texture2D" uid="uid://ud3rn14yjeed" path="res://bomb/explosion_effect/textures/Flare00.PNG" id="1_ie1fp"]
+[ext_resource type="Material" path="res://bomb/explosion_effect/resources/Mat_Flare00.tres" id="2_f1hed"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5nw0t"]
 transparency = 1

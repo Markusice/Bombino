@@ -1,9 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqi5dmtq3nghc"]
+[gd_scene load_steps=6 format=3 uid="uid://re7gdiivjo7k"]
 
 [ext_resource type="Script" path="res://ui/play_menu/NewGameButton.cs" id="1_3l6wp"]
-[ext_resource type="Material" uid="uid://cttditfqs6cci" path="res://ui/wallpaper/wallpaper_material.tres" id="1_3vm8x"]
+[ext_resource type="Material" uid="uid://dbqs2g2x4q31" path="res://ui/wallpaper/wallpaper_material.tres" id="1_3vm8x"]
 [ext_resource type="Script" path="res://ui/play_menu/LoadGameButton.cs" id="1_agsqa"]
-[ext_resource type="Texture2D" uid="uid://c8ueiirqyodml" path="res://ui/wallpaper/wallpaper.jpeg" id="2_721dm"]
+[ext_resource type="Texture2D" uid="uid://f85vj4rwkrxm" path="res://ui/wallpaper/wallpaper.jpeg" id="2_721dm"]
 [ext_resource type="Script" path="res://ui/components/back_button/BackButton.cs" id="3_c3x4i"]
 
 [node name="CanvasLayer" type="CanvasLayer"]

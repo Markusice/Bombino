@@ -1,9 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://q10o7rmqgthe"]
+[gd_scene load_steps=7 format=3 uid="uid://gigt2p77rs0p"]
 
 [ext_resource type="Script" path="res://ui/settings_menu/ActionKeysContainer.cs" id="1_b871c"]
-[ext_resource type="Material" uid="uid://cttditfqs6cci" path="res://ui/wallpaper/wallpaper_material.tres" id="1_h0m4b"]
+[ext_resource type="Material" uid="uid://dbqs2g2x4q31" path="res://ui/wallpaper/wallpaper_material.tres" id="1_h0m4b"]
 [ext_resource type="Script" path="res://ui/settings_menu/SettingsSaveButton.cs" id="2_q3i5o"]
-[ext_resource type="Texture2D" uid="uid://c8ueiirqyodml" path="res://ui/wallpaper/wallpaper.jpeg" id="2_udvca"]
+[ext_resource type="Texture2D" uid="uid://f85vj4rwkrxm" path="res://ui/wallpaper/wallpaper.jpeg" id="2_udvca"]
 [ext_resource type="Script" path="res://ui/settings_menu/SettingsCancelButton.cs" id="3_xaunk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uuids"]

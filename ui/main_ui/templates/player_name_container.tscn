@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://ctiw2gldrdey1"]
+[gd_scene format=3 uid="uid://bnio6bqeq8587"]
 
 [node name="PlayerNameContainer" type="MarginContainer"]
 theme_override_constants/margin_top = 10

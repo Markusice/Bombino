@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://513ouqm5a"]
+[gd_scene load_steps=4 format=3 uid="uid://ds5b6tpxgfbkl"]
 
 [ext_resource type="Script" path="res://ui/rounds_stats_screen/RoundStats.cs" id="1_s4ohh"]
-[ext_resource type="Material" uid="uid://dgrf62p003e8f" path="res://ui/paused_game_ui/resources/blur.tres" id="2_n6dki"]
+[ext_resource type="Material" uid="uid://bbvvnh6d6j1o1" path="res://ui/paused_game_ui/resources/blur.tres" id="2_n6dki"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v5lrk"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)

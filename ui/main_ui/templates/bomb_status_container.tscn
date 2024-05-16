@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://b8yslovrmkcuj"]
+[gd_scene load_steps=2 format=3 uid="uid://cesm34lqrhskj"]
 
-[ext_resource type="Texture2D" uid="uid://coogvqvpfiv15" path="res://ui/main_ui/icons/bomb.png" id="1_a4my2"]
+[ext_resource type="Texture2D" uid="uid://cown670yovx1f" path="res://ui/main_ui/icons/bomb.png" id="1_a4my2"]
 
 [node name="BombStatusContainer" type="PanelContainer"]
 offset_right = 50.0

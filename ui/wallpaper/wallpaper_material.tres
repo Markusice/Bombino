@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://cttditfqs6cci"]
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://dbqs2g2x4q31"]
 
 [ext_resource type="Shader" path="res://ui/wallpaper/wallpaper_effect.gdshader" id="1_kt7js"]
 

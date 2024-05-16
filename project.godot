@@ -124,3 +124,7 @@ place_bomb_yellow={
 3d_physics/layer_8="blue_bomb"
 3d_physics/layer_9="red_bomb"
 3d_physics/layer_10="yellow_bomb"
+
+[memory]
+
+limits/message_queue/max_size_mb=819200

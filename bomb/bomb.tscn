@@ -1,7 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://bb6uotovywqqa"]
+[gd_scene load_steps=13 format=3 uid="uid://cdx4p138gek6e"]
 
 [ext_resource type="Script" path="res://bomb/Bomb.cs" id="1_1hr57"]
-[ext_resource type="PackedScene" uid="uid://d3ldxy0l5gvp" path="res://bomb/explosion_effect/vfx_explosion.tscn" id="2_hirdy"]
+[ext_resource type="PackedScene" uid="uid://x4w84kpqqcot" path="res://bomb/explosion_effect/vfx_explosion.tscn" id="2_hirdy"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1d2bc"]
 size = Vector3(10, 1, 1.5)
