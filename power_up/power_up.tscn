@@ -1,26 +1,57 @@
-[gd_scene load_steps=6 format=3 uid="uid://ck8dv72n1i3he"]
+[gd_scene load_steps=10 format=3 uid="uid://ck8dv72n1i3he"]
 
 [ext_resource type="Script" path="res://power_up/PowerUp.cs" id="1_xui6t"]
-[ext_resource type="Material" uid="uid://bo0cym1j8op57" path="res://power_up/resources/hologram_blue.tres" id="2_2huab"]
 [ext_resource type="Material" uid="uid://dyf10t0br2h38" path="res://power_up/resources/hologram_pink.tres" id="2_mrjik"]
+[ext_resource type="Shader" uid="uid://bplbl3633akfb" path="res://power_up/resources/Hologram.tres" id="3_rgtnj"]
+[ext_resource type="Texture2D" uid="uid://dn1ajgysbe88k" path="res://power_up/textures/HologramLines.png" id="4_vh7cu"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_3qosn"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r0w4l"]
+render_priority = 0
+shader = ExtResource("3_rgtnj")
+shader_parameter/Scanline_Color = Color(0.0862745, 1.18431, 6.5098, 0.00784314)
+shader_parameter/Scanline_Scroll_Speed = 0.5
+shader_parameter/Scanline_Scale = 40.0
+shader_parameter/Fresnel_Power = 1.0
+shader_parameter/Fresnel_Color = Color(0, 0, 6.765, 0.431)
+shader_parameter/Scanline_Texture = ExtResource("4_vh7cu")
+
 [sub_resource type="SphereMesh" id="SphereMesh_pj42c"]
+material = SubResource("ShaderMaterial_r0w4l")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nl8r4"]
+render_priority = 0
+shader = ExtResource("3_rgtnj")
+shader_parameter/Scanline_Color = Color(0.0862745, 1.18431, 6.5098, 0.027451)
+shader_parameter/Scanline_Scroll_Speed = 0.5
+shader_parameter/Scanline_Scale = 40.0
+shader_parameter/Fresnel_Power = 1.0
+shader_parameter/Fresnel_Color = Color(3.69, 0, 0.384, 0.573)
+shader_parameter/Scanline_Texture = ExtResource("4_vh7cu")
+
+[sub_resource type="SphereMesh" id="SphereMesh_6f2p1"]
+material = SubResource("ShaderMaterial_nl8r4")
 
 [node name="PowerUp" type="Area3D"]
+visible = false
 collision_layer = 64
 collision_mask = 2
 script = ExtResource("1_xui6t")
 _hologramPink = ExtResource("2_mrjik")
-_hologramBlue = ExtResource("2_2huab")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.276017, 0)
 shape = SubResource("SphereShape3D_3qosn")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+[node name="MeshInstance3DBlue" type="MeshInstance3D" parent="CollisionShape3D"]
 unique_name_in_owner = true
+visible = false
 mesh = SubResource("SphereMesh_pj42c")
+
+[node name="MeshInstance3DPink" type="MeshInstance3D" parent="CollisionShape3D"]
+unique_name_in_owner = true
+visible = false
+mesh = SubResource("SphereMesh_6f2p1")
 
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]

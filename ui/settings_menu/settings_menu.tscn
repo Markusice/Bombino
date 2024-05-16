@@ -1,20 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://q10o7rmqgthe"]
+[gd_scene load_steps=7 format=3 uid="uid://q10o7rmqgthe"]
 
 [ext_resource type="Script" path="res://ui/settings_menu/ActionKeysContainer.cs" id="1_b871c"]
-[ext_resource type="Shader" path="res://ui/starting_screen/wallpaper_effect.gdshader" id="1_kurlk"]
+[ext_resource type="Material" uid="uid://cttditfqs6cci" path="res://ui/wallpaper/wallpaper_material.tres" id="1_h0m4b"]
 [ext_resource type="Script" path="res://ui/settings_menu/SettingsSaveButton.cs" id="2_q3i5o"]
-[ext_resource type="Texture2D" uid="uid://hmwgv8y26mtr" path="res://ui/wallpaper.jpeg" id="2_udvca"]
+[ext_resource type="Texture2D" uid="uid://c8ueiirqyodml" path="res://ui/wallpaper/wallpaper.jpeg" id="2_udvca"]
 [ext_resource type="Script" path="res://ui/settings_menu/SettingsCancelButton.cs" id="3_xaunk"]
-
-[sub_resource type="Gradient" id="Gradient_lyluq"]
-colors = PackedColorArray(0.2156, 0.2904, 0.44, 1, 0.2009, 0.24969, 0.41, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_pkloc"]
-gradient = SubResource("Gradient_lyluq")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_uqd5r"]
-shader = ExtResource("1_kurlk")
-shader_parameter/gradient = SubResource("GradientTexture1D_pkloc")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uuids"]
 bg_color = Color(0.141176, 0.137255, 0.133333, 0.831373)
@@ -26,7 +16,7 @@ corner_radius_bottom_left = 20
 [node name="CanvasLayer" type="CanvasLayer"]
 
 [node name="Background" type="TextureRect" parent="."]
-material = SubResource("ShaderMaterial_uqd5r")
+material = ExtResource("1_h0m4b")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

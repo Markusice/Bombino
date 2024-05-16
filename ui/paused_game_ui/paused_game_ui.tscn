@@ -2,10 +2,10 @@
 
 [ext_resource type="Material" uid="uid://dgrf62p003e8f" path="res://ui/paused_game_ui/resources/blur.tres" id="1_fu6uk"]
 [ext_resource type="Script" path="res://ui/paused_game_ui/PausedGameUi.cs" id="1_y8mo4"]
-[ext_resource type="Texture2D" uid="uid://bicy2l83jv0ek" path="res://ui/paused_game_ui/icons/Play.png" id="2_p6f7v"]
-[ext_resource type="Texture2D" uid="uid://cm86u6jvbi7jj" path="res://ui/paused_game_ui/icons/Exit.png" id="3_3g6il"]
-[ext_resource type="Texture2D" uid="uid://dlgcsyd65vmq2" path="res://ui/paused_game_ui/icons/Play--hover.png" id="3_5dlnu"]
-[ext_resource type="Texture2D" uid="uid://q1ro047m3q0j" path="res://ui/paused_game_ui/icons/Exit--hover.png" id="5_ll3qd"]
+[ext_resource type="Texture2D" uid="uid://bhlkmx7l6yw2s" path="res://ui/paused_game_ui/icons/Play.png" id="2_p6f7v"]
+[ext_resource type="Texture2D" uid="uid://bfjgob4msgxo" path="res://ui/paused_game_ui/icons/Exit.png" id="3_3g6il"]
+[ext_resource type="Texture2D" uid="uid://786t66d3pa0n" path="res://ui/paused_game_ui/icons/Play--hover.png" id="3_5dlnu"]
+[ext_resource type="Texture2D" uid="uid://4s7u5gpwwcs6" path="res://ui/paused_game_ui/icons/Exit--hover.png" id="5_ll3qd"]
 
 [sub_resource type="Animation" id="Animation_3w1tt"]
 length = 0.001
