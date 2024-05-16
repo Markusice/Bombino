@@ -87,7 +87,7 @@ A játék Godot-ban lett fejlesztve, és Windows 10/11 operációs rendszeren le
 * ingyenes és nyílt forráskódú játékmotor (Godot 4.2.1 játékmotor)
 * tervező eszköz (Figma, Visual Paradigm, StarUML)
 * C# programozási nyelv
-* Objektumelvű megvalósítás
+* objektumelvű megvalósítás
 * CI teszteléshez használt szoftver: [Chickensoft GoDotTest](https://github.com/chickensoft-games/GoDotTest)
 * felhasznált források:
     * [Kaykit adventurers](https://kaylousberg.itch.io/kaykit-adventurers) (játékosok)
