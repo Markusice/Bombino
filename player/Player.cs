@@ -16,8 +16,8 @@ internal partial class Player : CharacterBody3D
     [Export]
     public int Speed { get; set; } = 10;
 
-    [Export]
-    public PackedScene BombScene { get; set; }
+    [Export(PropertyHint.File, "*.tscn")]
+    public string BombScenePath { get; set; }
 
     #endregion
 
