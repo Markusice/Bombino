@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bq4lj4vteg35e"]
+[gd_scene load_steps=4 format=3 uid="uid://bq4lj4vteg35e"]
 
 [ext_resource type="Script" path="res://game/GameManager.cs" id="1_4g4o6"]
+[ext_resource type="Script" path="res://game/Cache.cs" id="2_uqxkf"]
 
 [sub_resource type="Environment" id="Environment_it7wf"]
 tonemap_white = 4.2
@@ -16,6 +17,9 @@ RoundStatsScenePath = "res://ui/rounds_stats_screen/round_stats.tscn"
 MainUiScenePath = "res://ui/main_ui/main_ui.tscn"
 MapScenePath = "res://map/map.tscn"
 EnemyScenePath = "res://enemy/enemy.tscn"
+
+[node name="Cache" type="Node" parent="WorldEnvironment"]
+script = ExtResource("2_uqxkf")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, 0.843091, 0.537771, 0, -0.537771, 0.843091, 0, 3.30227, 0)
